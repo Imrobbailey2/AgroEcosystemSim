@@ -16,6 +16,13 @@
     "figshare_article_id": 24442402,
     "station_id": 170,
     "station_name": "Live Oak",
+    "station_location": {
+      "latitude": 30.30500,
+      "longitude": -82.89876,
+      "elevation_ft": 165,
+      "source": "fawn-station-locations",
+      "loc": "Location Information for All Stations, Live Oak (Station ID 170)"
+    },
     "wind_height_m": 10,
     "season_start": "04-01",
     "season_end": "08-31",

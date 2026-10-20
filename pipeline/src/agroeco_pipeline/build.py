@@ -222,7 +222,9 @@ def weather_block(region: dict[str, Any], extracted: Path) -> tuple[dict[str, An
                          "method": "15-min obs aggregated to daily; ET0 by FAO-56 Penman-Monteith (Eq. 6)"},
             }
         )
-    station_out = {**station, "prov": _prov(cfg["source"], "station metadata")}
+    loc_source = station.pop("location_source", cfg["source"])
+    loc_text = station.pop("location_loc", "station metadata")
+    station_out = {**station, "prov": _prov(loc_source, loc_text)}
     return station_out, years
 
 

@@ -48,6 +48,9 @@ def test_content(tmp_path: Path) -> None:
     assert {u["dominant_component"]["name"] for u in pack["soil_units"]} == {"Blanton", "Bonneau"}
     assert {f["id"] for f in pack["review_flags"]} >= {"corn-n-rule", "custom-rates-florida-adjustment"}
     assert pack["market_channels"][0]["price_usd_bu"]["value"] == 4.5
+    station = pack["weather_station"]
+    assert station["prov"]["sources"] == ["fawn-station-locations"]
+    assert "location_source" not in station and "location_loc" not in station
 
 
 def test_build_is_byte_deterministic(tmp_path: Path) -> None:
