@@ -80,8 +80,48 @@ def schema_problems(pack: dict[str, Any]) -> list[str]:
     ]
 
 
+# Broad plausibility bounds for picked budget values. They exist to catch a wrong
+# workbook cell (for example a whole-farm total read as a per-acre value), not to
+# judge whether a budget assumption is realistic.
+PLAUSIBLE = {
+    "benchmark_yield_bu_ac": (50.0, 400.0),
+    "benchmark_price_usd_bu": (1.0, 20.0),
+}
+
+
+def _num(node: Any) -> float | None:
+    if isinstance(node, dict) and isinstance(node.get("value"), (int, float)):
+        return float(node["value"])
+    return None
+
+
+def plausibility_problems(pack: dict[str, Any]) -> list[str]:
+    problems: list[str] = []
+    for t in pack.get("tenure_options") or []:
+        tid = t.get("id")
+        for key, (lo, hi) in PLAUSIBLE.items():
+            v = _num(t.get(key))
+            if v is not None and not lo <= v <= hi:
+                problems.append(f"tenure_options[{tid}].{key} = {v} is outside {lo}-{hi}; check the budget cell")
+        y, p = _num(t.get("benchmark_yield_bu_ac")), _num(t.get("benchmark_price_usd_bu"))
+        revenue = y * p if y is not None and p is not None else None
+        for key, node in t.items():
+            v = _num(node)
+            if key.endswith("_usd_ac") and v is not None and revenue is not None and not 0 <= v <= revenue:
+                problems.append(
+                    f"tenure_options[{tid}].{key} = {v} is not between 0 and revenue per acre "
+                    f"({revenue:.2f}); is it a whole-farm total? check the budget cell"
+                )
+    for i, m in enumerate(pack.get("market_channels") or []):
+        net, gross = _num(m.get("price_usd_bu")), _num(m.get("gross_price_usd_bu"))
+        if m.get("price_basis") == "net_farm_gate" and net is not None and gross is not None and net > gross:
+            problems.append(f"market_channels[{i}] net price {net} exceeds gross price {gross}")
+    return problems
+
+
 def validate_pack(pack: dict[str, Any], use_schema: bool = True) -> list[str]:
     problems = provenance_problems(pack)
+    problems.extend(plausibility_problems(pack))
     if use_schema:
         problems.extend(schema_problems(pack))
     return problems
