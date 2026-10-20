@@ -84,6 +84,17 @@
       "kind": "fetched"
     },
     {
+      "id": "fawn-station-locations",
+      "title": "FAWN Location Information for All Stations",
+      "authors": "Florida Automated Weather Network (FAWN), UF/IFAS",
+      "publisher": "University of Florida, IFAS",
+      "year": "current",
+      "url": "https://fawn.ifas.ufl.edu/tour/location_info.php",
+      "accessed": "2026-10-20",
+      "license": "Copyright University of Florida. Station coordinates transcribed as facts with citation.",
+      "kind": "manual"
+    },
+    {
       "id": "fawn-gapfree-paper",
       "title": "Gap-free 16-year (2005-2020) sub-diurnal surface meteorological observations across Florida",
       "authors": "Peeling, J. A., Judge, J., Misra, V., et al.",

@@ -41,6 +41,31 @@ def test_fetch_budgets_requires_rent_for_rented(tmp_path: Path) -> None:
         fetch.fetch_budgets(REGION, REGISTRY, tmp_path, fetch.Lock(), get=fake_get)
 
 
+def test_configured_station_converts_feet_and_validates() -> None:
+    loc = REGION["weather"]["station_location"]
+    s = fetch.configured_station(loc)
+    assert (s["latitude"], s["longitude"], s["elevation_m"]) == (30.305, -82.89876, 50.3)
+    assert s["location_source"] == "fawn-station-locations"
+    assert loc["source"] in REGISTRY
+    with pytest.raises(PipelineError, match="latitude"):
+        fetch.configured_station({k: v for k, v in loc.items() if k != "latitude"})
+    with pytest.raises(PipelineError, match="elevation"):
+        fetch.configured_station({k: v for k, v in loc.items() if k != "elevation_ft"})
+
+
+def test_fetch_weather_uses_configured_location_without_metadata_file(tmp_path: Path) -> None:
+    header = "Period,temp_air_2m_C,rh_2m_pct,rain_2m_mm,rfd_2m_wm2,wind_speed_10m_m/s\n"
+    body = "".join(f"2010-06-01 {q // 4:02d}:{q % 4 * 15:02d}:00,25,70,0,300,2\n" for q in range(96))
+    article = {"files": [{"name": "170_2010.csv", "download_url": "https://example.test/170_2010.csv"}]}
+
+    def fake_get(url: str) -> bytes:
+        return json.dumps(article).encode() if "api.figshare" in url else (header + body).encode()
+
+    # Gets past the station lookup; fails later only because one day is not 3 complete years.
+    with pytest.raises(PipelineError, match="need at least 3 complete years"):
+        fetch.fetch_weather(REGION, tmp_path, fetch.Lock(), get=fake_get)
+
+
 def test_fetch_soils_fails_on_missing_map_unit(tmp_path: Path) -> None:
     def fake_post(url: str, body: bytes, headers: dict[str, str]) -> bytes:
         return json.dumps({"Table": [["areasymbol", "saverest", "mukey", "musym", "muname"],
