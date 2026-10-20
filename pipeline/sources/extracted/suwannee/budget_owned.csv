@@ -1,0 +1,24 @@
+label,sheet,label_cell,occurrence,values
+Crop yield (units/acre),Marketing,B7,0,"[[""C7"", 205.0]]"
+Average delivered gross price ($/unit),Marketing,B8,0,"[[""C8"", 5.2]]"
+Gross revenue from crop sales ($/acre),Marketing,B9,0,"[[""C9"", 1066.0]]"
+Hauling cost,Marketing,B22,0,"[[""D22"", 0.0]]"
+Net farm-gate crop sales revenue,Marketing,B27,0,"[[""C27"", 4.78], [""D27"", 979.9]]"
+Corn seeds,BudgetSummary,B10,0,"[[""E10"", 137.625], [""F10"", 0.6713414634146342], [""G10"", 19267.5]]"
+Fertilizers & lime,BudgetSummary,B11,0,"[[""E11"", 345.26485166025475], [""F11"", 1.6842187885866085], [""G11"", 48337.079232435666]]"
+Fertilizers & lime,MaterialLists,B15,1,[]
+Fertilizers & lime,MaterialsUsed,B9,2,[]
+Herbicides,MaterialsUsed,B34,0,[]
+Custom services,BudgetSummary,B14,0,"[[""E14"", 32.0], [""F14"", 0.15609756097560976], [""G14"", 4480.0]]"
+Custom services,OperatingRates,B26,1,[]
+Interest on operating costs,BudgetSummary,B20,0,"[[""E20"", 46.11509299857382], [""F20"", 0.22495167316377473], [""G20"", 6456.113019800335]]"
+Mortgage payment (principal + interest),FieldDetails,B20,0,"[[""E20"", 0.0]]"
+Annual interest rate,OperatingRates,B22,0,"[[""C22"", 0.0737]]"
+Hauling grain corn - 20 miles,OperatingRates,B36,0,"[[""E36"", 0.21]]"
+Hauling grain corn - 60 miles,OperatingRates,B37,0,"[[""E37"", 0.3]]"
+Cover crop seed,MaterialLists,B114,0,"[[""D114"", 0.6], [""G114"", 1.0], [""H114"", 0.6], [""I114"", 2025.0]]"
+Total Variable,FieldOperations,H64,0,[]
+Total Variable + Fixed,FieldOperations,J64,0,[]
+Total net farm-gate crop revenue,BudgetSummary,B39,0,"[[""E39"", 967.7], [""F39"", 4.720487804878049], [""G39"", 135478.0]]"
+Total net farm-gate crop revenue,Marketing,B39,1,"[[""C39"", 4.720487804878049], [""D39"", 967.6999999999999]]"
+Land rental cost,FieldDetails,B19,0,"[[""E19"", 0.0]]"

@@ -1,0 +1,102 @@
+[
+  {
+    "cokey": "28122329",
+    "compname": "Bonneau",
+    "comppct_r": "40",
+    "drainagecl": "Well drained",
+    "hydgrp": "B",
+    "majcompflag": "Yes",
+    "mukey": "1023326",
+    "taxclname": "Loamy, siliceous, subactive, thermic Arenic Paleudults"
+  },
+  {
+    "cokey": "28122330",
+    "compname": "Blanton",
+    "comppct_r": "30",
+    "drainagecl": "Well drained",
+    "hydgrp": "A",
+    "majcompflag": "Yes",
+    "mukey": "1023326",
+    "taxclname": "Loamy, siliceous, semiactive, thermic Grossarenic Paleudults"
+  },
+  {
+    "cokey": "28122331",
+    "compname": "Padlock",
+    "comppct_r": "20",
+    "drainagecl": "Moderately well drained",
+    "hydgrp": "D",
+    "majcompflag": "Yes",
+    "mukey": "1023326",
+    "taxclname": "Fine, mixed, active, thermic Aquic Paleudults"
+  },
+  {
+    "cokey": "28122332",
+    "compname": "Chipley",
+    "comppct_r": "5",
+    "drainagecl": "Somewhat poorly drained",
+    "hydgrp": "A",
+    "majcompflag": "No ",
+    "mukey": "1023326",
+    "taxclname": "Thermic, coated Aquic Quartzipsamments"
+  },
+  {
+    "cokey": "28122333",
+    "compname": "Alpin",
+    "comppct_r": "5",
+    "drainagecl": "Excessively drained",
+    "hydgrp": "A",
+    "majcompflag": "No ",
+    "mukey": "1023326",
+    "taxclname": "Thermic, coated Lamellic Quartzipsamments"
+  },
+  {
+    "cokey": "28122334",
+    "compname": "Blanton",
+    "comppct_r": "42",
+    "drainagecl": "Moderately well drained",
+    "hydgrp": "A",
+    "majcompflag": "Yes",
+    "mukey": "1023328",
+    "taxclname": "Loamy, siliceous, semiactive, thermic Grossarenic Paleudults"
+  },
+  {
+    "cokey": "28122335",
+    "compname": "Alpin",
+    "comppct_r": "33",
+    "drainagecl": "Excessively drained",
+    "hydgrp": "A",
+    "majcompflag": "Yes",
+    "mukey": "1023328",
+    "taxclname": "Thermic, coated Lamellic Quartzipsamments"
+  },
+  {
+    "cokey": "28122336",
+    "compname": "Bonneau",
+    "comppct_r": "16",
+    "drainagecl": "Well drained",
+    "hydgrp": "B",
+    "majcompflag": "Yes",
+    "mukey": "1023328",
+    "taxclname": "Loamy, siliceous, subactive, thermic Arenic Paleudults"
+  },
+  {
+    "cokey": "28122338",
+    "compname": "Albany",
+    "comppct_r": "5",
+    "drainagecl": "Somewhat poorly drained",
+    "hydgrp": "A/D",
+    "majcompflag": "No ",
+    "mukey": "1023328",
+    "taxclname": "Loamy, siliceous, subactive, thermic Aquic Arenic Paleudults"
+  },
+  {
+    "cokey": "28122337",
+    "compname": "Chipley",
+    "comppct_r": "4",
+    "drainagecl": "Somewhat poorly drained",
+    "hydgrp": "A",
+    "majcompflag": "No ",
+    "mukey": "1023328",
+    "taxclname": "Thermic, coated Aquic Quartzipsamments"
+  }
+]
