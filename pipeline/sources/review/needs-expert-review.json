@@ -49,11 +49,22 @@
       "title": "Confirm which workbook cells feed game values (yield, price, land rent, hauling, interest)",
       "status": "open",
       "decision_owner": "Project owner",
-      "current_default": "First numeric cell to the right of each label (see pipeline/sources/regions/suwannee.json)",
+      "current_default": "Named workbook column per field (budget_fields.col in pipeline/sources/regions/suwannee.json): yield Marketing!C7 (205 bu/A); gross price Marketing!C8 ($5.20/bu); net farm-gate price Marketing!C27 ($4.78/bu, used by the market channel); land rent FieldDetails!E19 ($285.71/A, rented only); hauling Marketing!D22; operating interest OperatingRates!C22",
       "options": [],
-      "notes": "The 2026 budgets are spreadsheets; the fetch records every numeric cell on each label row with its cell reference. The spot-check document lists them for confirmation.",
+      "notes": "Spot-check 2026-10-20 found the first-numeric-cell rule read whole-farm rent (FieldDetails!D19 = $40,000) as $/acre; fixed by picking named columns, and validation now rejects per-acre costs outside 0..revenue per acre. Open question: the Marketing sheet also has 'Total net farm-gate crop revenue' C39 = $4.72/bu ($967.70/A) versus C27 = $4.78/bu ($979.90/A); confirm which the game should pay.",
       "affects": ["budgets", "tenure_options", "market_channels"],
       "sources": ["svaec-corn-2026-ct-owned", "svaec-corn-2026-ct-rented"]
+    },
+    {
+      "id": "owned-land-costs",
+      "title": "Owned land: property tax, utilities, other ownership costs, and land appreciation",
+      "status": "open",
+      "decision_owner": "Project owner",
+      "current_default": "Not yet modelled: the 2026 owned budget carries $0 land rent (FieldDetails!E19) and $0 mortgage (FieldDetails!E20), so owned land currently has no land cost",
+      "options": [],
+      "notes": "Decided 2026-10-20: owned land must carry property tax, utilities and other related ownership costs, and must gain value over the period of ownership. Sources and method are pending approval.",
+      "affects": ["tenure_options"],
+      "sources": ["svaec-corn-2026-ct-owned"]
     }
   ]
 }

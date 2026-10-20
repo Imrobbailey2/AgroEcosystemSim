@@ -169,8 +169,15 @@
     },
     "marketChannel": {
       "type": "object",
-      "required": ["id", "name", "price_usd_bu", "prov"],
-      "properties": {"price_usd_bu": {"$ref": "#/$defs/citedNumber"}}
+      "required": ["id", "name", "price_basis", "price_usd_bu", "prov"],
+      "properties": {
+        "price_basis": {"enum": ["net_farm_gate", "delivered"]},
+        "price_usd_bu": {"$ref": "#/$defs/citedNumber"},
+        "gross_price_usd_bu": {"$ref": "#/$defs/citedNumber"},
+        "hauling_usd_ac": {"$ref": "#/$defs/citedNumber"}
+      },
+      "if": {"properties": {"price_basis": {"const": "net_farm_gate"}}},
+      "then": {"not": {"required": ["hauling_usd_ac"]}}
     },
     "weatherYear": {
       "type": "object",

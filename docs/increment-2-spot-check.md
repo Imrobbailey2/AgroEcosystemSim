@@ -22,13 +22,36 @@ Open the source, find the location, and compare. Mark each row pass or fail.
 
 ## Also check (budget cell mapping)
 
-The pipeline takes the **first numeric cell to the right** of each budget
-label. For rows 7 and 8, open `budgets.<tenure>.lines` in the pack, find the
-label, and confirm the picked cell is the right column (for example, the
-per-acre value rather than a quantity). If not, change `pick` in
-`pipeline/sources/regions/suwannee.json` and rebuild.
+Each game value is read from a **named workbook column** (`budget_fields.<name>.col`
+in `pipeline/sources/regions/suwannee.json`). For rows 7 and 8, open
+`budgets.<tenure>.lines` in the pack, find the label, and confirm the cell in
+`prov.loc` is the per-acre (or per-bushel) value, not a whole-farm total.
+Validation also rejects any per-acre cost outside 0 to revenue per acre.
 
-## Results
+## Results: first pass (data branch `data/fetch-39487912435`, 2026-10-20)
+
+| # | Result | Notes |
+|---|---|---|
+| 1 | PASS | SL129 Table 1: P Low ≤25 mg/kg |
+| 2 | PASS | SL129 Table 1: K High >60 mg/kg |
+| 3 | PASS | SL129 Table 2, code 5, 30,000 plants/acre: 240 lb N/A |
+| 4 | PASS | SL129 Table 2, code 5, 25,000 plants/acre, Medium P: 70 lb P₂O₅/A |
+| 5 | PASS | UF/IFAS corn page Table 2: 200 bu/ac → 274 lb N/ac |
+| 6 | PASS | Georgia 2024 survey, Combine Corn: $58.50 average ($55.00 median, $40.00–$90.00) |
+| 7 | PASS | Owned budget `Marketing!C7` = 205 bu/A |
+| 8 | **FAIL** | Rented budget: pack used `FieldDetails!D19` = $40,000 (whole-farm total) as $/acre; per-acre value is `FieldDetails!E19` = $285.71. Fixed by picking named columns; re-check after the next fetch. |
+| 9 | PASS | FL121 mukey 1023328: dominant component Blanton 42%, moderately well drained; top layer 0–13 cm, FC 7.9%, WP 2.0% (checked against the SDA extract) |
+| 10 | PENDING | Re-check after the next fetch using the dry year and season rainfall in the pack |
+
+Decisions recorded on 2026-10-20:
+
+- The market channel pays the **net farm-gate price** (`Marketing!C27` = $4.78/bu) rather than
+  the gross delivered price (`Marketing!C8` = $5.20/bu). Hauling is already deducted, so it is
+  not charged again.
+- Owned land will carry property tax, utilities and other ownership costs, and will gain value
+  over time. The sources still need approval; the decision is tracked in the review register.
+
+## Results: second pass
 
 - Checked by:
 - Date:
