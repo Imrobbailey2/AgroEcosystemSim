@@ -1,0 +1,75 @@
+{
+  "id": "suwannee",
+  "name": "Suwannee Valley, Florida",
+  "pack_version": "0.1.0",
+  "soils": {
+    "source": "ssurgo-fl121",
+    "areasymbol": "FL121",
+    "fields": [
+      {"id": "field-1", "muname": "Blanton-Alpin-Bonneau complex, 0 to 5 percent slopes"},
+      {"id": "field-2", "muname": "Bonneau-Blanton-Padlock complex, 0 to 5 percent slopes"}
+    ],
+    "max_depth_cm": 150
+  },
+  "weather": {
+    "source": "fawn-gapfree-liveoak-170",
+    "figshare_article_id": 24442402,
+    "station_id": 170,
+    "station_name": "Live Oak",
+    "wind_height_m": 10,
+    "season_start": "04-01",
+    "season_end": "08-31",
+    "select": ["dry", "median", "wet"]
+  },
+  "budgets": [
+    {
+      "tenure": "owned",
+      "source": "svaec-corn-2026-ct-owned",
+      "file": "budget_owned.csv"
+    },
+    {
+      "tenure": "rented",
+      "source": "svaec-corn-2026-ct-rented",
+      "file": "budget_rented.csv"
+    }
+  ],
+  "budget_labels": {
+    "required": [
+      "Crop yield (units/acre)",
+      "Average delivered gross price ($/unit)",
+      "Land rental cost"
+    ],
+    "optional": [
+      "Gross revenue from crop sales ($/acre)",
+      "Hauling cost",
+      "Net farm-gate crop sales revenue",
+      "Corn seeds",
+      "Fertilizers & lime",
+      "Herbicides",
+      "Custom services",
+      "Interest on operating costs",
+      "Mortgage payment (principal + interest)",
+      "Annual interest rate",
+      "Hauling grain corn - 20 miles",
+      "Hauling grain corn - 60 miles",
+      "Cover crop seed",
+      "Total Variable",
+      "Total Variable + Fixed",
+      "Total net farm-gate crop revenue"
+    ]
+  },
+  "budget_fields": {
+    "yield_bu_ac": {"label": "Crop yield (units/acre)", "pick": 0},
+    "price_usd_bu": {"label": "Average delivered gross price ($/unit)", "pick": 0},
+    "land_rent_usd_ac": {"label": "Land rental cost", "pick": 0},
+    "hauling_usd_ac": {"label": "Hauling cost", "pick": 0},
+    "operating_interest_rate": {"label": "Annual interest rate", "pick": 0}
+  },
+  "market_channel": {
+    "id": "local-buying-point",
+    "name": "Local grain buying point",
+    "price_field": "price_usd_bu",
+    "hauling_field": "hauling_usd_ac",
+    "crosscheck_haul_operation": "haul_grain"
+  }
+}

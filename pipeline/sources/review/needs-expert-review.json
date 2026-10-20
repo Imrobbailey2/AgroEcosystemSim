@@ -1,0 +1,59 @@
+{
+  "_comment": "Needs-expert-review register. Each item is exported into the data pack as a review flag so the game and instructors can see what is provisional. Close an item by setting status to 'resolved' with the reviewer's decision.",
+  "items": [
+    {
+      "id": "corn-n-rule",
+      "title": "Corn nitrogen rate: SL129 plant-population table vs. interim yield-goal rule",
+      "status": "open",
+      "decision_owner": "IFAS expert",
+      "current_default": "sl129-plant-population",
+      "options": [
+        {
+          "id": "sl129-plant-population",
+          "summary": "SL129 Table 2, irrigated corn: 180 / 210 / 240 lb N/A at 20,000 / 25,000 / 30,000 plants/acre",
+          "sources": ["sl129"]
+        },
+        {
+          "id": "interim-yield-goal",
+          "summary": "1.37 lb N per bushel of yield potential (interim, approved September 3, 2025): 137 / 206 / 274 / 343 lb N/ac at 100 / 150 / 200 / 250 bu/ac",
+          "sources": ["ufifas-corn-n-interim", "ss757"]
+        }
+      ],
+      "notes": "Both rules are stored in the data pack. Default chosen by the project owner on 2026-10-20 so that Increment 3 tests can match SL129. Changing the default is a one-line edit here.",
+      "affects": ["crops.corn-grain-irrigated.n_rules"]
+    },
+    {
+      "id": "custom-rates-florida-adjustment",
+      "title": "Re-pricing Georgia 2024 custom rates for Florida diesel and labor",
+      "status": "open",
+      "decision_owner": "Project owner / IFAS economist",
+      "current_default": "factor 1.0 (unadjusted Georgia 2024 averages)",
+      "options": [],
+      "notes": "No sourced Florida-vs-Georgia diesel and farm-labor cost ratios have been approved yet. Proposed method: factor = 1 + fuel_share x (FL_diesel/GA_diesel - 1) + labor_share x (FL_wage/GA_wage - 1), with all four inputs cited.",
+      "affects": ["custom_operations[*].rate"],
+      "sources": ["uga-custom-rates-2024", "ufifas-custom-rates-nfl-2000"]
+    },
+    {
+      "id": "soil-map-units",
+      "title": "Confirm the two SSURGO map units represent irrigated corn fields in the Suwannee Valley",
+      "status": "open",
+      "decision_owner": "IFAS expert",
+      "current_default": "Field 1: Blanton-Alpin-Bonneau complex, 0 to 5 percent slopes; Field 2: Bonneau-Blanton-Padlock complex, 0 to 5 percent slopes",
+      "options": [],
+      "notes": "Chosen to contrast deep sand (low water holding) with loamy sand (higher water holding). Names confirmed against SSURGO when the fetch runs.",
+      "affects": ["soil_units"],
+      "sources": ["ssurgo-fl121"]
+    },
+    {
+      "id": "budget-cell-mapping",
+      "title": "Confirm which workbook cells feed game values (yield, price, land rent, hauling, interest)",
+      "status": "open",
+      "decision_owner": "Project owner",
+      "current_default": "First numeric cell to the right of each label (see pipeline/sources/regions/suwannee.json)",
+      "options": [],
+      "notes": "The 2026 budgets are spreadsheets; the fetch records every numeric cell on each label row with its cell reference. The spot-check document lists them for confirmation.",
+      "affects": ["budgets", "tenure_options", "market_channels"],
+      "sources": ["svaec-corn-2026-ct-owned", "svaec-corn-2026-ct-rented"]
+    }
+  ]
+}

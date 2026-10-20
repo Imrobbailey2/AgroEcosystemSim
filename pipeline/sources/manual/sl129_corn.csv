@@ -1,0 +1,7 @@
+crop_code,description,irrigated,plants_per_acre,target_ph,n_lb_a,p2o5_lo,p2o5_med,p2o5_hi,k2o_lo,k2o_med,k2o_hi,footnotes,source,locator
+2,Nonirrigated corn,false,10000,6.5,120,80,40,0,80,40,0,102;120;124,sl129,Table 2 crop code 2
+2,Nonirrigated corn,false,12500,6.5,150,125,50,0,120,60,0,102;120;124,sl129,Table 2 crop code 2
+2,Nonirrigated corn,false,15000,6.5,180,125,60,0,120,60,0,102;120;124,sl129,Table 2 crop code 2
+5,Irrigated corn,true,20000,6.5,180,120,60,0,120,60,0,104;120;124,sl129,Table 2 crop code 5
+5,Irrigated corn,true,25000,6.5,210,175,70,0,175,70,0,104;120;124,sl129,Table 2 crop code 5
+5,Irrigated corn,true,30000,6.5,240,175,70,0,175,70,0,104;120;124,sl129,Table 2 crop code 5
