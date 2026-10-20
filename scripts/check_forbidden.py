@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Fail if any tracked file matches a pattern in ``.forbidden-paths``.
 
 This is the CI guard that keeps UF validation data and private calibration

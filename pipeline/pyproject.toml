@@ -24,9 +24,4 @@ packages = ["src/agroeco_pipeline"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
-[tool.ruff]
-line-length = 100
-target-version = "py311"
-
-[tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B"]
+# Ruff settings live in the repository-root ruff.toml.
