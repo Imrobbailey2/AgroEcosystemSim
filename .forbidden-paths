@@ -1,0 +1,15 @@
+# Forbidden path patterns: UF validation data and private calibration data
+# must NEVER be committed to this public repository.
+#
+# Syntax: one shell-style glob per line (fnmatch), matched case-insensitively
+# against "/" + the repo-relative POSIX path of every tracked file.
+# "*" matches any characters, including "/". Blank lines and "#" lines are ignored.
+*/uf-validation/*
+*/uf_validation/*
+*/uf-validation*
+*/uf_validation*
+*/uf-data/*
+*/uf_data/*
+*/private/*
+*/calibration-private/*
+*.ufdata.*
