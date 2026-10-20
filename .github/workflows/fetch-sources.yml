@@ -43,17 +43,18 @@ jobs:
           ONLY: ${{ inputs.only }}
         shell: bash
         run: |
-          set -euo pipefail
+          set -uo pipefail
+          args=(fetch --region "$REGION")
           if [ -n "$ONLY" ]; then
-            # shellcheck disable=SC2086
-            agroeco-pipeline fetch --region "$REGION" --only $ONLY
-          else
-            agroeco-pipeline fetch --region "$REGION"
+            read -r -a only_steps <<< "$ONLY"
+            args+=(--only "${only_steps[@]}")
           fi
+          bash scripts/annotate-errors.sh agroeco-pipeline "${args[@]}"
       - name: Build and validate data pack
         env:
           REGION: ${{ inputs.region }}
-        run: agroeco-pipeline build --region "$REGION"
+        shell: bash
+        run: bash scripts/annotate-errors.sh agroeco-pipeline build --region "$REGION"
       - name: Data guard
         run: python scripts/check_forbidden.py
       - name: Push data branch
