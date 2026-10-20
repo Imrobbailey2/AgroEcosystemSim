@@ -84,10 +84,19 @@ def _matches(role: str, n: str) -> bool:
 
 
 def map_columns(headers: list[str]) -> dict[str, Column]:
-    """Identify the needed columns and their units, or fail with the header list."""
+    """Identify the needed columns and their units, or fail with the header list.
+
+    For the time role, a file with separate ``Date`` and ``Time`` columns (as in
+    the FAWN gap-free CSVs) uses the ``Date`` column: only the day is needed to
+    aggregate observations into daily values.
+    """
     found: dict[str, Column] = {}
     for role in ROLES:
         cands = [(i, h) for i, h in enumerate(headers) if _matches(role, _norm(h))]
+        if role == "time" and len(cands) > 1:
+            date_only = [(i, h) for i, h in cands if _norm(h) == "_date_"]
+            if len(date_only) == 1:
+                cands = date_only
         if len(cands) != 1:
             raise PipelineError(
                 f"expected exactly one {role} column, found {[h for _, h in cands]} in {headers}"
@@ -97,17 +106,26 @@ def map_columns(headers: list[str]) -> dict[str, Column]:
     return found
 
 
-_TIME_FORMATS = ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%m/%d/%Y %H:%M", "%m/%d/%Y %H:%M:%S",
-                 "%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M")
+# Two-digit-year (%y) formats come before four-digit ones: strptime's %Y would
+# otherwise read "1/1/05" as the year 5.
+_TIME_FORMATS = (
+    "%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M",
+    "%m/%d/%y %H:%M", "%m/%d/%y %H:%M:%S", "%m/%d/%Y %H:%M", "%m/%d/%Y %H:%M:%S",
+    "%Y-%m-%d", "%Y/%m/%d", "%m/%d/%y", "%m/%d/%Y",
+)
 
 
 def parse_day(text: str) -> date:
+    """Parse a date or date-time string to a calendar day."""
     t = text.strip().split("+")[0].rstrip("Z")
     for fmt in _TIME_FORMATS:
         try:
-            return datetime.strptime(t, fmt).date()
+            day = datetime.strptime(t, fmt).date()
         except ValueError:
             continue
+        if not 1900 <= day.year <= 2100:
+            raise PipelineError(f"implausible year in timestamp {text!r}")
+        return day
     raise PipelineError(f"unrecognised timestamp {text!r}")
 
 

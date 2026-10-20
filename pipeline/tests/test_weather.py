@@ -33,6 +33,43 @@ def test_map_columns_metric_and_us() -> None:
     assert (u["temp"].unit, u["rain"].unit, u["wind"].unit) == ("F", "in", "mph")
 
 
+HEADERS_FAWN_GAPFREE = [
+    "Station ID", "Station Name", "Date", "Time", "Soil Temp (C)", "Temp @ 60cm (C)", "Temp @ 2m (C)",
+    "Temp @ 10m (C)", "Relative Humidity (%)", "Dew Point Temp (C)", "Rainfall Amount (in)",
+    "Wind Speed (mph)", "Wind Direction (deg)", "Solar Radiation (w/m2)", "Filled Flag", "Variable Flag",
+]
+
+
+def test_map_columns_fawn_gapfree_headers() -> None:
+    m = map_columns(HEADERS_FAWN_GAPFREE)
+    assert {r: (c.header, c.unit) for r, c in m.items()} == {
+        "time": ("Date", "local"),
+        "temp": ("Temp @ 2m (C)", "C"),
+        "rh": ("Relative Humidity (%)", "%"),
+        "rain": ("Rainfall Amount (in)", "in"),
+        "solar": ("Solar Radiation (w/m2)", "W/m2"),
+        "wind": ("Wind Speed (mph)", "mph"),
+    }
+
+
+@pytest.mark.parametrize("date_text", ["2010-06-01", "6/1/2010", "06/01/10", "2010/06/01"])
+def test_aggregate_daily_separate_date_and_time(date_text: str) -> None:
+    lines = [",".join(HEADERS_FAWN_GAPFREE)]
+    for q in range(96):
+        hh, mm = divmod(q * 15, 60)
+        lines.append(f"170,Live Oak,{date_text},{hh:02d}:{mm:02d},24,23,25,26,70,19,0.01,4.4738,180,300,0,")
+    rows = aggregate_daily("\n".join(lines) + "\n", latitude=30.305, elevation_m=50.3, wind_height_m=10)
+    assert len(rows) == 1
+    assert rows[0]["date"] == "2010-06-01"
+    assert rows[0]["tmax_c"] == 25.0
+    assert rows[0]["rain_mm"] == pytest.approx(96 * 0.254, abs=1e-6)
+
+
+def test_parse_day_rejects_implausible_year() -> None:
+    with pytest.raises(PipelineError, match="implausible"):
+        parse_day("1/1/0005")
+
+
 def test_map_columns_fails_loudly() -> None:
     with pytest.raises(PipelineError, match="temp"):
         map_columns(["Period", "rh_2m_pct", "rain_2m_mm", "rfd_2m_wm2", "wind_speed_10m_m/s"])
@@ -41,6 +78,8 @@ def test_map_columns_fails_loudly() -> None:
 def test_parse_day_formats() -> None:
     assert parse_day("2012-05-01 00:15:00").isoformat() == "2012-05-01"
     assert parse_day("05/01/2012 23:45").isoformat() == "2012-05-01"
+    assert parse_day("1/1/05").isoformat() == "2005-01-01"
+    assert parse_day("2005-01-01").isoformat() == "2005-01-01"
     with pytest.raises(PipelineError):
         parse_day("yesterday")
 
