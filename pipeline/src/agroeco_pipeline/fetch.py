@@ -144,9 +144,9 @@ def fetch_weather(region: dict[str, Any], out: Path, lock: Lock,
                 "with a cited source to the region config"
             )
         station = weather.find_station(metas[0][1].decode("utf-8-sig"), cfg["station_id"], cfg["station_name"])
-    data_files = [(n, d) for n, d in files if n.lower().endswith(".csv") and "meta" not in n.lower()]
+    data_files = [d for n, d in files if n.lower().endswith(".csv") and "meta" not in n.lower()]
     rows: list[dict[str, Any]] = []
-    for name, data in data_files:
+    for data in data_files:
         rows.extend(
             weather.aggregate_daily(
                 data.decode("utf-8-sig"), station["latitude"], station["elevation_m"], cfg["wind_height_m"]

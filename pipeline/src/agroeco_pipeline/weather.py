@@ -194,7 +194,7 @@ def select_years(
     years = complete_years(rows)
     if len(years) < 3:
         raise PipelineError(f"need at least 3 complete years, have {years}")
-    totals = sorted(((season_rain(rows, y, start, end), y) for y in years))
+    totals = sorted((season_rain(rows, y, start, end), y) for y in years)
     dry = totals[0]
     wet = totals[-1]
     middle = totals[1:-1]
