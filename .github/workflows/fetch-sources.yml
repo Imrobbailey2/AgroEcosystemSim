@@ -15,7 +15,7 @@ on:
         type: choice
         options: [suwannee]
       only:
-        description: "Optional subset: any of 'soils budgets weather' (blank = all)"
+        description: "Steps to run. Leave EMPTY to run all. Or type any of: soils budgets weather"
         required: false
         default: ""
 
@@ -37,10 +37,27 @@ jobs:
           python-version: '3.12'
       - name: Install pipeline
         run: python -m pip install -e "./pipeline[dev]"
+      - name: Resolve steps to run
+        id: only
+        env:
+          ONLY_INPUT: ${{ inputs.only }}
+        shell: bash
+        run: |
+          set -uo pipefail
+          err="$(mktemp)"
+          if ! picked="$(bash scripts/normalize-only.sh "$ONLY_INPUT" 2>"$err")"; then
+            msg="$(head -n 1 "$err")"
+            msg="${msg//'%'/'%25'}"
+            echo "::error title=Invalid 'only' input::$msg"
+            exit 2
+          fi
+          picked="$(echo $picked)"  # one line, space-separated
+          echo "steps=$picked" >> "$GITHUB_OUTPUT"
+          echo "Fetch steps: ${picked:-all (soils budgets weather)}" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Fetch and extract
         env:
           REGION: ${{ inputs.region }}
-          ONLY: ${{ inputs.only }}
+          ONLY: ${{ steps.only.outputs.steps }}
         shell: bash
         run: |
           set -uo pipefail
