@@ -52,9 +52,10 @@ into the results (it lists every SCORM call and any error code).
 
 ## Results
 
-- Date tested:
-- Canvas course:
-- Account used (test student / Student View):
-- Browser and version:
-- New tab setting:
-- Overall: PASS / PASS with a lower save budget / FAIL
+- Date tested: 2026-10-20
+- Canvas course: UF Canvas course with SCORM enabled (reported by Rob Bailey)
+- Account used (test student / Student View): not recorded
+- Browser and version: not recorded
+- New tab setting: not recorded
+- Overall: **PASS**. All checklist steps reported green, including the 60,000-character save,
+  so Increment 8 keeps the planned save budget (fail the CI size test at 50% of 64,000).
