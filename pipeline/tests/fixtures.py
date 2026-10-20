@@ -114,7 +114,9 @@ def make_sources_tree(root: Path) -> Path:
         write_csv(ex / f"budget_{tenure}.csv", rows, ["label", "sheet", "label_cell", "occurrence", "values"])
     write_json(ex / "station.json", {"latitude": 30.3, "longitude": -82.9, "elevation_m": 50.0,
                                      "station_id": 170, "name": "Live Oak",
-                                     "source": "fawn-gapfree-liveoak-170"})
+                                     "source": "fawn-gapfree-liveoak-170",
+                                     "location_source": "fawn-station-locations",
+                                     "location_loc": "Live Oak (Station ID 170)"})
     years = [2010, 2011, 2012, 2013, 2014]
     write_csv(ex / "weather_daily.csv",
               daily_rows(years, {2010: 1.0, 2011: 0.5, 2012: 1.5, 2013: 0.9, 2014: 1.2}), DAILY_FIELDS)

@@ -110,6 +110,30 @@ def fetch_budgets(region: dict[str, Any], registry: dict[str, dict[str, Any]], o
         write_csv(out / b["file"], rows, budget.FIELDS)
 
 
+def configured_station(loc: dict[str, Any]) -> dict[str, Any]:
+    """Validate a cited station location from the region config.
+
+    Accepts elevation as published (``elevation_ft``) or in metres (``elevation_m``).
+    """
+    missing = [k for k in ("latitude", "longitude", "source", "loc") if loc.get(k) in (None, "")]
+    if "elevation_m" not in loc and "elevation_ft" not in loc:
+        missing.append("elevation_m or elevation_ft")
+    if missing:
+        raise PipelineError(f"weather.station_location is missing {missing}")
+    try:
+        lat, lon = float(loc["latitude"]), float(loc["longitude"])
+        elev = float(loc["elevation_m"]) if "elevation_m" in loc else round(float(loc["elevation_ft"]) * 0.3048, 1)
+    except (TypeError, ValueError) as exc:
+        raise PipelineError(f"weather.station_location has a non-numeric value: {exc}") from exc
+    return {
+        "latitude": lat,
+        "longitude": lon,
+        "elevation_m": elev,
+        "location_source": loc["source"],
+        "location_loc": loc["loc"],
+    }
+
+
 def _files_from(name: str, raw: bytes) -> list[tuple[str, bytes]]:
     if name.lower().endswith(".zip"):
         with zipfile.ZipFile(io.BytesIO(raw)) as zf:
@@ -135,8 +159,9 @@ def fetch_weather(region: dict[str, Any], out: Path, lock: Lock,
     if not files:
         raise PipelineError("figshare article lists no files")
 
-    station = cfg.get("station_location")
-    if station is None:
+    if cfg.get("station_location") is not None:
+        station = configured_station(cfg["station_location"])
+    else:
         metas = [(n, d) for n, d in files if "meta" in n.lower() and n.lower().endswith(".csv")]
         if not metas:
             raise PipelineError(
@@ -144,6 +169,7 @@ def fetch_weather(region: dict[str, Any], out: Path, lock: Lock,
                 "with a cited source to the region config"
             )
         station = weather.find_station(metas[0][1].decode("utf-8-sig"), cfg["station_id"], cfg["station_name"])
+        station.update(location_source=cfg["source"], location_loc=metas[0][0])
     data_files = [d for n, d in files if n.lower().endswith(".csv") and "meta" not in n.lower()]
     rows: list[dict[str, Any]] = []
     for data in data_files:
