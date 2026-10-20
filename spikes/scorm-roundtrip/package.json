@@ -1,0 +1,29 @@
+{
+  "name": "agroeco-scorm-roundtrip",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Increment 1 spike: SCORM 2004 3rd Edition save/resume/score round-trip test for Canvas",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "dev": "vite",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "node --test tests/payload.test.ts tests/package.test.mjs",
+    "package": "node scripts/package.mjs",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "scorm-again": "^3.0.4"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.0"
+  }
+}

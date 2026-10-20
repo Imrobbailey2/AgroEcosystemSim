@@ -76,3 +76,43 @@ jobs:
         run: ruff check pipeline scripts
       - name: Tests (pytest)
         run: python -m pytest pipeline/tests scripts/tests
+
+  scorm-spike:
+    name: SCORM round-trip spike (build, test, package)
+    needs: data-guard
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: spikes/scorm-roundtrip
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Unit tests (payload, packager)
+        run: npm test
+      - name: Build (tsc + Vite)
+        run: npm run build
+      - name: Package SCORM 2004 3rd Edition zip
+        run: npm run package
+      - name: Check zip with an independent reader
+        run: python3 -m zipfile -l artifacts/agroeco-scorm-roundtrip.zip
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: Standalone round trip (Playwright)
+        run: npm run test:e2e
+      - name: Upload SCORM zip for the Canvas test
+        uses: actions/upload-artifact@v4
+        with:
+          name: agroeco-scorm-roundtrip
+          path: spikes/scorm-roundtrip/artifacts/agroeco-scorm-roundtrip.zip
+          if-no-files-found: error
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scorm-spike-playwright-report
+          path: spikes/scorm-roundtrip/playwright-report
+          if-no-files-found: ignore

@@ -4,6 +4,10 @@ game/dist/
 game/coverage/
 game/playwright-report/
 game/test-results/
+spikes/*/dist/
+spikes/*/artifacts/
+spikes/*/playwright-report/
+spikes/*/test-results/
 *.log
 
 # --- Python / pipeline ---
