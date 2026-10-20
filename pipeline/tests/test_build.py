@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import sys
 from pathlib import Path
@@ -9,7 +10,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from agroeco_pipeline.build import build_pack, run_build  # noqa: E402
-from agroeco_pipeline.validate import provenance_problems, validate_pack  # noqa: E402
+from agroeco_pipeline.validate import plausibility_problems, provenance_problems, validate_pack  # noqa: E402
 from fixtures import make_sources_tree  # noqa: E402
 
 
@@ -42,15 +43,41 @@ def test_content(tmp_path: Path) -> None:
     assert [r["n_lb_a"] for r in corn["fertilizer_by_population"]] == [180, 210, 240]
     assert {t["id"] for t in pack["tenure_options"]} == {"owned", "rented"}
     rented = next(t for t in pack["tenure_options"] if t["id"] == "rented")
-    assert rented["land_rent_usd_ac"]["value"] == 140.0
+    assert rented["land_rent_usd_ac"]["value"] == 140.0  # per-acre column E, not whole-farm D
+    assert rented["land_rent_usd_ac"]["prov"]["loc"] == "Budget!E20"
+    assert rented["benchmark_price_usd_bu"]["value"] == 4.2  # net farm-gate, same as the market
     assert [y["role"] for y in pack["weather_years"]] == ["dry", "median", "wet"]
     assert len(pack["weather_years"][0]["daily"]["et0_mm"]) == 365
     assert {u["dominant_component"]["name"] for u in pack["soil_units"]} == {"Blanton", "Bonneau"}
     assert {f["id"] for f in pack["review_flags"]} >= {"corn-n-rule", "custom-rates-florida-adjustment"}
-    assert pack["market_channels"][0]["price_usd_bu"]["value"] == 4.5
+    market = pack["market_channels"][0]
+    assert market["price_basis"] == "net_farm_gate"
+    assert market["price_usd_bu"]["value"] == 4.2
+    assert market["price_usd_bu"]["prov"]["loc"] == "Budget!C12"
+    assert market["gross_price_usd_bu"]["value"] == 4.5
+    assert "hauling_usd_ac" not in market  # already deducted from the net price
     station = pack["weather_station"]
     assert station["prov"]["sources"] == ["fawn-station-locations"]
     assert "location_source" not in station and "location_loc" not in station
+
+
+def test_whole_farm_rent_is_rejected(tmp_path: Path) -> None:
+    """The bug found in the spot-check: $40,000 whole-farm rent read as $/acre."""
+    pack = _build(tmp_path)
+    rented = next(t for t in pack["tenure_options"] if t["id"] == "rented")
+    rented["land_rent_usd_ac"]["value"] = 40000.0
+    problems = plausibility_problems(pack)
+    assert any("land_rent_usd_ac = 40000.0" in p and "whole-farm" in p for p in problems)
+
+
+def test_implausible_price_and_net_above_gross_are_rejected(tmp_path: Path) -> None:
+    # Round-trip through JSON (as the written pack is) so shared sub-objects become independent.
+    pack = json.loads(json.dumps(_build(tmp_path)))
+    pack["tenure_options"][0]["benchmark_price_usd_bu"]["value"] = 861.0
+    pack["market_channels"][0]["price_usd_bu"]["value"] = 5.0
+    problems = plausibility_problems(pack)
+    assert any("benchmark_price_usd_bu = 861.0" in p for p in problems)
+    assert any("net price 5.0 exceeds gross price 4.5" in p for p in problems)
 
 
 def test_build_is_byte_deterministic(tmp_path: Path) -> None:

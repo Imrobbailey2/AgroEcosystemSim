@@ -99,18 +99,22 @@ def make_sources_tree(root: Path) -> Path:
                        "om_r": 1.0, "dbthirdbar_r": 1.5, "wthirdbar_r": fc, "wfifteenbar_r": wp,
                        "awc_r": 0.06, "ksat_r": 40, "ph1to1h2o_r": 5.5, "cec7_r": 3})
     write_json(ex / "sda_horizons.json", hz)
+    # Same column layout as the real 2026 workbooks: per-unit values in C, per-acre
+    # hauling in D, and a land-rent row holding the whole-farm total (D) before the
+    # per-acre value (E).
     lines = [
         ("Crop yield (units/acre)", [["C10", 205.0]]),
         ("Average delivered gross price ($/unit)", [["C11", 4.5]]),
-        ("Hauling cost", [["C12", 24.6]]),
-        ("Annual interest rate", [["C13", 0.08]]),
+        ("Net farm-gate crop sales revenue", [["C12", 4.2], ["D12", 861.0]]),
+        ("Hauling cost", [["D13", 24.6]]),
+        ("Annual interest rate", [["C14", 0.08]]),
     ]
     for tenure in ("owned", "rented"):
-        rows = [{"label": lab, "sheet": "Budget", "label_cell": "A1", "occurrence": 0,
+        rows = [{"label": lab, "sheet": "Budget", "label_cell": "B1", "occurrence": 0,
                  "values": json.dumps(v)} for lab, v in lines]
         if tenure == "rented":
-            rows.append({"label": "Land rental cost", "sheet": "Budget", "label_cell": "A20",
-                         "occurrence": 0, "values": json.dumps([["C20", 140.0]])})
+            rows.append({"label": "Land rental cost", "sheet": "Budget", "label_cell": "B20",
+                         "occurrence": 0, "values": json.dumps([["D20", 19600.0], ["E20", 140.0]])})
         write_csv(ex / f"budget_{tenure}.csv", rows, ["label", "sheet", "label_cell", "occurrence", "values"])
     write_json(ex / "station.json", {"latitude": 30.3, "longitude": -82.9, "elevation_m": 50.0,
                                      "station_id": 170, "name": "Live Oak",
