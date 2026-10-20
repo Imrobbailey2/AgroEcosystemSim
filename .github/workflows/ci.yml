@@ -76,6 +76,15 @@ jobs:
         run: ruff check pipeline scripts
       - name: Tests (pytest)
         run: python -m pytest pipeline/tests scripts/tests
+      - name: Data pack is reproducible and valid
+        shell: bash
+        run: |
+          if [ -f pipeline/sources/extracted/suwannee/fetch-lock.json ]; then
+            agroeco-pipeline build --region suwannee --check
+            agroeco-pipeline validate data/packs/suwannee-v0.1.0.json
+          else
+            echo "::notice::No fetched data yet. Run the 'Fetch sources' workflow to create it."
+          fi
 
   scorm-spike:
     name: SCORM round-trip spike (build, test, package)

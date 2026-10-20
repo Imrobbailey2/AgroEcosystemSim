@@ -1,0 +1,2 @@
+operation_id,survey_label,unit,range_low,range_high,source,locator
+combine_corn,"Combine, irrigated corn",acre,25,45,ufifas-custom-rates-nfl-2000,Table 1 Harvesting

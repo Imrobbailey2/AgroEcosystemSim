@@ -1,0 +1,11 @@
+operation_id,survey_label,survey_section,unit,average,median,high,low,source,locator
+disk_harrow,Disk-Harrow/Cultipacker,Land Preparation,acre,21.74,20.00,58.00,8.00,uga-custom-rates-2024,Land Preparation table
+plant_corn,Corn,Planting Operations,acre,27.00,23.00,60.00,12.00,uga-custom-rates-2024,Planting Operations table
+plant_cover_crop,Cover Crops,Planting Operations,acre,20.79,20.00,40.00,8.00,uga-custom-rates-2024,Planting Operations table
+spread_lime,Spread Lime/Gypsum,Spraying Operations,acre,14.30,10.00,45.00,1.00,uga-custom-rates-2024,Spraying Operations table
+broadcast_fertilizer,Broadcast Fertilizer,Spraying Operations,acre,12.36,10.00,45.00,2.00,uga-custom-rates-2024,Spraying Operations table
+side_dress_fertilizer,Side Dress Fertilizer,Spraying Operations,acre,18.44,10.00,81.00,5.00,uga-custom-rates-2024,Spraying Operations table
+ground_spray,Ground Apply Spray,Spraying Operations,acre,14.88,10.00,50.00,8.00,uga-custom-rates-2024,Spraying Operations table
+combine_corn,Combine Corn,Harvest Operations,acre,58.50,55.00,90.00,40.00,uga-custom-rates-2024,Harvest Operations table
+haul_grain,Haul Grain/Beans,Hauling Operation,mile,3.11,3.00,5.00,1.00,uga-custom-rates-2024,Hauling Operation table
+farm_labor,Farm Labor,Labor,hour,15.14,15.00,22.00,8.00,uga-custom-rates-2024,Labor table

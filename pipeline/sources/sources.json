@@ -1,0 +1,143 @@
+{
+  "_comment": "Source registry. Every data-pack record must cite at least one id below. Copyrighted files are never committed; only URLs, checksums and transcribed facts.",
+  "sources": [
+    {
+      "id": "sl129",
+      "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops (SL129/SS163)",
+      "authors": "Mylavarapu, R., Singh, H., and Sidhu, S. S.",
+      "publisher": "UF/IFAS Extension, Department of Soil, Water, and Ecosystem Sciences",
+      "year": "2025",
+      "edition": "Revised September 2025 (original June 1997)",
+      "url": "https://ask.ifas.ufl.edu/publication/SS163",
+      "doi": "10.32473/EDIS-SS163-2021",
+      "accessed": "2026-10-20",
+      "license": "Copyright University of Florida. Numeric recommendations transcribed as facts with citation; text not reproduced.",
+      "kind": "manual"
+    },
+    {
+      "id": "ufifas-corn-n-interim",
+      "title": "Corn - UF/IFAS Nutrient Management Program (interim N recommendation of 1.37 lb N per bushel, approved September 3, 2025)",
+      "authors": "UF/IFAS Nutrient Management Program",
+      "publisher": "University of Florida, IFAS",
+      "year": "2025",
+      "url": "https://bmp.ifas.ufl.edu/crop-recommendations/corn/",
+      "accessed": "2026-10-20",
+      "license": "Copyright University of Florida. Numeric values transcribed as facts with citation.",
+      "kind": "manual"
+    },
+    {
+      "id": "ss757",
+      "title": "Nitrogen Fertilizer Guidelines for Field Corn Production in Florida (SL541/SS757)",
+      "authors": "UF/IFAS Extension",
+      "publisher": "UF/IFAS Extension",
+      "year": "2025",
+      "url": "https://ask.ifas.ufl.edu/publication/SS757",
+      "accessed": "2026-10-20",
+      "license": "Copyright University of Florida. Cited for context only.",
+      "kind": "reference"
+    },
+    {
+      "id": "svaec-corn-2026-ct-owned",
+      "title": "Corn Grain Budget 2026 - SV Irrigated - Conventional Till - Owned Land",
+      "authors": "Athearn, K. R.",
+      "publisher": "UF/IFAS North Florida Research and Education Center - Suwannee Valley",
+      "year": "2026",
+      "url": "https://svaec.ifas.ufl.edu/media/svaecifasufledu/docs/excel/agribusiness/FieldCornBudget2026_Grain-Irrig-CT_Owned_260209.xlsx",
+      "landing_page": "https://svaec.ifas.ufl.edu/agribusiness/farm-enterprise-budgets/",
+      "accessed": "2026-10-20",
+      "license": "Copyright University of Florida. Workbook not committed; values extracted with cell references and cited.",
+      "kind": "fetched"
+    },
+    {
+      "id": "svaec-corn-2026-ct-rented",
+      "title": "Corn Grain Budget 2026 - SV Irrigated - Conventional Till - Rented Land",
+      "authors": "Athearn, K. R.",
+      "publisher": "UF/IFAS North Florida Research and Education Center - Suwannee Valley",
+      "year": "2026",
+      "url": "https://svaec.ifas.ufl.edu/media/svaecifasufledu/docs/excel/agribusiness/FieldCornBudget2026_Grain-Irrig-CT_Rented_260209.xlsx",
+      "landing_page": "https://svaec.ifas.ufl.edu/agribusiness/farm-enterprise-budgets/",
+      "accessed": "2026-10-20",
+      "license": "Copyright University of Florida. Workbook not committed; values extracted with cell references and cited.",
+      "kind": "fetched"
+    },
+    {
+      "id": "ssurgo-fl121",
+      "title": "Soil Survey Geographic (SSURGO) Database for Suwannee County, Florida (FL121), via Soil Data Access",
+      "authors": "Soil Survey Staff, Natural Resources Conservation Service, United States Department of Agriculture",
+      "publisher": "USDA-NRCS",
+      "year": "current",
+      "url": "https://sdmdataaccess.sc.egov.usda.gov/tabular/post.rest",
+      "accessed": "set by fetch (see fetch-lock.json)",
+      "license": "US Government work, public domain. Cite USDA-NRCS as the data source.",
+      "kind": "fetched"
+    },
+    {
+      "id": "fawn-gapfree-liveoak-170",
+      "title": "LiveOak_170 (FAWN Yearly CSV Data, Gap Free, 2005-2020)",
+      "authors": "Peeling, J. A., Judge, J., Misra, V., Jayasankar, C. B., and Lusher, R.",
+      "publisher": "figshare",
+      "year": "2023",
+      "url": "https://figshare.com/articles/dataset/LiveOak_170/24442402",
+      "doi": "10.6084/m9.figshare.24442402",
+      "accessed": "set by fetch (see fetch-lock.json)",
+      "license": "CC BY 4.0",
+      "kind": "fetched"
+    },
+    {
+      "id": "fawn-gapfree-paper",
+      "title": "Gap-free 16-year (2005-2020) sub-diurnal surface meteorological observations across Florida",
+      "authors": "Peeling, J. A., Judge, J., Misra, V., et al.",
+      "publisher": "Scientific Data 10, 907",
+      "year": "2023",
+      "url": "https://doi.org/10.1038/s41597-023-02826-4",
+      "doi": "10.1038/s41597-023-02826-4",
+      "accessed": "2026-10-20",
+      "license": "Cited as method reference.",
+      "kind": "reference"
+    },
+    {
+      "id": "fao56",
+      "title": "Crop evapotranspiration: Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+      "authors": "Allen, R. G., Pereira, L. S., Raes, D., and Smith, M.",
+      "publisher": "FAO, Rome",
+      "year": "1998",
+      "url": "https://www.fao.org/4/x0490e/x0490e00.htm",
+      "accessed": "2026-10-20",
+      "license": "Cited as method reference (equations implemented, text not reproduced).",
+      "kind": "reference"
+    },
+    {
+      "id": "uga-custom-rates-2024",
+      "title": "2024 Georgia Custom Rate Survey Summary",
+      "authors": "University of Georgia Cooperative Extension, Department of Agricultural and Applied Economics",
+      "publisher": "University of Georgia",
+      "year": "2024",
+      "url": "https://agecon.uga.edu/content/dam/caes-subsite/ag-econ/documents/extension/Decision%20Aids/Georgia%20Custom%20Rate%20Survey%20Summary%202024.pdf",
+      "accessed": "2026-10-20",
+      "license": "Copyright University of Georgia. Survey statistics transcribed as facts with citation.",
+      "kind": "manual"
+    },
+    {
+      "id": "ufifas-custom-rates-nfl-2000",
+      "title": "Custom Rates for North Florida, 2000",
+      "authors": "Adapted from material by T. Hewitt and G. Mikulecky",
+      "publisher": "UF/IFAS",
+      "year": "2000",
+      "url": "https://programs.ifas.ufl.edu/media/programsifasufledu/sfbf/docs/forage-budgets/Custom-Rates-for-North-Florida.pdf",
+      "accessed": "2026-10-20",
+      "license": "Copyright University of Florida. Used as a cross-check only.",
+      "kind": "manual"
+    },
+    {
+      "id": "agroeco-adjustments",
+      "title": "AgroEcosystemSim project adjustments (documented methods awaiting expert review)",
+      "authors": "AgroEcosystemSim project",
+      "publisher": "This repository",
+      "year": "2026",
+      "url": "https://github.com/Imrobbailey2/AgroEcosystemSim/blob/main/pipeline/sources/review/needs-expert-review.json",
+      "accessed": "2026-10-20",
+      "license": "MIT",
+      "kind": "project"
+    }
+  ]
+}

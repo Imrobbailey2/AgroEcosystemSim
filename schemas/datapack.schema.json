@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Imrobbailey2/AgroEcosystemSim/schemas/datapack.schema.json",
+  "title": "AgroEcosystemSim data pack",
+  "description": "Cited regional data consumed by the game engine. Every numeric value is covered by a 'prov' object on itself or a parent.",
+  "type": "object",
+  "required": [
+    "format", "format_version", "pack_version", "region", "inputs", "sources", "review_flags",
+    "soil_test", "soil_units", "crops", "custom_operations", "budgets", "tenure_options",
+    "market_channels", "weather_station", "weather_years"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "format": {"const": "agroeco-datapack"},
+    "format_version": {"const": 1},
+    "pack_version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "region": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {"id": {"type": "string"}, "name": {"type": "string"}}
+    },
+    "inputs": {
+      "type": "object",
+      "required": ["fetch_lock_sha256"],
+      "properties": {"fetch_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+    },
+    "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}},
+    "review_flags": {"type": "array", "items": {"$ref": "#/$defs/reviewFlag"}},
+    "soil_test": {
+      "type": "object",
+      "required": ["extractant", "ratings", "lime_rules"],
+      "properties": {
+        "extractant": {"const": "Mehlich-3"},
+        "ratings": {"type": "array", "minItems": 9, "items": {"$ref": "#/$defs/rating"}},
+        "lime_rules": {"type": "array", "items": {"$ref": "#/$defs/keyValue"}}
+      }
+    },
+    "soil_units": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/soilUnit"}},
+    "crops": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/crop"}},
+    "custom_operations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/customOperation"}},
+    "budgets": {
+      "type": "object",
+      "required": ["owned", "rented"],
+      "additionalProperties": {"$ref": "#/$defs/budget"}
+    },
+    "tenure_options": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "budget", "benchmark_yield_bu_ac", "benchmark_price_usd_bu"],
+        "properties": {
+          "id": {"enum": ["owned", "rented"]},
+          "benchmark_yield_bu_ac": {"$ref": "#/$defs/citedNumber"},
+          "benchmark_price_usd_bu": {"$ref": "#/$defs/citedNumber"},
+          "land_rent_usd_ac": {"$ref": "#/$defs/citedNumber"}
+        },
+        "if": {"properties": {"id": {"const": "rented"}}},
+        "then": {"required": ["land_rent_usd_ac"]}
+      }
+    },
+    "market_channels": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/marketChannel"}},
+    "weather_station": {
+      "type": "object",
+      "required": ["latitude", "longitude", "elevation_m", "station_id", "prov"],
+      "properties": {
+        "latitude": {"type": "number", "minimum": 24, "maximum": 31.5},
+        "longitude": {"type": "number", "minimum": -88, "maximum": -79},
+        "elevation_m": {"type": "number", "minimum": -5, "maximum": 120},
+        "prov": {"$ref": "#/$defs/prov"}
+      }
+    },
+    "weather_years": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/weatherYear"}}
+  },
+  "$defs": {
+    "prov": {
+      "type": "object",
+      "required": ["sources", "loc"],
+      "properties": {
+        "sources": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "loc": {"type": "string", "minLength": 1},
+        "method": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "citedNumber": {
+      "type": "object",
+      "required": ["value", "prov"],
+      "properties": {"value": {"type": "number"}, "prov": {"$ref": "#/$defs/prov"}},
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": ["id", "title", "url", "license", "accessed", "kind"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "kind": {"enum": ["manual", "fetched", "reference", "project"]}
+      }
+    },
+    "reviewFlag": {
+      "type": "object",
+      "required": ["id", "title", "status", "current_default"],
+      "properties": {"status": {"enum": ["open", "resolved"]}}
+    },
+    "rating": {
+      "type": "object",
+      "required": ["nutrient", "rating", "gt_mg_kg", "le_mg_kg", "prov"],
+      "properties": {
+        "nutrient": {"enum": ["P", "K", "Mg"]},
+        "rating": {"enum": ["Low", "Medium", "High"]},
+        "gt_mg_kg": {"type": ["number", "null"]},
+        "le_mg_kg": {"type": ["number", "null"]}
+      }
+    },
+    "keyValue": {
+      "type": "object",
+      "required": ["key", "value", "unit", "prov"]
+    },
+    "soilLayer": {
+      "type": "object",
+      "required": ["chkey", "top_cm", "bottom_cm", "theta_fc", "theta_wp"],
+      "properties": {
+        "top_cm": {"type": "number", "minimum": 0},
+        "bottom_cm": {"type": "number", "exclusiveMinimum": 0},
+        "theta_fc": {"type": "number", "minimum": 0, "maximum": 0.6},
+        "theta_wp": {"type": "number", "minimum": 0, "maximum": 0.5}
+      }
+    },
+    "soilUnit": {
+      "type": "object",
+      "required": ["id", "mukey", "muname", "dominant_component", "layers", "taw_mm_top_100cm", "prov"],
+      "properties": {
+        "layers": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/soilLayer"}},
+        "taw_mm_top_100cm": {"type": "number", "minimum": 0}
+      }
+    },
+    "crop": {
+      "type": "object",
+      "required": ["id", "target_ph", "fertilizer_by_population", "n_rules", "prov"],
+      "properties": {
+        "n_rules": {
+          "type": "object",
+          "required": ["default", "rules", "review_flag"],
+          "properties": {"rules": {"type": "array", "minItems": 2}}
+        }
+      }
+    },
+    "customOperation": {
+      "type": "object",
+      "required": ["id", "unit", "rate_usd", "survey", "florida_adjustment", "prov"],
+      "properties": {
+        "unit": {"enum": ["acre", "mile", "hour", "ton", "bushel"]},
+        "rate_usd": {"type": "number", "minimum": 0}
+      }
+    },
+    "budget": {
+      "type": "object",
+      "required": ["source", "lines"],
+      "properties": {
+        "lines": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["label", "sheet", "label_cell", "values", "prov"]
+          }
+        }
+      }
+    },
+    "marketChannel": {
+      "type": "object",
+      "required": ["id", "name", "price_usd_bu", "prov"],
+      "properties": {"price_usd_bu": {"$ref": "#/$defs/citedNumber"}}
+    },
+    "weatherYear": {
+      "type": "object",
+      "required": ["id", "year", "role", "season", "daily", "prov"],
+      "properties": {
+        "role": {"enum": ["dry", "median", "wet"]},
+        "daily": {
+          "type": "object",
+          "required": ["doy", "tmax_c", "tmin_c", "rhmax_pct", "rhmin_pct", "rain_mm", "solar_mj_m2", "wind2m_ms", "et0_mm"],
+          "additionalProperties": {"type": "array", "minItems": 365, "maxItems": 366}
+        }
+      }
+    }
+  }
+}

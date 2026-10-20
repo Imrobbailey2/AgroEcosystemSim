@@ -1,0 +1,13 @@
+footnote,key,value,unit,source,locator
+104,preplant_p2o5_fraction,1.0,fraction,sl129,Footnote 104
+104,preplant_k2o_fraction,0.3,fraction,sl129,Footnote 104
+104,preplant_n,30,lb N/A,sl129,Footnote 104
+104,sidedress_k2o_fraction,0.7,fraction,sl129,Footnote 104
+104,sidedress_k2o_weeks_after_planting,4,weeks,sl129,Footnote 104
+104,remaining_n,180,lb N/A,sl129,Footnote 104
+104,remaining_n_min_sidedressings,3,count,sl129,Footnote 104
+104,one_sidedressing_at_weeks,4,weeks,sl129,Footnote 104
+120,sulfur_min,15,lb S/A,sl129,Footnote 120
+120,sulfur_max,20,lb S/A,sl129,Footnote 120
+120,sulfur_form,sulfate,text,sl129,Footnote 120
+124,advisory,true,flag,sl129,Footnote 124

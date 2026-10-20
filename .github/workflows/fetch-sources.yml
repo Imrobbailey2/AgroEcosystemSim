@@ -1,0 +1,81 @@
+name: Fetch sources
+
+# Manually started. Downloads SSURGO soils, UF/IFAS budgets and FAWN weather,
+# writes citable extracts plus a checksum lock, rebuilds the data pack, and
+# pushes everything to a new data/fetch-<run id> branch for review as a PR.
+# Copyrighted raw files (budget workbooks) are never committed.
+
+on:
+  workflow_dispatch:
+    inputs:
+      region:
+        description: Region to fetch
+        required: true
+        default: suwannee
+        type: choice
+        options: [suwannee]
+      only:
+        description: "Optional subset: any of 'soils budgets weather' (blank = all)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fetch-sources
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pipeline
+        run: python -m pip install -e "./pipeline[dev]"
+      - name: Fetch and extract
+        env:
+          REGION: ${{ inputs.region }}
+          ONLY: ${{ inputs.only }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "$ONLY" ]; then
+            # shellcheck disable=SC2086
+            agroeco-pipeline fetch --region "$REGION" --only $ONLY
+          else
+            agroeco-pipeline fetch --region "$REGION"
+          fi
+      - name: Build and validate data pack
+        env:
+          REGION: ${{ inputs.region }}
+        run: agroeco-pipeline build --region "$REGION"
+      - name: Data guard
+        run: python scripts/check_forbidden.py
+      - name: Push data branch
+        env:
+          REGION: ${{ inputs.region }}
+          BRANCH: data/fetch-${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add "pipeline/sources/extracted/$REGION" data/packs
+          if git diff --cached --quiet; then
+            echo "::notice::No changes from this fetch."
+            exit 0
+          fi
+          git commit -m "data: fetch $REGION sources (run ${{ github.run_id }})"
+          git push origin "$BRANCH"
+          {
+            echo "### Data branch pushed"
+            echo ""
+            echo "Open a pull request from \`$BRANCH\` into \`main\`, then complete"
+            echo "\`docs/increment-2-spot-check.md\`."
+          } >> "$GITHUB_STEP_SUMMARY"

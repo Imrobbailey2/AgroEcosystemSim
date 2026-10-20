@@ -1,0 +1,5 @@
+key,value,unit,source,locator
+lime_requirement_method,Adams-Evans buffer,text,sl129,General Background
+lime_from_ph_alone_valid,false,flag,sl129,General Background
+lime_target_ph_source,crop target pH (Table 2),text,sl129,General Background
+soil_test_extractant,Mehlich-3,text,sl129,General Background

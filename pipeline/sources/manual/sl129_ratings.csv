@@ -1,0 +1,10 @@
+nutrient,rating,gt_mg_kg,le_mg_kg,source,locator,notes
+P,Low,,25,sl129,Table 1,Published as <=25
+P,Medium,25,45,sl129,Table 1,Published as 26-45 (integer mg/kg); >25 used for decimals
+P,High,45,,sl129,Table 1,Published as >45
+K,Low,,35,sl129,Table 1,Published as <=35
+K,Medium,35,60,sl129,Table 1,Published as 36-60 (integer mg/kg); >35 used for decimals
+K,High,60,,sl129,Table 1,Published as >60
+Mg,Low,,20,sl129,Table 1,Published as <=20
+Mg,Medium,20,40,sl129,Table 1,Published as 21-40 (integer mg/kg); >20 used for decimals
+Mg,High,40,,sl129,Table 1,Published as >40
