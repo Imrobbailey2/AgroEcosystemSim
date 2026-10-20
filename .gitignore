@@ -1,0 +1,35 @@
+# --- Node / game ---
+node_modules/
+game/dist/
+game/coverage/
+game/playwright-report/
+game/test-results/
+*.log
+
+# --- Python / pipeline ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+pipeline/build/
+pipeline/out/
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- PRIVATE DATA: never commit (also enforced in CI by .forbidden-paths) ---
+uf-validation/
+uf_validation/
+uf-data/
+uf_data/
+private/
+calibration-private/
+*.ufdata.*
+.env
+.env.*

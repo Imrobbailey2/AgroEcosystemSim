@@ -1,0 +1,8 @@
+# Repo-wide ruff configuration (applies to pipeline/ and scripts/).
+# Rules are listed explicitly so new ruff releases cannot change what CI checks.
+line-length = 100
+target-version = "py311"
+src = ["pipeline/src", "pipeline/tests", "scripts"]
+
+[lint]
+select = ["E", "F", "I", "UP", "B"]
