@@ -8,7 +8,7 @@ and money in Florida. It is packaged as SCORM 2004 3rd Edition for Canvas.
 
 **Live build:** https://imrobbailey2.github.io/AgroEcosystemSim/
 
-> Status: **Increment 0 (toolchain)**. The live page is a placeholder.
+> Status: **Increment 1 (Canvas round-trip test)**. The live page is a placeholder.
 
 ## First playable version (planned)
 
@@ -26,6 +26,8 @@ through Canvas. Every screen works from the keyboard.
 | `pipeline/` | Python 3.11+ data-pack builder (`agroeco-pipeline`), tested with pytest. |
 | `schemas/` | JSON Schemas shared by the game and the pipeline. |
 | `scripts/` | Repository tooling, including the forbidden-data guard. |
+| `spikes/scorm-roundtrip/` | Increment 1 SCORM 2004 Canvas save/resume/score test package. |
+| `docs/` | Test checklists and project notes. |
 | `.github/workflows/` | CI (lint, tests, build, accessibility) and GitHub Pages deployment. |
 
 ## Quick start

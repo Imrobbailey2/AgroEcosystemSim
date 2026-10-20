@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgroEcosystemSim: SCORM round-trip test</title>
+    <style>
+      body { font-family: system-ui, sans-serif; line-height: 1.5; color: #1b1b1b; background: #fff; margin: 0; }
+      main { max-width: 52rem; margin: 0 auto; padding: 1rem; }
+      dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; }
+      dt { font-weight: 700; }
+      dd { margin: 0; overflow-wrap: anywhere; font-family: ui-monospace, monospace; }
+      .actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+      button { font: inherit; padding: 0.5rem 0.9rem; border: 2px solid #0b4f8a; background: #fff; color: #0b4f8a; border-radius: 4px; cursor: pointer; }
+      button:hover { background: #e8f0f8; }
+      button:disabled { border-color: #767676; color: #595959; cursor: not-allowed; background: #f2f2f2; }
+      :focus-visible { outline: 3px solid #0b4f8a; outline-offset: 2px; }
+      .result { font-weight: 700; padding: 0.5rem; border-left: 6px solid #767676; background: #f6f6f6; }
+      .result.ok { border-color: #1f7a3a; }
+      .result.bad { border-color: #b00020; }
+      #log { font-family: ui-monospace, monospace; font-size: 0.85rem; max-height: 22rem; overflow: auto; border: 1px solid #c4c4c4; padding: 0.5rem 0.5rem 0.5rem 2.5rem; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>SCORM round-trip test</h1>
+      <p>
+        Increment 1 test package for AgroEcosystemSim. It checks that the LMS saves,
+        resumes and scores a large compressed save. Follow
+        <code>docs/increment-1-canvas-checklist.md</code>.
+      </p>
+
+      <h2>Connection</h2>
+      <dl>
+        <dt>Mode</dt><dd id="mode" data-testid="mode">starting…</dd>
+        <dt>Entry</dt><dd id="entry" data-testid="entry">–</dd>
+        <dt>Stored save length</dt><dd id="stored-len" data-testid="stored-len">–</dd>
+        <dt>Stored reference</dt><dd id="stored-ref" data-testid="stored-ref">–</dd>
+        <dt>Stored score (scaled)</dt><dd id="stored-score" data-testid="stored-score">–</dd>
+      </dl>
+
+      <h2>Actions</h2>
+      <div class="actions" role="group" aria-label="Test actions">
+        <button type="button" id="btn-save-30k" disabled>Save about 30,000 characters</button>
+        <button type="button" id="btn-save-60k" disabled>Save about 60,000 characters (stress)</button>
+        <button type="button" id="btn-verify" disabled>Verify saved data</button>
+        <button type="button" id="btn-score" disabled>Report score 87 out of 100</button>
+        <button type="button" id="btn-interactions" disabled>Write 3 interaction records</button>
+        <button type="button" id="btn-exit" disabled>Exit session (suspend)</button>
+        <button type="button" id="btn-clear" hidden>Clear standalone data</button>
+      </div>
+
+      <h2>Result</h2>
+      <p id="result" class="result" role="status" data-testid="result">Waiting for connection…</p>
+
+      <h2>Log</h2>
+      <ol id="log" role="log" aria-label="SCORM call log"></ol>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
