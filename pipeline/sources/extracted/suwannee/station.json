@@ -1,0 +1,10 @@
+{
+  "elevation_m": 50.3,
+  "latitude": 30.305,
+  "location_loc": "Location Information for All Stations, Live Oak (Station ID 170)",
+  "location_source": "fawn-station-locations",
+  "longitude": -82.89876,
+  "name": "Live Oak",
+  "source": "fawn-gapfree-liveoak-170",
+  "station_id": 170
+}

@@ -1,0 +1,186 @@
+{
+  "downloads": [
+    {
+      "bytes": 268,
+      "note": "mapunits",
+      "sha256": "5e61f3023204e9c51c6bee84c0a80b5f68ba4113ff281c2c8d5898e62316a21e",
+      "source": "ssurgo-fl121",
+      "step": "soils",
+      "url": "https://sdmdataaccess.sc.egov.usda.gov/tabular/post.rest"
+    },
+    {
+      "bytes": 1313,
+      "note": "components",
+      "sha256": "c90655252f73f4d049bc40b68c790e63c04be1845ba23bada168fdf0a8d9d9a4",
+      "source": "ssurgo-fl121",
+      "step": "soils",
+      "url": "https://sdmdataaccess.sc.egov.usda.gov/tabular/post.rest"
+    },
+    {
+      "bytes": 3663,
+      "note": "horizons",
+      "sha256": "e9a44a6a33f9df0782f5f13f0e21cb25659d1907317c187cb27a7e1078b3e684",
+      "source": "ssurgo-fl121",
+      "step": "soils",
+      "url": "https://sdmdataaccess.sc.egov.usda.gov/tabular/post.rest"
+    },
+    {
+      "bytes": 151417,
+      "note": "",
+      "sha256": "0b3b6cbac1def357586fd25621ee2d225078c8bde7627334d19f8ec886d3a670",
+      "source": "svaec-corn-2026-ct-owned",
+      "step": "budgets",
+      "url": "https://svaec.ifas.ufl.edu/media/svaecifasufledu/docs/excel/agribusiness/FieldCornBudget2026_Grain-Irrig-CT_Owned_260209.xlsx"
+    },
+    {
+      "bytes": 151298,
+      "note": "",
+      "sha256": "4acf7efecf3edf715b19aad515f39b5fbf7cff46487db41f09c160f2587e51c3",
+      "source": "svaec-corn-2026-ct-rented",
+      "step": "budgets",
+      "url": "https://svaec.ifas.ufl.edu/media/svaecifasufledu/docs/excel/agribusiness/FieldCornBudget2026_Grain-Irrig-CT_Rented_260209.xlsx"
+    },
+    {
+      "bytes": 8627,
+      "note": "figshare article metadata",
+      "sha256": "720d678d26bb146e1afa934a3ca8b58d28d6cac506c6252b6d1c190b37279ca9",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://api.figshare.com/v2/articles/24442402"
+    },
+    {
+      "bytes": 3311165,
+      "note": "170_2005.csv",
+      "sha256": "cfe6e8baf7343cd600a2521b6e9355b464e7323aa8e588896c80aa7651e2e93f",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://ndownloader.figshare.com/files/43213572"
+    },
+    {
+      "bytes": 3386958,
+      "note": "170_2006.csv",
+      "sha256": "b047d8c97dc83894d2ca11a11285f5775aa1e01e06209b657c683f5c9ed22ca4",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://ndownloader.figshare.com/files/43213569"
+    },
+    {
+      "bytes": 3306865,
+      "note": "170_2007.csv",
+      "sha256": "3a5501dd0e2a65cb2fd0d461a304c89880f6603945a8ce2a1925762e73d534b1",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://ndownloader.figshare.com/files/43213563"
+    },
+    {
+      "bytes": 3355400,
+      "note": "170_2008.csv",
+      "sha256": "e3f808f174ad71f0d709a2cb0ce4f10f40de83348c2f0a013ab7cf06b3de7577",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://ndownloader.figshare.com/files/43213566"
+    },
+    {
+      "bytes": 3291824,
+      "note": "170_2009.csv",
+      "sha256": "aefeca266e62c2983af6da6e4646b504659e20f4a4e08d31d799f1511017f313",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://ndownloader.figshare.com/files/43213560"
+    },
+    {
+      "bytes": 3277935,
+      "note": "170_2010.csv",
+      "sha256": "c987381cb092b5e5f09ae0f9b1642fb3e74a343539c21ea3e00ba5c8d6623312",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://ndownloader.figshare.com/files/43213575"
+    },
+    {
+      "bytes": 3290492,
+      "note": "170_2011.csv",
+      "sha256": "c0c5ebd95816813f2cc583eac270b3540a9cf42f89ddf4350baec3900ea34406",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://ndownloader.figshare.com/files/43213578"
+    },
+    {
+      "bytes": 3295107,
+      "note": "170_2012.csv",
+      "sha256": "366a6c56e5a461a86b51ad13bc9874c958fcc773d595d38798b497c8c5d8140e",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://ndownloader.figshare.com/files/43213581"
+    },
+    {
+      "bytes": 3293447,
+      "note": "170_2013.csv",
+      "sha256": "74c56196d1ec442d49a1270c243516b9772196ff95a4ed96ea447970dfe7219a",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://ndownloader.figshare.com/files/43213584"
+    },
+    {
+      "bytes": 3280278,
+      "note": "170_2014.csv",
+      "sha256": "f2f225fad81e2934b87ac6fde5928053502def644cca1a5091a2924fcd7c8468",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://ndownloader.figshare.com/files/43213587"
+    },
+    {
+      "bytes": 3289359,
+      "note": "170_2015.csv",
+      "sha256": "a8792280d343a1f41494da3e49d1df5637718240b96fc0e753a53fb4633c33be",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://ndownloader.figshare.com/files/43213590"
+    },
+    {
+      "bytes": 3292220,
+      "note": "170_2016.csv",
+      "sha256": "07e4bdeb7b5c0100cd58b186b7c3d8d7dbc06e01c3f0eacf1f0be8a978115930",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://ndownloader.figshare.com/files/43213593"
+    },
+    {
+      "bytes": 3287846,
+      "note": "170_2017.csv",
+      "sha256": "a6d1308d0ccb90a5d4833a8bad6bb3988bbcf2430fde1c5c697351984ab07899",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://ndownloader.figshare.com/files/43213596"
+    },
+    {
+      "bytes": 3307064,
+      "note": "170_2018.csv",
+      "sha256": "218ae4e80e3b051eb8252a17320a94caf77225f3309ba3436d1c0e0b7941f64c",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://ndownloader.figshare.com/files/43213599"
+    },
+    {
+      "bytes": 3302714,
+      "note": "170_2019.csv",
+      "sha256": "1a04b3d9cfeb1672a011097ed752c6fb076f57492200e46c1a5a1994b2df3102",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://ndownloader.figshare.com/files/43213602"
+    },
+    {
+      "bytes": 3308280,
+      "note": "170_2020.csv",
+      "sha256": "abba36579c7230dfdcb3eaea6cc8e7bdd4a8676ca5c78e06dd351b4872e43829",
+      "source": "fawn-gapfree-liveoak-170",
+      "step": "weather",
+      "url": "https://ndownloader.figshare.com/files/43213605"
+    }
+  ],
+  "fetched_at": {
+    "budgets": "2026-10-20T19:58:05Z",
+    "soils": "2026-10-20T19:58:05Z",
+    "weather": "2026-10-20T19:58:05Z"
+  },
+  "region": "suwannee"
+}
