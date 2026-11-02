@@ -1254,11 +1254,11 @@
   "format": "agroeco-datapack",
   "format_version": 1,
   "inputs": {
-    "fetch_lock_sha256": "7bf5a75c66fadd1d5cf4060ec89b600c673e11c9955870386b63cb538b1b2a68",
+    "fetch_lock_sha256": "5ca5d7e84b37aaaa7400071b9994fc1789d74ba8af3eb4e65baeaaa980cc521c",
     "fetched_at": {
-      "budgets": "2026-10-20T19:58:05Z",
-      "soils": "2026-10-20T19:58:05Z",
-      "weather": "2026-10-20T19:58:05Z"
+      "budgets": "2026-11-02T15:25:46Z",
+      "soils": "2026-11-02T15:25:46Z",
+      "weather": "2026-11-02T15:25:46Z"
     }
   },
   "market_channels": [
