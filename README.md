@@ -8,7 +8,7 @@ and money in Florida. It is packaged as SCORM 2004 3rd Edition for Canvas.
 
 **Live build:** https://imrobbailey2.github.io/AgroEcosystemSim/
 
-> Status: **Increment 2 (Data pack v0)**. Increment 1 (Canvas round trip) passed. The live page is a placeholder.
+> Status: **Increment 2 (Data pack v0) complete**, pending the project owner's spot-check sign-off (see [docs/increment-2-spot-check.md](docs/increment-2-spot-check.md)). Increment 1 (Canvas round trip) passed. Next: **Increment 3**, the UI-free game engine that consumes `data/packs/suwannee-v0.1.0.json`. The live page is a placeholder.
 
 ## First playable version (planned)
 
