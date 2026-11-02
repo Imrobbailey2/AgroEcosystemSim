@@ -58,11 +58,12 @@
     {
       "id": "owned-land-costs",
       "title": "Owned land: property tax, utilities, other ownership costs, and land appreciation",
-      "status": "open",
+      "status": "deferred",
+      "deferred_on": "2026-11-02",
       "decision_owner": "Project owner",
       "current_default": "Not yet modelled: the 2026 owned budget carries $0 land rent (FieldDetails!E19) and $0 mortgage (FieldDetails!E20), so owned land currently has no land cost",
       "options": [],
-      "notes": "Decided 2026-10-20: owned land must carry property tax, utilities and other related ownership costs, and must gain value over the period of ownership. Sources and method are pending approval.",
+      "notes": "Decided 2026-10-20: owned land must carry property tax, utilities and other related ownership costs, and must gain value over the period of ownership. Sources and method are pending approval. Deferred to a later increment on 2026-11-02 by project-owner decision: no ownership-cost source is approved for Increment 2, so owned land carries no land cost for now; revisit when a cited source and method are approved.",
       "affects": ["tenure_options"],
       "sources": ["svaec-corn-2026-ct-owned"]
     }
