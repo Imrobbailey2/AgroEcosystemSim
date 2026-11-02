@@ -100,7 +100,7 @@
     "reviewFlag": {
       "type": "object",
       "required": ["id", "title", "status", "current_default"],
-      "properties": {"status": {"enum": ["open", "resolved"]}}
+      "properties": {"status": {"enum": ["open", "resolved", "deferred"]}}
     },
     "rating": {
       "type": "object",
