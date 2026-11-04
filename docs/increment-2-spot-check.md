@@ -53,7 +53,7 @@ Decisions recorded on 2026-10-20:
   (Deferred to a later increment on 2026-11-02 by project-owner decision — see the review
   register item `owned-land-costs`.)
 
-## Second-pass re-check of rows 8 and 10 (2026-11-02)
+## Second-pass re-check of rows 8 and 10 (2026-11-02, row 8 completed 2026-11-04)
 
 > **Second-pass sign-off is pending the project owner's signature.** The two
 > rows below are re-checked against the pack; the sign-off block at the end is
@@ -62,7 +62,7 @@ Decisions recorded on 2026-10-20:
 | # | Result | Notes |
 |---|---|---|
 | 10 | PASS | Dry year is `weather_years` role `dry` = station 170, 2010. Its `season` block (April 1 – August 31) reports `rain_mm` = 442.7 mm, the sum of the daily `rain_mm` over those dates. Matches FAWN Live Oak daily rain for the same window. |
-| 8 | PENDING REGENERATION | The source config and pipeline code are fixed on this branch (named-column picks; rent reads `FieldDetails!E19` ≈ $285.71, not the whole-farm total `FieldDetails!D19` = $40,000), but the committed `data/packs/suwannee-v0.1.0.json` has **not yet been rebuilt**, so it still shows `tenure_options[rented].land_rent_usd_ac` = 40000.0 at `FieldDetails!D19`. Re-check row 8 against the pack once the fetch → build → validate pipeline has regenerated it; the new plausibility checks and `pipeline/tests/test_validate.py` assert the $40,000 case is rejected and ~$285.71 passes. |
+| 8 | PASS | Pack regenerated on `fix-budget-columns` (commits `1298b3f`, `87a8b74`; CI green on `87a8b74`). `tenure_options[rented].land_rent_usd_ac` = 285.7142857142857 at `FieldDetails!E19` (source `svaec-corn-2026-ct-rented`), no longer the whole-farm total `FieldDetails!D19` = $40,000. Within 0 to revenue per acre (205 bu/A × $4.78/bu = $979.90/A). Related changes confirmed in the same pack: benchmark and market price = $4.78/bu at `Marketing!C27`, gross price $5.20/bu at `Marketing!C8`, `price_basis` = `net_farm_gate`, no separate hauling charge. |
 
 ## Results: second pass
 
