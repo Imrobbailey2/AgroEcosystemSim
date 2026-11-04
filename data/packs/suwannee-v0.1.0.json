@@ -1254,7 +1254,7 @@
   "format": "agroeco-datapack",
   "format_version": 1,
   "inputs": {
-    "fetch_lock_sha256": "33d165cf21775958888059afa60e1ddd9a02d0296700e49e467d3321e39dbcc4",
+    "fetch_lock_sha256": "7bf5a75c66fadd1d5cf4060ec89b600c673e11c9955870386b63cb538b1b2a68",
     "fetched_at": {
       "budgets": "2026-10-20T19:58:05Z",
       "soils": "2026-10-20T19:58:05Z",
