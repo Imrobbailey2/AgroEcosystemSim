@@ -1,0 +1,17 @@
+# Keep line endings identical on every platform. The data-pack build hashes
+# pipeline/sources/extracted/<region>/fetch-lock.json byte for byte, so a CRLF
+# checkout (Windows, core.autocrlf=true) produces a pack that CI rejects.
+* text=auto eol=lf
+
+# Binary files: never convert.
+*.xlsx binary
+*.xls binary
+*.zip binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
