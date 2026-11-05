@@ -7,7 +7,7 @@
   "required": [
     "format", "format_version", "pack_version", "region", "inputs", "sources", "review_flags",
     "soil_test", "soil_units", "crops", "custom_operations", "budgets", "tenure_options",
-    "market_channels", "weather_station", "weather_years"
+    "market_channels", "crop_insurance_options", "weather_station", "weather_years"
   ],
   "additionalProperties": false,
   "properties": {
@@ -53,13 +53,15 @@
           "id": {"enum": ["owned", "rented"]},
           "benchmark_yield_bu_ac": {"$ref": "#/$defs/citedNumber"},
           "benchmark_price_usd_bu": {"$ref": "#/$defs/citedNumber"},
-          "land_rent_usd_ac": {"$ref": "#/$defs/citedNumber"}
+          "land_rent_usd_ac": {"$ref": "#/$defs/citedNumber"},
+          "budget_total_net_revenue_usd_ac": {"$ref": "#/$defs/citedNumber"}
         },
         "if": {"properties": {"id": {"const": "rented"}}},
         "then": {"required": ["land_rent_usd_ac"]}
       }
     },
     "market_channels": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/marketChannel"}},
+    "crop_insurance_options": {"type": "array", "items": {"$ref": "#/$defs/cropInsuranceOption"}},
     "weather_station": {
       "type": "object",
       "required": ["latitude", "longitude", "elevation_m", "station_id", "prov"],
@@ -174,10 +176,29 @@
         "price_basis": {"enum": ["net_farm_gate", "delivered"]},
         "price_usd_bu": {"$ref": "#/$defs/citedNumber"},
         "gross_price_usd_bu": {"$ref": "#/$defs/citedNumber"},
-        "hauling_usd_ac": {"$ref": "#/$defs/citedNumber"}
+        "hauling_usd_ac": {"$ref": "#/$defs/citedNumber"},
+        "included_deductions": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/citedNumber"}
+        }
       },
       "if": {"properties": {"price_basis": {"const": "net_farm_gate"}}},
       "then": {"not": {"required": ["hauling_usd_ac"]}}
+    },
+    "cropInsuranceOption": {
+      "type": "object",
+      "required": [
+        "id", "name", "plan", "coverage_level", "premium_usd_ac", "default_purchased", "proceeds_modelled", "prov"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "plan": {"type": "string", "minLength": 1},
+        "coverage_level": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+        "premium_usd_ac": {"$ref": "#/$defs/citedNumber"},
+        "default_purchased": {"type": "boolean"},
+        "proceeds_modelled": {"type": "boolean"},
+        "prov": {"$ref": "#/$defs/prov"}
+      }
     },
     "weatherYear": {
       "type": "object",
