@@ -64,20 +64,29 @@ def _column(ref: str) -> str:
     return "".join(ch for ch in ref if ch.isalpha()).upper()
 
 
-def pick_value(lines: list[dict[str, str]], label: str, col: str) -> tuple[float, str]:
+def pick_value(
+    lines: list[dict[str, str]], label: str, col: str, sheet: str | None = None
+) -> tuple[float, str]:
     """Return (value, 'sheet!cell') from column `col` of the first `label` row that has one.
 
     Picking by column (not by position) matters because the same label row can hold
     different numbers in different workbooks: in the 2026 rented budget the
     "Land rental cost" row has the whole-farm total in D and the per-acre value in E.
+
+    `sheet` restricts the search to one worksheet. Use it when a label repeats on
+    several sheets: "Total net farm-gate crop revenue" appears on BudgetSummary
+    (whole-farm total in G) and on Marketing (per-acre value in D).
     """
     want = col.strip().upper()
     seen: list[str] = []
     for line in sorted(lines, key=lambda r: int(r["occurrence"])):
-        if line["label"] != label:
+        if line["label"] != label or (sheet is not None and line["sheet"] != sheet):
             continue
         for ref, val in json.loads(line["values"]):
             seen.append(f"{line['sheet']}!{ref}")
             if _column(ref) == want:
                 return float(val), f"{line['sheet']}!{ref}"
-    raise PipelineError(f"no numeric value in column {want} for budget label {label!r} (numeric cells: {seen})")
+    where = f" on sheet {sheet!r}" if sheet is not None else ""
+    raise PipelineError(
+        f"no numeric value in column {want} for budget label {label!r}{where} (numeric cells: {seen})"
+    )
