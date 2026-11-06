@@ -60,13 +60,24 @@ def extract_lines(
     return rows
 
 
-def pick_value(lines: list[dict[str, str]], label: str, pick: int) -> tuple[float, str]:
-    """Return (value, 'sheet!cell') for the first occurrence of `label` with a value."""
+def _column(ref: str) -> str:
+    return "".join(ch for ch in ref if ch.isalpha()).upper()
+
+
+def pick_value(lines: list[dict[str, str]], label: str, col: str) -> tuple[float, str]:
+    """Return (value, 'sheet!cell') from column `col` of the first `label` row that has one.
+
+    Picking by column (not by position) matters because the same label row can hold
+    different numbers in different workbooks: in the 2026 rented budget the
+    "Land rental cost" row has the whole-farm total in D and the per-acre value in E.
+    """
+    want = col.strip().upper()
+    seen: list[str] = []
     for line in sorted(lines, key=lambda r: int(r["occurrence"])):
         if line["label"] != label:
             continue
-        values = json.loads(line["values"])
-        if len(values) > pick:
-            ref, val = values[pick]
-            return float(val), f"{line['sheet']}!{ref}"
-    raise PipelineError(f"no numeric value #{pick} for budget label {label!r}")
+        for ref, val in json.loads(line["values"]):
+            seen.append(f"{line['sheet']}!{ref}")
+            if _column(ref) == want:
+                return float(val), f"{line['sheet']}!{ref}"
+    raise PipelineError(f"no numeric value in column {want} for budget label {label!r} (numeric cells: {seen})")

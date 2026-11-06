@@ -66,16 +66,19 @@
     ]
   },
   "budget_fields": {
-    "yield_bu_ac": {"label": "Crop yield (units/acre)", "pick": 0},
-    "price_usd_bu": {"label": "Average delivered gross price ($/unit)", "pick": 0},
-    "land_rent_usd_ac": {"label": "Land rental cost", "pick": 0},
-    "hauling_usd_ac": {"label": "Hauling cost", "pick": 0},
-    "operating_interest_rate": {"label": "Annual interest rate", "pick": 0}
+    "yield_bu_ac": {"label": "Crop yield (units/acre)", "col": "C", "required": true},
+    "price_usd_bu": {"label": "Average delivered gross price ($/unit)", "col": "C", "required": true},
+    "net_price_usd_bu": {"label": "Net farm-gate crop sales revenue", "col": "C", "required": true},
+    "land_rent_usd_ac": {"label": "Land rental cost", "col": "E", "required": true, "tenures": ["rented"]},
+    "hauling_usd_ac": {"label": "Hauling cost", "col": "D"},
+    "operating_interest_rate": {"label": "Annual interest rate", "col": "C"}
   },
   "market_channel": {
     "id": "local-buying-point",
     "name": "Local grain buying point",
-    "price_field": "price_usd_bu",
+    "price_basis": "net_farm_gate",
+    "price_field": "net_price_usd_bu",
+    "gross_price_field": "price_usd_bu",
     "hauling_field": "hauling_usd_ac",
     "crosscheck_haul_operation": "haul_grain"
   }

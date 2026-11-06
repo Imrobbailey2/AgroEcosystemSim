@@ -152,22 +152,21 @@ def budgets_block(region: dict[str, Any], extracted: Path) -> tuple[dict[str, An
         }
         fields: dict[str, Any] = {}
         for name, spec in region["budget_fields"].items():
-            if name == "land_rent_usd_ac" and b["tenure"] == "owned":
+            if b["tenure"] not in spec.get("tenures", [b["tenure"]]):
                 continue
             try:
-                value, ref = budget.pick_value(lines, spec["label"], spec["pick"])
-            except PipelineError:
-                if name in ("yield_bu_ac", "price_usd_bu") or (
-                    name == "land_rent_usd_ac" and b["tenure"] == "rented"
-                ):
-                    raise
+                value, ref = budget.pick_value(lines, spec["label"], spec["col"])
+            except PipelineError as exc:
+                if spec.get("required", False):
+                    raise PipelineError(f"{b['tenure']} budget, field {name}: {exc}") from exc
                 continue
             fields[name] = {"value": value, "prov": _prov(b["source"], ref)}
         picked[b["tenure"]] = fields
     return budgets, picked
 
 
-def tenure_block(picked: dict[str, dict]) -> list[dict[str, Any]]:
+def tenure_block(picked: dict[str, dict], price_field: str) -> list[dict[str, Any]]:
+    """Tenure options; the benchmark price is the same one the market channel pays."""
     out = []
     for tenure in sorted(picked):
         f = picked[tenure]
@@ -175,7 +174,7 @@ def tenure_block(picked: dict[str, dict]) -> list[dict[str, Any]]:
             "id": tenure,
             "budget": tenure,
             "benchmark_yield_bu_ac": f["yield_bu_ac"],
-            "benchmark_price_usd_bu": f["price_usd_bu"],
+            "benchmark_price_usd_bu": f[price_field],
         }
         if tenure == "rented":
             entry["land_rent_usd_ac"] = f["land_rent_usd_ac"]
@@ -189,11 +188,16 @@ def market_block(region: dict[str, Any], picked: dict[str, dict], ops: list[dict
     channel: dict[str, Any] = {
         "id": m["id"],
         "name": m["name"],
+        "price_basis": m["price_basis"],
         "price_usd_bu": base[m["price_field"]],
         "price_series": None,
         "prov": base[m["price_field"]]["prov"],
     }
-    if m["hauling_field"] in base:
+    if m.get("gross_price_field") in base:
+        channel["gross_price_usd_bu"] = base[m["gross_price_field"]]
+    # A net farm-gate price already has hauling and marketing deducted, so hauling
+    # is only carried separately when the channel pays a delivered (gross) price.
+    if m["price_basis"] == "delivered" and m.get("hauling_field") in base:
         channel["hauling_usd_ac"] = base[m["hauling_field"]]
     haul = next((o for o in ops if o["id"] == m["crosscheck_haul_operation"]), None)
     if haul:
@@ -269,7 +273,7 @@ def build_pack(region_id: str) -> dict[str, Any]:
         "crops": [crop_block(manual, review)],
         "custom_operations": ops,
         "budgets": budgets,
-        "tenure_options": tenure_block(picked),
+        "tenure_options": tenure_block(picked, region["market_channel"]["price_field"]),
         "market_channels": market_block(region, picked, ops),
         "weather_station": station,
         "weather_years": years,
