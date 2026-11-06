@@ -29,6 +29,19 @@
           "values": "[[\"C8\", 5.2]]"
         },
         {
+          "label": "Revenue Protection, 75%",
+          "label_cell": "B30",
+          "occurrence": 0,
+          "prov": {
+            "loc": "Marketing!B30",
+            "sources": [
+              "svaec-corn-2026-ct-owned"
+            ]
+          },
+          "sheet": "Marketing",
+          "values": "[[\"C30\", 0.05951219512195122], [\"D30\", 12.2]]"
+        },
+        {
           "label": "Gross revenue from crop sales ($/acre)",
           "label_cell": "B9",
           "occurrence": 0,
@@ -40,6 +53,32 @@
           },
           "sheet": "Marketing",
           "values": "[[\"C9\", 1066.0]]"
+        },
+        {
+          "label": "Drying fees",
+          "label_cell": "B12",
+          "occurrence": 0,
+          "prov": {
+            "loc": "Marketing!B12",
+            "sources": [
+              "svaec-corn-2026-ct-owned"
+            ]
+          },
+          "sheet": "Marketing",
+          "values": "[[\"C12\", 0.12], [\"D12\", 24.599999999999998]]"
+        },
+        {
+          "label": "Buying point hauling charges",
+          "label_cell": "B14",
+          "occurrence": 0,
+          "prov": {
+            "loc": "Marketing!B14",
+            "sources": [
+              "svaec-corn-2026-ct-owned"
+            ]
+          },
+          "sheet": "Marketing",
+          "values": "[[\"C14\", 0.3], [\"D14\", 61.5]]"
         },
         {
           "label": "Hauling cost",
@@ -346,6 +385,19 @@
           "values": "[[\"D19\", 40000.0], [\"E19\", 285.7142857142857]]"
         },
         {
+          "label": "Revenue Protection, 75%",
+          "label_cell": "B30",
+          "occurrence": 0,
+          "prov": {
+            "loc": "Marketing!B30",
+            "sources": [
+              "svaec-corn-2026-ct-rented"
+            ]
+          },
+          "sheet": "Marketing",
+          "values": "[[\"C30\", 0.05951219512195122], [\"D30\", 12.2]]"
+        },
+        {
           "label": "Gross revenue from crop sales ($/acre)",
           "label_cell": "B9",
           "occurrence": 0,
@@ -357,6 +409,32 @@
           },
           "sheet": "Marketing",
           "values": "[[\"C9\", 1066.0]]"
+        },
+        {
+          "label": "Drying fees",
+          "label_cell": "B12",
+          "occurrence": 0,
+          "prov": {
+            "loc": "Marketing!B12",
+            "sources": [
+              "svaec-corn-2026-ct-rented"
+            ]
+          },
+          "sheet": "Marketing",
+          "values": "[[\"C12\", 0.12], [\"D12\", 24.599999999999998]]"
+        },
+        {
+          "label": "Buying point hauling charges",
+          "label_cell": "B14",
+          "occurrence": 0,
+          "prov": {
+            "loc": "Marketing!B14",
+            "sources": [
+              "svaec-corn-2026-ct-rented"
+            ]
+          },
+          "sheet": "Marketing",
+          "values": "[[\"C14\", 0.3], [\"D14\", 61.5]]"
         },
         {
           "label": "Hauling cost",
@@ -609,6 +687,32 @@
       "source": "svaec-corn-2026-ct-rented"
     }
   },
+  "crop_insurance_options": [
+    {
+      "coverage_level": 0.75,
+      "default_purchased": true,
+      "id": "rp-75",
+      "name": "Revenue Protection, 75% coverage",
+      "plan": "Revenue Protection",
+      "premium_usd_ac": {
+        "prov": {
+          "loc": "Marketing!D30",
+          "sources": [
+            "svaec-corn-2026-ct-owned"
+          ]
+        },
+        "value": 12.2
+      },
+      "proceeds_modelled": false,
+      "prov": {
+        "loc": "Marketing!D30",
+        "method": "plan and coverage level from the budget row label 'Revenue Protection, 75%'",
+        "sources": [
+          "svaec-corn-2026-ct-owned"
+        ]
+      }
+    }
+  ],
   "crops": [
     {
       "fertilizer_by_population": [
@@ -1254,9 +1358,9 @@
   "format": "agroeco-datapack",
   "format_version": 1,
   "inputs": {
-    "fetch_lock_sha256": "7bf5a75c66fadd1d5cf4060ec89b600c673e11c9955870386b63cb538b1b2a68",
+    "fetch_lock_sha256": "aabdf609b1e219ca23b41e6d5302d7cdbc94e35061150eab74443e3dd35dd2f6",
     "fetched_at": {
-      "budgets": "2026-10-20T19:58:05Z",
+      "budgets": "2026-11-06T21:04:49Z",
       "soils": "2026-10-20T19:58:05Z",
       "weather": "2026-10-20T19:58:05Z"
     }
@@ -1284,6 +1388,26 @@
         "value": 5.2
       },
       "id": "local-buying-point",
+      "included_deductions": {
+        "drying_fees_usd_ac": {
+          "prov": {
+            "loc": "Marketing!D12",
+            "sources": [
+              "svaec-corn-2026-ct-owned"
+            ]
+          },
+          "value": 24.599999999999998
+        },
+        "hauling_usd_ac": {
+          "prov": {
+            "loc": "Marketing!D14",
+            "sources": [
+              "svaec-corn-2026-ct-owned"
+            ]
+          },
+          "value": 61.5
+        }
+      },
       "name": "Local grain buying point",
       "price_basis": "net_farm_gate",
       "price_series": null,
@@ -1373,19 +1497,21 @@
       "affects": [
         "budgets",
         "tenure_options",
-        "market_channels"
+        "market_channels",
+        "crop_insurance_options"
       ],
-      "current_default": "Named workbook column per field (budget_fields.col in pipeline/sources/regions/suwannee.json): yield Marketing!C7 (205 bu/A); gross price Marketing!C8 ($5.20/bu); net farm-gate price Marketing!C27 ($4.78/bu, used by the market channel); land rent FieldDetails!E19 ($285.71/A, rented only); hauling Marketing!D22; operating interest OperatingRates!C22",
+      "current_default": "Named workbook column per field (budget_fields.col in pipeline/sources/regions/suwannee.json): yield Marketing!C7 (205 bu/A); gross price Marketing!C8 ($5.20/bu); net farm-gate price Marketing!C27 ($4.78/bu, paid by the market channel); crop insurance premium, Revenue Protection 75%, Marketing column D ($12.20/A, a separate cost); budget total net farm-gate crop revenue Marketing!D39 ($967.70/A, used only to reconcile); land rent FieldDetails!E19 ($285.71/A, rented only); own hauling Marketing!D22 ($0); operating interest OperatingRates!C22",
       "decision_owner": "Project owner",
       "id": "budget-cell-mapping",
-      "notes": "Spot-check 2026-10-20 found the first-numeric-cell rule read whole-farm rent (FieldDetails!D19 = $40,000) as $/acre; fixed by picking named columns, and validation now rejects per-acre costs outside 0..revenue per acre. Open question: the Marketing sheet also has 'Total net farm-gate crop revenue' C39 = $4.72/bu ($967.70/A) versus C27 = $4.78/bu ($979.90/A); confirm which the game should pay.",
+      "notes": "Spot-check 2026-10-20 found the first-numeric-cell rule read whole-farm rent (FieldDetails!D19 = $40,000) as $/acre; fixed by picking named columns, and validation rejects per-acre costs outside 0..revenue per acre. Resolved 2026-11-05 by project-owner decision (option C): the Marketing sheet shows gross revenue $1,066.00/A, minus buyer drying fees $24.60/A ($0.12/bu) and buying-point hauling $61.50/A ($0.30/bu), gives net farm-gate sales revenue C27 = $4.78/bu ($979.90/A); minus the crop insurance premium (Revenue Protection, 75%) of $12.20/A ($0.06/bu) gives total net farm-gate crop revenue C39 = $4.72/bu ($967.70/A). Additional crop revenues (insurance proceeds, farm program payments, crop residue) are $0. The game pays C27 and carries the premium as a separate, optional cost; validation checks yield x price - premium = D39. Owned and rented workbooks match on these rows.",
       "options": [],
+      "resolved_on": "2026-11-05",
       "sources": [
         "svaec-corn-2026-ct-owned",
         "svaec-corn-2026-ct-rented"
       ],
-      "status": "open",
-      "title": "Confirm which workbook cells feed game values (yield, price, land rent, hauling, interest)"
+      "status": "resolved",
+      "title": "Confirm which workbook cells feed game values (yield, price, land rent, hauling, interest, crop insurance)"
     },
     {
       "affects": [
@@ -1921,6 +2047,15 @@
         "value": 205.0
       },
       "budget": "owned",
+      "budget_total_net_revenue_usd_ac": {
+        "prov": {
+          "loc": "Marketing!D39",
+          "sources": [
+            "svaec-corn-2026-ct-owned"
+          ]
+        },
+        "value": 967.6999999999999
+      },
       "id": "owned"
     },
     {
@@ -1943,6 +2078,15 @@
         "value": 205.0
       },
       "budget": "rented",
+      "budget_total_net_revenue_usd_ac": {
+        "prov": {
+          "loc": "Marketing!D39",
+          "sources": [
+            "svaec-corn-2026-ct-rented"
+          ]
+        },
+        "value": 967.6999999999999
+      },
       "id": "rented",
       "land_rent_usd_ac": {
         "prov": {
