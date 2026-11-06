@@ -44,10 +44,13 @@
     "required": [
       "Crop yield (units/acre)",
       "Average delivered gross price ($/unit)",
-      "Land rental cost"
+      "Land rental cost",
+      "Revenue Protection, 75%"
     ],
     "optional": [
       "Gross revenue from crop sales ($/acre)",
+      "Drying fees",
+      "Buying point hauling charges",
       "Hauling cost",
       "Net farm-gate crop sales revenue",
       "Corn seeds",
@@ -70,7 +73,15 @@
     "price_usd_bu": {"label": "Average delivered gross price ($/unit)", "col": "C", "required": true},
     "net_price_usd_bu": {"label": "Net farm-gate crop sales revenue", "col": "C", "required": true},
     "land_rent_usd_ac": {"label": "Land rental cost", "col": "E", "required": true, "tenures": ["rented"]},
-    "hauling_usd_ac": {"label": "Hauling cost", "col": "D"},
+    "own_hauling_usd_ac": {"label": "Hauling cost", "col": "D"},
+    "buyer_drying_fees_usd_ac": {"label": "Drying fees", "col": "D", "sheet": "Marketing"},
+    "buyer_hauling_usd_ac": {"label": "Buying point hauling charges", "col": "D", "sheet": "Marketing"},
+    "crop_insurance_premium_usd_ac": {
+      "label": "Revenue Protection, 75%", "col": "D", "sheet": "Marketing", "required": true
+    },
+    "total_net_revenue_usd_ac": {
+      "label": "Total net farm-gate crop revenue", "col": "D", "sheet": "Marketing", "required": true
+    },
     "operating_interest_rate": {"label": "Annual interest rate", "col": "C"}
   },
   "market_channel": {
@@ -79,7 +90,19 @@
     "price_basis": "net_farm_gate",
     "price_field": "net_price_usd_bu",
     "gross_price_field": "price_usd_bu",
-    "hauling_field": "hauling_usd_ac",
+    "hauling_field": "own_hauling_usd_ac",
+    "included_deductions": {
+      "drying_fees_usd_ac": "buyer_drying_fees_usd_ac",
+      "hauling_usd_ac": "buyer_hauling_usd_ac"
+    },
     "crosscheck_haul_operation": "haul_grain"
+  },
+  "crop_insurance": {
+    "id": "rp-75",
+    "name": "Revenue Protection, 75% coverage",
+    "plan": "Revenue Protection",
+    "coverage_level": 0.75,
+    "premium_field": "crop_insurance_premium_usd_ac",
+    "default_purchased": true
   }
 }

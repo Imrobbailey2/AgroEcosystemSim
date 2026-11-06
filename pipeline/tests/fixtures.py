@@ -69,6 +69,38 @@ def daily_rows(years: list[int], rain_scale: dict[int, float]) -> list[dict[str,
     return rows
 
 
+# Budget lines as (label, sheet, label_cell, occurrence, values). Same column layout
+# as the real 2026 workbooks: per-unit values in C, per-acre values in D, a
+# land-rent row holding the whole-farm total (D) before the per-acre value (E), and
+# "Total net farm-gate crop revenue" appearing first on BudgetSummary (whole-farm
+# total in D here, so picking without the configured sheet would be wrong) and then
+# on Marketing (per-acre value in D).
+# Revenue: 205 bu/A x $4.20 = $861.00/A; minus the $12.20/A premium = $848.80/A.
+BUDGET_LINES: list[tuple[str, str, str, int, list[list[object]]]] = [
+    ("Crop yield (units/acre)", "Marketing", "B10", 0, [["C10", 205.0]]),
+    ("Average delivered gross price ($/unit)", "Marketing", "B11", 0, [["C11", 4.5]]),
+    ("Drying fees", "Marketing", "B12", 0, [["C12", 0.12], ["D12", 24.6]]),
+    ("Buying point hauling charges", "Marketing", "B13", 0, [["C13", 0.3], ["D13", 61.5]]),
+    ("Hauling cost", "Marketing", "B14", 0, [["D14", 0.0]]),
+    ("Net farm-gate crop sales revenue", "Marketing", "B15", 0, [["C15", 4.2], ["D15", 861.0]]),
+    ("Revenue Protection, 75%", "Marketing", "B16", 0, [["C16", 0.06], ["D16", 12.2]]),
+    ("Total net farm-gate crop revenue", "BudgetSummary", "B39", 0, [["D39", 118832.0]]),
+    ("Total net farm-gate crop revenue", "Marketing", "B17", 1, [["C17", 4.14], ["D17", 848.8]]),
+    ("Annual interest rate", "OperatingRates", "B22", 0, [["C22", 0.08]]),
+]
+RENT_LINE = ("Land rental cost", "FieldDetails", "B20", 0, [["D20", 19600.0], ["E20", 140.0]])
+
+
+def write_budget_csvs(ex: Path, lines: list[tuple[str, str, str, int, list[list[object]]]] | None = None) -> None:
+    """Write budget_owned.csv and budget_rented.csv (rented adds the land-rent row)."""
+    lines = BUDGET_LINES if lines is None else lines
+    for tenure in ("owned", "rented"):
+        chosen = [*lines, RENT_LINE] if tenure == "rented" else list(lines)
+        rows = [{"label": lab, "sheet": sheet, "label_cell": cell, "occurrence": occ, "values": json.dumps(v)}
+                for lab, sheet, cell, occ, v in chosen]
+        write_csv(ex / f"budget_{tenure}.csv", rows, ["label", "sheet", "label_cell", "occurrence", "values"])
+
+
 def make_sources_tree(root: Path) -> Path:
     """Copy the real committed sources and add synthetic extracts for 'suwannee'."""
     base = root / "sources"
@@ -99,23 +131,7 @@ def make_sources_tree(root: Path) -> Path:
                        "om_r": 1.0, "dbthirdbar_r": 1.5, "wthirdbar_r": fc, "wfifteenbar_r": wp,
                        "awc_r": 0.06, "ksat_r": 40, "ph1to1h2o_r": 5.5, "cec7_r": 3})
     write_json(ex / "sda_horizons.json", hz)
-    # Same column layout as the real 2026 workbooks: per-unit values in C, per-acre
-    # hauling in D, and a land-rent row holding the whole-farm total (D) before the
-    # per-acre value (E).
-    lines = [
-        ("Crop yield (units/acre)", [["C10", 205.0]]),
-        ("Average delivered gross price ($/unit)", [["C11", 4.5]]),
-        ("Net farm-gate crop sales revenue", [["C12", 4.2], ["D12", 861.0]]),
-        ("Hauling cost", [["D13", 24.6]]),
-        ("Annual interest rate", [["C14", 0.08]]),
-    ]
-    for tenure in ("owned", "rented"):
-        rows = [{"label": lab, "sheet": "Budget", "label_cell": "B1", "occurrence": 0,
-                 "values": json.dumps(v)} for lab, v in lines]
-        if tenure == "rented":
-            rows.append({"label": "Land rental cost", "sheet": "Budget", "label_cell": "B20",
-                         "occurrence": 0, "values": json.dumps([["D20", 19600.0], ["E20", 140.0]])})
-        write_csv(ex / f"budget_{tenure}.csv", rows, ["label", "sheet", "label_cell", "occurrence", "values"])
+    write_budget_csvs(ex)
     write_json(ex / "station.json", {"latitude": 30.3, "longitude": -82.9, "elevation_m": 50.0,
                                      "station_id": 170, "name": "Live Oak",
                                      "source": "fawn-gapfree-liveoak-170",

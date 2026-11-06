@@ -88,6 +88,10 @@ PLAUSIBLE = {
     "benchmark_price_usd_bu": (1.0, 20.0),
 }
 
+# Allowed difference, in $/acre, when the pack's revenue is reconciled with the
+# budget's own "Total net farm-gate crop revenue" line.
+RECONCILE_TOLERANCE_USD_AC = 0.01
+
 
 def _num(node: Any) -> float | None:
     if isinstance(node, dict) and isinstance(node.get("value"), (int, float)):
@@ -95,8 +99,17 @@ def _num(node: Any) -> float | None:
     return None
 
 
+def _default_premium(pack: dict[str, Any]) -> float | None:
+    """Premium ($/acre) of the crop insurance option the budget assumes is bought."""
+    for option in pack.get("crop_insurance_options") or []:
+        if option.get("default_purchased") is True:
+            return _num(option.get("premium_usd_ac"))
+    return None
+
+
 def plausibility_problems(pack: dict[str, Any]) -> list[str]:
     problems: list[str] = []
+    premium = _default_premium(pack)
     for t in pack.get("tenure_options") or []:
         tid = t.get("id")
         for key, (lo, hi) in PLAUSIBLE.items():
@@ -111,6 +124,17 @@ def plausibility_problems(pack: dict[str, Any]) -> list[str]:
                 problems.append(
                     f"tenure_options[{tid}].{key} = {v} is not between 0 and revenue per acre "
                     f"({revenue:.2f}); is it a whole-farm total? check the budget cell"
+                )
+        # The budget's bottom line is net sales revenue minus the crop insurance
+        # premium. If the pack does not reproduce it, a cell is wrong or a deduction
+        # is missing.
+        total = _num(t.get("budget_total_net_revenue_usd_ac"))
+        if total is not None and revenue is not None and premium is not None:
+            expected = revenue - premium
+            if abs(expected - total) > RECONCILE_TOLERANCE_USD_AC:
+                problems.append(
+                    f"tenure_options[{tid}]: yield x price - insurance premium = {expected:.2f} "
+                    f"does not reconcile with the budget's total net revenue {total:.2f} $/acre"
                 )
     for i, m in enumerate(pack.get("market_channels") or []):
         net, gross = _num(m.get("price_usd_bu")), _num(m.get("gross_price_usd_bu"))

@@ -155,7 +155,7 @@ def budgets_block(region: dict[str, Any], extracted: Path) -> tuple[dict[str, An
             if b["tenure"] not in spec.get("tenures", [b["tenure"]]):
                 continue
             try:
-                value, ref = budget.pick_value(lines, spec["label"], spec["col"])
+                value, ref = budget.pick_value(lines, spec["label"], spec["col"], spec.get("sheet"))
             except PipelineError as exc:
                 if spec.get("required", False):
                     raise PipelineError(f"{b['tenure']} budget, field {name}: {exc}") from exc
@@ -178,6 +178,10 @@ def tenure_block(picked: dict[str, dict], price_field: str) -> list[dict[str, An
         }
         if tenure == "rented":
             entry["land_rent_usd_ac"] = f["land_rent_usd_ac"]
+        # The budget's bottom line (net sales revenue minus the insurance premium),
+        # kept so validation can reconcile the pack against the published budget.
+        if "total_net_revenue_usd_ac" in f:
+            entry["budget_total_net_revenue_usd_ac"] = f["total_net_revenue_usd_ac"]
         out.append(entry)
     return out
 
@@ -199,10 +203,41 @@ def market_block(region: dict[str, Any], picked: dict[str, dict], ops: list[dict
     # is only carried separately when the channel pays a delivered (gross) price.
     if m["price_basis"] == "delivered" and m.get("hauling_field") in base:
         channel["hauling_usd_ac"] = base[m["hauling_field"]]
+    # Buyer charges already taken out of a net farm-gate price, for reference only
+    # (never charged again by the game).
+    included = {key: base[field] for key, field in (m.get("included_deductions") or {}).items() if field in base}
+    if included:
+        channel["included_deductions"] = included
     haul = next((o for o in ops if o["id"] == m["crosscheck_haul_operation"]), None)
     if haul:
         channel["crosscheck_haul_usd_mile"] = {"value": haul["rate_usd"], "prov": haul["prov"]}
     return [channel]
+
+
+def crop_insurance_block(region: dict[str, Any], picked: dict[str, dict]) -> list[dict[str, Any]]:
+    """Crop insurance options. The budget deducts the premium after net sales revenue."""
+    cfg = region.get("crop_insurance")
+    if cfg is None:
+        return []
+    base = picked.get("owned") or next(iter(picked.values()))
+    premium = base.get(cfg["premium_field"])
+    if premium is None:
+        raise PipelineError(f"crop_insurance: budget field {cfg['premium_field']!r} was not picked")
+    label = region["budget_fields"][cfg["premium_field"]]["label"]
+    prov = dict(premium["prov"])
+    prov["method"] = f"plan and coverage level from the budget row label {label!r}"
+    return [
+        {
+            "id": cfg["id"],
+            "name": cfg["name"],
+            "plan": cfg["plan"],
+            "coverage_level": cfg["coverage_level"],
+            "premium_usd_ac": premium,
+            "default_purchased": cfg["default_purchased"],
+            "proceeds_modelled": False,
+            "prov": prov,
+        }
+    ]
 
 
 def weather_block(region: dict[str, Any], extracted: Path) -> tuple[dict[str, Any], list[dict[str, Any]]]:
@@ -275,6 +310,7 @@ def build_pack(region_id: str) -> dict[str, Any]:
         "budgets": budgets,
         "tenure_options": tenure_block(picked, region["market_channel"]["price_field"]),
         "market_channels": market_block(region, picked, ops),
+        "crop_insurance_options": crop_insurance_block(region, picked),
         "weather_station": station,
         "weather_years": years,
     }

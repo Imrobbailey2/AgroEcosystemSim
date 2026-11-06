@@ -7,11 +7,14 @@ import os
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent))
 
 from agroeco_pipeline.build import build_pack, run_build  # noqa: E402
+from agroeco_pipeline.common import PipelineError  # noqa: E402
 from agroeco_pipeline.validate import plausibility_problems, provenance_problems, validate_pack  # noqa: E402
-from fixtures import make_sources_tree  # noqa: E402
+from fixtures import BUDGET_LINES, make_sources_tree, write_budget_csvs  # noqa: E402
 
 
 def _build(tmp_path: Path) -> dict:
@@ -44,7 +47,7 @@ def test_content(tmp_path: Path) -> None:
     assert {t["id"] for t in pack["tenure_options"]} == {"owned", "rented"}
     rented = next(t for t in pack["tenure_options"] if t["id"] == "rented")
     assert rented["land_rent_usd_ac"]["value"] == 140.0  # per-acre column E, not whole-farm D
-    assert rented["land_rent_usd_ac"]["prov"]["loc"] == "Budget!E20"
+    assert rented["land_rent_usd_ac"]["prov"]["loc"] == "FieldDetails!E20"
     assert rented["benchmark_price_usd_bu"]["value"] == 4.2  # net farm-gate, same as the market
     assert [y["role"] for y in pack["weather_years"]] == ["dry", "median", "wet"]
     assert len(pack["weather_years"][0]["daily"]["et0_mm"]) == 365
@@ -53,12 +56,59 @@ def test_content(tmp_path: Path) -> None:
     market = pack["market_channels"][0]
     assert market["price_basis"] == "net_farm_gate"
     assert market["price_usd_bu"]["value"] == 4.2
-    assert market["price_usd_bu"]["prov"]["loc"] == "Budget!C12"
+    assert market["price_usd_bu"]["prov"]["loc"] == "Marketing!C15"
     assert market["gross_price_usd_bu"]["value"] == 4.5
     assert "hauling_usd_ac" not in market  # already deducted from the net price
+    # Buyer charges already inside the net price are carried for reference only.
+    deductions = market["included_deductions"]
+    assert deductions["drying_fees_usd_ac"]["value"] == 24.6
+    assert deductions["hauling_usd_ac"]["value"] == 61.5
+    assert deductions["hauling_usd_ac"]["prov"]["loc"] == "Marketing!D13"
     station = pack["weather_station"]
     assert station["prov"]["sources"] == ["fawn-station-locations"]
     assert "location_source" not in station and "location_loc" not in station
+
+
+def test_crop_insurance_is_a_separate_cited_cost(tmp_path: Path) -> None:
+    pack = _build(tmp_path)
+    [option] = pack["crop_insurance_options"]
+    assert option["id"] == "rp-75"
+    assert (option["plan"], option["coverage_level"]) == ("Revenue Protection", 0.75)
+    assert option["premium_usd_ac"]["value"] == 12.2
+    assert option["premium_usd_ac"]["prov"]["loc"] == "Marketing!D16"
+    assert option["default_purchased"] is True
+    assert option["proceeds_modelled"] is False
+    assert "Revenue Protection, 75%" in option["prov"]["method"]
+
+
+def test_budget_total_is_read_from_the_marketing_sheet(tmp_path: Path) -> None:
+    """The same label on BudgetSummary holds a whole-farm total; the sheet setting avoids it."""
+    pack = _build(tmp_path)
+    for t in pack["tenure_options"]:
+        total = t["budget_total_net_revenue_usd_ac"]
+        assert total["value"] == 848.8
+        assert total["prov"]["loc"] == "Marketing!D17"
+
+
+def test_revenue_reconciles_with_the_budget(tmp_path: Path) -> None:
+    """205 bu/A x $4.20 - $12.20 premium = $848.80, the budget's own total."""
+    pack = json.loads(json.dumps(_build(tmp_path)))
+    assert plausibility_problems(pack) == []
+    pack["crop_insurance_options"][0]["premium_usd_ac"]["value"] = 0.0
+    problems = plausibility_problems(pack)
+    assert any("does not reconcile" in p and "861.00" in p and "848.80" in p for p in problems)
+
+
+def test_missing_insurance_premium_fails_the_build(tmp_path: Path) -> None:
+    base = make_sources_tree(tmp_path)
+    write_budget_csvs(base / "extracted" / "suwannee",
+                      [ln for ln in BUDGET_LINES if ln[0] != "Revenue Protection, 75%"])
+    os.environ["AGROECO_SOURCES_DIR"] = str(base)
+    try:
+        with pytest.raises(PipelineError, match="crop_insurance_premium_usd_ac"):
+            build_pack("suwannee")
+    finally:
+        del os.environ["AGROECO_SOURCES_DIR"]
 
 
 def test_whole_farm_rent_is_rejected(tmp_path: Path) -> None:

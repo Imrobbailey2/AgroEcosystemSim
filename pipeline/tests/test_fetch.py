@@ -16,11 +16,12 @@ from fixtures import make_xlsx  # noqa: E402
 
 REGION = read_json(PIPELINE_DIR / "sources" / "regions" / "suwannee.json")
 REGISTRY = {s["id"]: s for s in read_json(PIPELINE_DIR / "sources" / "sources.json")["sources"]}
+PREMIUM_ROW = ["Revenue Protection, 75%", 0.06, 12.2]
 
 
 def test_fetch_budgets_writes_cell_references(tmp_path: Path) -> None:
     def fake_get(url: str) -> bytes:
-        rows = [["Crop yield (units/acre)", 205], ["Average delivered gross price ($/unit)", 4.5]]
+        rows = [["Crop yield (units/acre)", 205], ["Average delivered gross price ($/unit)", 4.5], PREMIUM_ROW]
         if "Rented" in url:
             rows.append(["Land rental cost", 140])
         return make_xlsx(rows)
@@ -29,15 +30,28 @@ def test_fetch_budgets_writes_cell_references(tmp_path: Path) -> None:
     fetch.fetch_budgets(REGION, REGISTRY, tmp_path, lock, get=fake_get)
     rented = read_csv(tmp_path / "budget_rented.csv")
     rent = next(r for r in rented if r["label"] == "Land rental cost")
-    assert json.loads(rent["values"]) == [["B3", 140.0]]
+    assert json.loads(rent["values"]) == [["B4", 140.0]]
+    premium = next(r for r in rented if r["label"] == "Revenue Protection, 75%")
+    assert json.loads(premium["values"]) == [["B3", 0.06], ["C3", 12.2]]
     assert len(lock.entries) == 2 and all(len(e["sha256"]) == 64 for e in lock.entries)
 
 
 def test_fetch_budgets_requires_rent_for_rented(tmp_path: Path) -> None:
     def fake_get(url: str) -> bytes:
-        return make_xlsx([["Crop yield (units/acre)", 205], ["Average delivered gross price ($/unit)", 4.5]])
+        return make_xlsx([["Crop yield (units/acre)", 205], ["Average delivered gross price ($/unit)", 4.5],
+                          PREMIUM_ROW])
 
     with pytest.raises(PipelineError, match="Land rental cost"):
+        fetch.fetch_budgets(REGION, REGISTRY, tmp_path, fetch.Lock(), get=fake_get)
+
+
+def test_fetch_budgets_requires_crop_insurance_premium(tmp_path: Path) -> None:
+    """If a future budget changes the plan or coverage level, the fetch must stop."""
+    def fake_get(url: str) -> bytes:
+        return make_xlsx([["Crop yield (units/acre)", 205], ["Average delivered gross price ($/unit)", 4.5],
+                          ["Revenue Protection, 80%", 0.08, 16.4], ["Land rental cost", 140]])
+
+    with pytest.raises(PipelineError, match=r"Revenue Protection, 75%"):
         fetch.fetch_budgets(REGION, REGISTRY, tmp_path, fetch.Lock(), get=fake_get)
 
 

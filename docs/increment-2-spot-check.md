@@ -53,6 +53,20 @@ Decisions recorded on 2026-10-20:
   (Deferred to a later increment on 2026-11-02 by project-owner decision — see the review
   register item `owned-land-costs`.)
 
+Decision recorded on 2026-11-05 (C27 vs. C39, option C):
+
+- The Marketing sheet (owned and rented identical) gives: gross revenue $1,066.00/A
+  (205 bu × $5.20); minus buyer drying fees $24.60/A ($0.12/bu) and buying-point hauling
+  $61.50/A ($0.30/bu) = **net farm-gate sales revenue `C27` $4.78/bu ($979.90/A)**; minus the
+  **crop insurance premium, Revenue Protection 75%, $12.20/A ($0.06/bu)** = total net farm-gate
+  crop revenue `C39` $4.72/bu ($967.70/A). Additional crop revenues are $0.
+- The market keeps paying `C27`. The premium is a separate, cited cost
+  (`crop_insurance_options`, bought by default, proceeds not modelled), so insurance can become a
+  player decision. Buyer drying and hauling are recorded under the market channel's
+  `included_deductions` for reference only and are never charged again.
+- Validation now checks yield × price − premium = the budget's `Marketing!D39` (±$0.01/A). The
+  review register item `budget-cell-mapping` is resolved.
+
 ## Second-pass re-check of rows 8 and 10 (2026-11-02, row 8 completed 2026-11-04)
 
 > **Second-pass sign-off is pending the project owner's signature.** The two

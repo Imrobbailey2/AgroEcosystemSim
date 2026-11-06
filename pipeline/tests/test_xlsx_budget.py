@@ -70,6 +70,21 @@ def test_pick_by_column_uses_later_occurrence_when_first_lacks_column() -> None:
     assert pick_value(lines, "Total", "AA") == (1.0, "B!AA9")
 
 
+def test_pick_by_sheet_skips_the_same_label_on_another_sheet() -> None:
+    """2026 budgets: 'Total net farm-gate crop revenue' is on BudgetSummary and Marketing."""
+    lines = [
+        {"label": "Total net farm-gate crop revenue", "sheet": "BudgetSummary", "label_cell": "B39",
+         "occurrence": "0", "values": json.dumps([["D39", 135478.0], ["E39", 967.7]])},
+        {"label": "Total net farm-gate crop revenue", "sheet": "Marketing", "label_cell": "B39",
+         "occurrence": "1", "values": json.dumps([["C39", 4.720487804878049], ["D39", 967.6999999999999]])},
+    ]
+    label = "Total net farm-gate crop revenue"
+    assert pick_value(lines, label, "D") == (135478.0, "BudgetSummary!D39")
+    assert pick_value(lines, label, "D", "Marketing") == (967.6999999999999, "Marketing!D39")
+    with pytest.raises(PipelineError, match="on sheet 'Insurance'"):
+        pick_value(lines, label, "D", "Insurance")
+
+
 def test_missing_required_label_suggests_matches() -> None:
     cells = read_workbook(make_xlsx(ROWS))
     with pytest.raises(PipelineError, match="Crop yield"):
