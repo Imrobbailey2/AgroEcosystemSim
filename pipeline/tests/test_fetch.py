@@ -88,3 +88,58 @@ def test_fetch_soils_fails_on_missing_map_unit(tmp_path: Path) -> None:
     with pytest.raises(PipelineError, match="map units not found"):
         fetch.fetch_soils(REGION, tmp_path, fetch.Lock(), post=fake_post)
     assert not (tmp_path / "sda_mapunits.json").exists()
+
+
+def test_region_parcels_config_is_registered() -> None:
+    cfg = REGION["parcels"]
+    assert cfg["source"] in REGISTRY
+    assert REGISTRY[cfg["source"]]["url"] == cfg["url"]
+    assert cfg["county_no"] == 71 and cfg["use_codes"] == [51, 52, 53]
+
+
+def test_fetch_parcels_writes_only_aggregates(tmp_path: Path) -> None:
+    f = REGION["parcels"]["fields"]
+    string_keys = {"use_code", "tax_authority"}
+    meta = {"objectIdField": "OBJECTID",
+            "fields": [{"name": n, "type": "esriFieldTypeString" if k in string_keys else "esriFieldTypeDouble"}
+                       for k, n in f.items()]}
+    rows = [{f["county"]: 71, f["use_code"]: "052", f["class_use_assessed"]: 250.0 * a, f["class_use_just"]: None,
+             f["land_sqft"]: a * 43560.0, f["tax_authority"]: "1", f["year"]: 2026} for a in range(10, 30)]
+
+    def fake_get(url: str) -> bytes:
+        body = meta if url.endswith("?f=json") else {"features": [{"attributes": r} for r in rows]}
+        return json.dumps(body).encode()
+
+    lock = fetch.Lock()
+    lock.step = "parcels"
+    fetch.fetch_parcels(REGION, tmp_path, lock, get=fake_get)
+    summary = read_json(tmp_path / "parcels_summary.json")
+    assert summary["parcels_used"] == 20
+    assert summary["classified_use_assessed_usd_ac"]["median"] == 250.0
+    text = (tmp_path / "parcels_summary.json").read_text(encoding="utf-8")
+    assert "OWN_" not in text and "PARCEL_ID" not in text
+    assert [e["note"] for e in lock.entries] == ["layer metadata", "query page 1"]
+
+
+def test_region_ers_config_is_registered() -> None:
+    cfg = REGION["ers"]
+    assert cfg["source"] in REGISTRY
+    assert REGISTRY[cfg["source"]]["url"] == cfg["url"]
+    assert set(cfg["items"]) == {"taxes_and_insurance", "general_farm_overhead"}
+
+
+def test_fetch_ers_writes_selected_items(tmp_path: Path) -> None:
+    cfg = REGION["ers"]
+    header = '"Commodity","Category","Item","Units","Size","Region","Country","Year","Value","Survey base year"\n'
+    rows = "".join(
+        f'"Corn","Allocated overhead","{label}","{cfg["units"]}","No specific size","{cfg["region"]}",'
+        f'"United States",2024,{value},"Base survey of 2021"\n'
+        for label, value in (("Taxes and insurance", 18.5), ("General farm overhead", 22.25))
+    )
+    lock = fetch.Lock()
+    lock.step = "ers"
+    fetch.fetch_ers(REGION, tmp_path, lock, get=lambda url: (header + rows).encode())
+    out = read_json(tmp_path / "ers_costs.json")
+    assert out["latest_year"] == 2024
+    assert out["items"]["general_farm_overhead"]["latest_value"] == 22.25
+    assert [e["note"] for e in lock.entries] == ["commodity costs and returns CSV"]

@@ -175,10 +175,27 @@
       "source": "svaec-corn-2026-ct-rented",
       "step": "budgets",
       "url": "https://svaec.ifas.ufl.edu/media/svaecifasufledu/docs/excel/agribusiness/FieldCornBudget2026_Grain-Irrig-CT_Rented_260209.xlsx"
+    },
+    {
+      "bytes": 30504,
+      "note": "layer metadata",
+      "sha256": "afd269587534e88454e92c51aeb6eed1a9fe3184f3a737de4241f90de2628652",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcels",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0?f=json"
+    },
+    {
+      "bytes": 59719,
+      "note": "query page 1",
+      "sha256": "661cb3b1cad5a2f397d06f4fe921a47559e7de166a78bfd32c375133aac6624f",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcels",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=CO_NO+%3D+71+AND+DOR_UC+IN+%28%27051%27%2C+%27052%27%2C+%27053%27%29&outFields=CO_NO%2CDOR_UC%2CAV_CLASS_U%2CJV_CLASS_U%2CLND_SQFOOT%2CTAX_AUTH_C%2CASMNT_YR&returnGeometry=false&orderByFields=OBJECTID+ASC&resultOffset=0&resultRecordCount=2000&f=json"
     }
   ],
   "fetched_at": {
-    "budgets": "2026-11-06T21:04:49Z",
+    "budgets": "2026-11-07T02:32:03Z",
+    "parcels": "2026-11-07T15:00:31Z",
     "soils": "2026-10-20T19:58:05Z",
     "weather": "2026-10-20T19:58:05Z"
   },

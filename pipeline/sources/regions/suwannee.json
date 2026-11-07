@@ -104,5 +104,34 @@
     "coverage_level": 0.75,
     "premium_field": "crop_insurance_premium_usd_ac",
     "default_purchased": true
+  },
+  "parcels": {
+    "source": "fgio-fl-statewide-parcels",
+    "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0",
+    "county_no": 71,
+    "use_codes": [51, 52, 53],
+    "fields": {
+      "county": "CO_NO",
+      "use_code": "DOR_UC",
+      "class_use_assessed": "AV_CLASS_U",
+      "class_use_just": "JV_CLASS_U",
+      "land_sqft": "LND_SQFOOT",
+      "tax_authority": "TAX_AUTH_C",
+      "year": "ASMNT_YR"
+    },
+    "exclude_tax_authorities": [],
+    "min_parcels": 10
+  },
+  "ers": {
+    "source": "usda-ers-ccr-corn",
+    "url": "https://www.ers.usda.gov/sites/default/files/_laserfiche/DataFiles/47913/CornCostReturn.csv",
+    "commodity": "Corn",
+    "region": "Southern Seaboard",
+    "units": "dollars per planted acre",
+    "items": {
+      "taxes_and_insurance": "Taxes and insurance",
+      "general_farm_overhead": "General farm overhead"
+    },
+    "years_kept": 5
   }
 }

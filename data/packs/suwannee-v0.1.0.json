@@ -1358,9 +1358,10 @@
   "format": "agroeco-datapack",
   "format_version": 1,
   "inputs": {
-    "fetch_lock_sha256": "aabdf609b1e219ca23b41e6d5302d7cdbc94e35061150eab74443e3dd35dd2f6",
+    "fetch_lock_sha256": "f18792ba8c367398dbad6d45cf74a3748947f6a5949454ccbbdfc30e23dcfd22",
     "fetched_at": {
-      "budgets": "2026-11-06T21:04:49Z",
+      "budgets": "2026-11-07T02:32:03Z",
+      "parcels": "2026-11-07T15:00:31Z",
       "soils": "2026-10-20T19:58:05Z",
       "weather": "2026-10-20T19:58:05Z"
     }
@@ -1517,17 +1518,96 @@
       "affects": [
         "tenure_options"
       ],
-      "current_default": "Not yet modelled: the 2026 owned budget carries $0 land rent (FieldDetails!E19) and $0 mortgage (FieldDetails!E20), so owned land currently has no land cost",
+      "current_default": "Not yet modelled: the 2026 owned budget carries $0 land rent (FieldDetails!E19) and $0 mortgage (FieldDetails!E20), so owned land has no land cost until Increment 2b adds the cited cost lines described here",
+      "decided_on": "2026-11-06",
       "decision_owner": "Project owner",
-      "deferred_on": "2026-11-02",
       "id": "owned-land-costs",
-      "notes": "Decided 2026-10-20: owned land must carry property tax, utilities and other related ownership costs, and must gain value over the period of ownership. Sources and method are pending approval. Deferred to a later increment on 2026-11-02 by project-owner decision: no ownership-cost source is approved for Increment 2, so owned land carries no land cost for now; revisit when a cited source and method are approved.",
+      "notes": "Decided 2026-10-20: owned land must carry property tax and other ownership costs, and must gain value over the period of ownership. Deferred 2026-11-02 (no approved source for Increment 2). Decided 2026-11-06 by the project owner: owned land necessarily includes a cost; Basic shows one average, Advanced shows property tax, property insurance and maintenance/upkeep separately, both read from the same data pack. Land appreciation is in scope for Increment 2b (see land-appreciation-method). Status stays open until the cited sources are registered and the values are built and spot-checked.",
+      "options": [
+        {
+          "id": "basic-average",
+          "summary": "Basic mode: one owned-land cost in $/acre/year, equal to the sum of the three Advanced lines (validated to +/- $0.01/A)"
+        },
+        {
+          "id": "advanced-detail",
+          "summary": "Advanced mode: three lines - property tax (see owned-land-use-value), property insurance (see owned-land-insurance-proxy), maintenance/upkeep (see owned-land-upkeep-proxy)"
+        }
+      ],
+      "sources": [
+        "svaec-corn-2026-ct-owned"
+      ],
+      "status": "open",
+      "title": "Owned land: property tax, property insurance, maintenance/upkeep, and land appreciation"
+    },
+    {
+      "affects": [
+        "tenure_options"
+      ],
+      "current_default": "Not yet modelled. Method: median agricultural classified-use assessed value per acre for Suwannee County cropland parcels (DOR use codes 051-053) x total millage 14.4962 mills ($14.4962 per $1,000 of taxable value)",
+      "decided_on": "2026-11-06",
+      "decision_owner": "Project owner",
+      "id": "owned-land-use-value",
+      "notes": "Use value: fetched automatically (fetch step 'parcels', added 2026-11-07) from the Florida Statewide Parcels layer published by the State of Florida Geographic Information Office: the Florida Department of Revenue parcel GIS joined with the real property assessment roll (NAL) that the Suwannee County Property Appraiser submits to the Department. Filter CO_NO = 71 (Suwannee) and DOR_UC 051-053 (cropland, soil capability Class I-III; codes confirmed against the 2025 DOR NAL/SDF/NAP User's Guide). Value = AV_CLASS_USE (assessed value of the agriculturally classified portion) / parcel acres (LND_SQFOOT / 43,560); parcel acres include any non-classified portion such as a homesite, so values are conservative. Median, 25th/75th percentiles, counts by use code and taxing authority, and assessment year are written to parcels_summary.json; the sha256 of every query page is in fetch-lock.json. Only allow-listed value and land-use fields are requested: owner names, mailing addresses, parcel IDs and geometry are never downloaded. Still open: confirm the unincorporated filter (TAX_AUTH_CD codes for Live Oak and Branford, from tax_authority_counts) and whether improved agricultural (050) parcels should be included. Optional: per-field tax by matching each SSURGO unit's capability class to a cropland code. Millage FY2025-26, unincorporated Suwannee County: County 8.8000 (adopted 2025-09-22); School Board 5.415 (required local effort 3.167 + discretionary 0.748 + capital outlay 1.500); Suwannee River Water Management District 0.2812 (Resolution 2025-11); total 14.4962. Conflict: the Property Appraiser Tax Rates page shows 14.4745 (schools 5.4050, SRWMD 0.2695); cite the adoption documents and keep this note. Classification requires an application to the Property Appraiser by March 1 each year (possible Advanced-mode decision).",
+      "options": [],
+      "status": "open",
+      "title": "Owned land property tax: Suwannee County agricultural-use (greenbelt) value per acre and millage"
+    },
+    {
+      "affects": [
+        "tenure_options"
+      ],
+      "current_default": "Not yet modelled. Placeholder: USDA ERS Commodity Costs and Returns, corn, Southern Seaboard region, 'Taxes and insurance' ($ per planted acre), latest actual (non-forecast) year in the 2026-10-01 release",
+      "decided_on": "2026-11-06",
+      "decision_owner": "IFAS economist",
+      "id": "owned-land-insurance-proxy",
+      "notes": "Approved 2026-11-06 as a flagged upper estimate. Under the current ERS method this line covers non-real-estate property tax plus property/casualty/liability insurance, so it does not double-count real-estate property tax. It does include machinery insurance; in Basic mode the player hires custom operations whose rates already include the contractor's insurance, so this proxy overstates Basic costs. Replace with a farm-liability-only source when one is found. ERS corn estimates rest on the 2021 ARMS survey, updated annually.",
+      "options": [],
+      "status": "open",
+      "title": "Owned land property insurance: USDA ERS 'Taxes and insurance' proxy"
+    },
+    {
+      "affects": [
+        "tenure_options"
+      ],
+      "current_default": "Not yet modelled. Placeholder: USDA ERS Commodity Costs and Returns, corn, Southern Seaboard region, 'General farm overhead' ($ per planted acre)",
+      "decided_on": "2026-11-06",
+      "decision_owner": "IFAS economist",
+      "id": "owned-land-upkeep-proxy",
+      "notes": "Approved 2026-11-06. ERS general farm overhead covers utilities, supplies, maintenance of general-use structures and general business expense. Condition: before adding it, scan the SVAEC 2026 owned budget workbook (FieldCornBudget2026_Grain-Irrig-CT_Owned_260209.xlsx) for existing overhead, utilities, maintenance, tax or insurance lines, and the FieldOperations fixed costs for machinery depreciation, interest, repairs, taxes and insurance. If any overlap exists, stop and report it to the project owner before adding this cost.",
       "options": [],
       "sources": [
         "svaec-corn-2026-ct-owned"
       ],
-      "status": "deferred",
-      "title": "Owned land: property tax, utilities, other ownership costs, and land appreciation"
+      "status": "open",
+      "title": "Owned land maintenance/upkeep: USDA ERS 'General farm overhead' proxy"
+    },
+    {
+      "affects": [
+        "tenure_options"
+      ],
+      "current_default": "Not yet modelled. Method: USDA NASS Land Values, Florida cropland average value per acre, 2022-2026 series; the game uses the average annual growth rate",
+      "decided_on": "2026-11-06",
+      "decision_owner": "Project owner",
+      "id": "land-appreciation-method",
+      "notes": "In scope for Increment 2b (data); applying appreciation in the game belongs to Increment 3. NASS reports Florida cropland at $10,550/A (2025) and $11,100/A (2026), +5.2%. NASS publishes state values only, so this is a state-level estimate for a Suwannee County farm.",
+      "options": [],
+      "status": "open",
+      "title": "Owned land appreciation rate"
+    },
+    {
+      "affects": [
+        "tenure_options",
+        "crop_insurance_options",
+        "custom_operations"
+      ],
+      "current_default": "Basic mode: hired custom operations only; crop insurance rp-75 always bought; owned-land cost shown as one average. Advanced mode: not yet built",
+      "decided_on": "2026-11-06",
+      "decision_owner": "Project owner",
+      "id": "advanced-mode-scope",
+      "notes": "Decided 2026-11-06: Advanced mode lets the player own machinery, hire workers, own farm trucks and own buildings, and see owned-land costs line by line; crop insurance becomes a player choice, which first needs Revenue Protection payouts modelled (USDA RMA projected and harvest prices plus a yield history). Approved order: Increment 2b (owned-land costs and appreciation), Increment 3 (UI-free engine, Basic end to end, with a basic/advanced mode switch from the start), then an Advanced-mode requirements step, then Advanced increments starting with machinery. Insurance researched for Advanced mode: workers' compensation is required for farm employers with 6 or more regular employees and/or 12 or more seasonal workers working more than 30 days in a season or more than 45 days in a calendar year (Florida DFS); registered vehicles with 4 or more wheels need at least $10,000 PIP and $10,000 property damage liability (FLHSMV); flood insurance is required on buildings in a FEMA Special Flood Hazard Area that secure a federally regulated or federally backed loan; lenders may require scheduled coverage on financed equipment. Common optional coverage: farm liability, farm property and machinery, umbrella, environmental, custom-farming liability, ATV/UTV, trailers, commercial auto. Machinery insurance estimate: about 0.5% of average machine value (Mississippi State P3543).",
+      "options": [],
+      "status": "open",
+      "title": "Basic vs. Advanced game modes: scope of Advanced mode"
     }
   ],
   "soil_test": {
@@ -1931,6 +2011,19 @@
       "publisher": "University of Florida, IFAS",
       "title": "FAWN Location Information for All Stations",
       "url": "https://fawn.ifas.ufl.edu/tour/location_info.php",
+      "year": "current"
+    },
+    {
+      "accessed": "set by fetch (see fetch-lock.json)",
+      "authors": "Florida Department of Revenue, Property Tax Oversight; Florida county property appraisers",
+      "field_guide": "https://floridarevenue.com/property/dataportal/Documents/PTO%20Data%20Portal/User%20Guides/2025%20Users%20guide%20and%20quick%20reference/2025_NAL_SDF_NAP_Users_Guide.pdf",
+      "id": "fgio-fl-statewide-parcels",
+      "kind": "fetched",
+      "landing_page": "https://geodata.floridagio.gov/datasets/FGIO::florida-statewide-parcels/about",
+      "license": "Florida public records (Chapter 119, F.S.); see the FGIO item license. Only aggregate statistics are committed; owner names, addresses, parcel IDs and geometry are never requested.",
+      "publisher": "State of Florida Geographic Information Office (FGIO)",
+      "title": "Florida Statewide Parcels (CADASTRAL_DOR): Florida Department of Revenue parcel GIS joined with the real property assessment roll (NAL)",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0",
       "year": "current"
     },
     {
