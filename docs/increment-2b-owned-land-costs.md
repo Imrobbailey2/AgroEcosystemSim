@@ -58,10 +58,16 @@ difference.
   code refuses to request `OWN_*`, `FIDU_*`, `PHY_ADDR*`, `PARCEL_ID`,
   `S_LEGAL`, `ALT_KEY` fields. Only aggregates are committed; the sha256 of
   every query page is in `fetch-lock.json`.
-- Still open: the unincorporated filter (taxing-authority codes for Live Oak
-  and Branford) and whether improved agricultural (050) parcels belong in the
-  sample. If the automated fetch fails, the fallback is a one-time manual
-  export from the Property Appraiser's Download Manager.
+- First fetch (2026-11-07, run 42384231645, 2026 roll): 431 parcels, median
+  **$278.63/A** (p25 $235.00, p75 $285.00; min $41.81, max $1,253.00). By
+  code: 051 1 parcel $277.53; 052 240 parcels $285.00; 053 190 parcels
+  $234.99. At 14.4962 mills: about $4.04/A/yr property tax.
+- Decided 2026-11-07: use all 431 parcels with no municipal filter (the
+  taxing-authority field is `CO` for every parcel, so Live Oak and Branford
+  cannot be separated) and exclude improved agricultural (050) parcels.
+  `JV_CLASS_USE` (median $2,000/A, flat) is not used. If the automated fetch
+  fails, the fallback is a one-time manual export from the Property
+  Appraiser's Download Manager.
 
 ## Land appreciation
 
