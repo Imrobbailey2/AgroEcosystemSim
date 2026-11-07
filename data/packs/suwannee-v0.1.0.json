@@ -1358,9 +1358,10 @@
   "format": "agroeco-datapack",
   "format_version": 1,
   "inputs": {
-    "fetch_lock_sha256": "24f5a038e0e8a3621fdc26d967a694c4a86f26b405346280d90cb08d6900e850",
+    "fetch_lock_sha256": "f18792ba8c367398dbad6d45cf74a3748947f6a5949454ccbbdfc30e23dcfd22",
     "fetched_at": {
       "budgets": "2026-11-07T02:32:03Z",
+      "parcels": "2026-11-07T15:00:31Z",
       "soils": "2026-10-20T19:58:05Z",
       "weather": "2026-10-20T19:58:05Z"
     }
@@ -1542,11 +1543,11 @@
       "affects": [
         "tenure_options"
       ],
-      "current_default": "Not yet modelled. Method: median agricultural-use assessed land value per acre for unincorporated Suwannee County cropland parcels x total millage 14.4962 mills ($14.4962 per $1,000 of taxable value)",
+      "current_default": "Not yet modelled. Method: median agricultural classified-use assessed value per acre for Suwannee County cropland parcels (DOR use codes 051-053) x total millage 14.4962 mills ($14.4962 per $1,000 of taxable value)",
       "decided_on": "2026-11-06",
       "decision_owner": "Project owner",
       "id": "owned-land-use-value",
-      "notes": "Use value: derived from the Suwannee County Property Appraiser parcel download (Download Manager, Parcel Details CSV). Filter unincorporated parcels classified as cropland (Florida DOR land-use codes 51-53 expected; confirm against the DOR code table before use). Value = agricultural assessed land value / acres, land only (buildings and extra features excluded). Record median and 25th/75th percentiles, export date, filter, parcel count and sha256 of the raw export. Owner names and mailing addresses are dropped on read; only parcel ID, use code, acres and value are kept, and only summary statistics enter the pack. Optional: per-field tax by matching each SSURGO unit's capability class to a cropland code. Millage FY2025-26, unincorporated Suwannee County: County 8.8000 (adopted 2025-09-22); School Board 5.415 (required local effort 3.167 + discretionary 0.748 + capital outlay 1.500); Suwannee River Water Management District 0.2812 (Resolution 2025-11); total 14.4962. Conflict: the Property Appraiser Tax Rates page shows 14.4745 (schools 5.4050, SRWMD 0.2695); cite the adoption documents and keep this note. Classification requires an application to the Property Appraiser by March 1 each year (possible Advanced-mode decision).",
+      "notes": "Use value: fetched automatically (fetch step 'parcels', added 2026-11-07) from the Florida Statewide Parcels layer published by the State of Florida Geographic Information Office: the Florida Department of Revenue parcel GIS joined with the real property assessment roll (NAL) that the Suwannee County Property Appraiser submits to the Department. Filter CO_NO = 71 (Suwannee) and DOR_UC 051-053 (cropland, soil capability Class I-III; codes confirmed against the 2025 DOR NAL/SDF/NAP User's Guide). Value = AV_CLASS_USE (assessed value of the agriculturally classified portion) / parcel acres (LND_SQFOOT / 43,560); parcel acres include any non-classified portion such as a homesite, so values are conservative. Median, 25th/75th percentiles, counts by use code and taxing authority, and assessment year are written to parcels_summary.json; the sha256 of every query page is in fetch-lock.json. Only allow-listed value and land-use fields are requested: owner names, mailing addresses, parcel IDs and geometry are never downloaded. Still open: confirm the unincorporated filter (TAX_AUTH_CD codes for Live Oak and Branford, from tax_authority_counts) and whether improved agricultural (050) parcels should be included. Optional: per-field tax by matching each SSURGO unit's capability class to a cropland code. Millage FY2025-26, unincorporated Suwannee County: County 8.8000 (adopted 2025-09-22); School Board 5.415 (required local effort 3.167 + discretionary 0.748 + capital outlay 1.500); Suwannee River Water Management District 0.2812 (Resolution 2025-11); total 14.4962. Conflict: the Property Appraiser Tax Rates page shows 14.4745 (schools 5.4050, SRWMD 0.2695); cite the adoption documents and keep this note. Classification requires an application to the Property Appraiser by March 1 each year (possible Advanced-mode decision).",
       "options": [],
       "status": "open",
       "title": "Owned land property tax: Suwannee County agricultural-use (greenbelt) value per acre and millage"
@@ -2010,6 +2011,19 @@
       "publisher": "University of Florida, IFAS",
       "title": "FAWN Location Information for All Stations",
       "url": "https://fawn.ifas.ufl.edu/tour/location_info.php",
+      "year": "current"
+    },
+    {
+      "accessed": "set by fetch (see fetch-lock.json)",
+      "authors": "Florida Department of Revenue, Property Tax Oversight; Florida county property appraisers",
+      "field_guide": "https://floridarevenue.com/property/dataportal/Documents/PTO%20Data%20Portal/User%20Guides/2025%20Users%20guide%20and%20quick%20reference/2025_NAL_SDF_NAP_Users_Guide.pdf",
+      "id": "fgio-fl-statewide-parcels",
+      "kind": "fetched",
+      "landing_page": "https://geodata.floridagio.gov/datasets/FGIO::florida-statewide-parcels/about",
+      "license": "Florida public records (Chapter 119, F.S.); see the FGIO item license. Only aggregate statistics are committed; owner names, addresses, parcel IDs and geometry are never requested.",
+      "publisher": "State of Florida Geographic Information Office (FGIO)",
+      "title": "Florida Statewide Parcels (CADASTRAL_DOR): Florida Department of Revenue parcel GIS joined with the real property assessment roll (NAL)",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0",
       "year": "current"
     },
     {
