@@ -1,6 +1,7 @@
 # Increment 2b: owned-land costs and land appreciation (design note)
 
-Status: **decisions recorded 2026-11-06; implementation not started.**
+Status: **decisions recorded 2026-11-06; automated parcel fetch (step
+`parcels`) added 2026-11-07; cost lines not yet built.**
 Review register items: `owned-land-costs`, `owned-land-use-value`,
 `owned-land-insurance-proxy`, `owned-land-upkeep-proxy`,
 `land-appreciation-method`, `advanced-mode-scope`
@@ -21,7 +22,7 @@ Advanced lines, so the two can never disagree.
 
 | Line | Formula / source | Review item |
 |---|---|---|
-| Property tax | Median agricultural-use (greenbelt) assessed land value per acre, unincorporated Suwannee County cropland, from the Property Appraiser parcel download x 14.4962 mills | `owned-land-use-value` |
+| Property tax | Median agricultural-use (greenbelt) assessed land value per acre, unincorporated Suwannee County cropland (DOR use codes 051-053), from the Florida Statewide Parcels layer (fetch step `parcels`) x 14.4962 mills | `owned-land-use-value` |
 | Property insurance | USDA ERS Commodity Costs and Returns, corn, Southern Seaboard, "Taxes and insurance", latest actual year (flagged upper estimate) | `owned-land-insurance-proxy` |
 | Maintenance/upkeep | USDA ERS, corn, Southern Seaboard, "General farm overhead" (only if the workbook scan finds no overlap) | `owned-land-upkeep-proxy` |
 | Basic average | Sum of the three lines | `owned-land-costs` |
@@ -39,16 +40,28 @@ The Property Appraiser's Tax Rates page shows 14.4745 (schools 5.4050,
 SRWMD 0.2695). The pack cites the adoption documents and records the
 difference.
 
-### Parcel download rules
+### Parcel data (automated fetch step `parcels`)
 
-- Suwannee County Property Appraiser, Download Manager, Parcel Details CSV.
-- Unincorporated parcels classified as cropland. Florida DOR land-use codes
-  51-53 are expected; confirm against the DOR code table before use.
-- Value per acre = agricultural assessed **land** value / acres (buildings and
-  extra features excluded). Report median, 25th and 75th percentiles.
-- Record export date, filter, parcel count and sha256 of the raw export.
-- Drop owner names and mailing addresses on read. Keep only parcel ID, use
-  code, acres and value; only summary statistics enter the pack.
+- Source: **Florida Statewide Parcels** (State of Florida Geographic
+  Information Office), the Florida DOR parcel GIS joined with the real property
+  assessment roll (NAL) that the Suwannee County Property Appraiser submits to
+  the Department. Queried through its public ArcGIS REST API; no manual export.
+- Filter: `CO_NO = 71` (Suwannee) and `DOR_UC` 051-053 (cropland, soil
+  capability Class I-III, per the 2025 DOR NAL/SDF/NAP User's Guide).
+- Value per acre = `AV_CLASS_USE` (assessed value of the agriculturally
+  classified portion) / parcel acres (`LND_SQFOOT` / 43,560). Parcel acres
+  include any non-classified portion (e.g. a homesite), so values are
+  conservative. Median, 25th and 75th percentiles, counts by use code and by
+  taxing authority, and assessment year go to `parcels_summary.json`.
+- Privacy: only allow-listed value and land-use fields are requested. Owner
+  names, mailing addresses, parcel IDs and geometry are never downloaded; the
+  code refuses to request `OWN_*`, `FIDU_*`, `PHY_ADDR*`, `PARCEL_ID`,
+  `S_LEGAL`, `ALT_KEY` fields. Only aggregates are committed; the sha256 of
+  every query page is in `fetch-lock.json`.
+- Still open: the unincorporated filter (taxing-authority codes for Live Oak
+  and Branford) and whether improved agricultural (050) parcels belong in the
+  sample. If the automated fetch fails, the fallback is a one-time manual
+  export from the Property Appraiser's Download Manager.
 
 ## Land appreciation
 
