@@ -1,8 +1,9 @@
 name: Fetch sources
 
-# Manually started. Downloads SSURGO soils, UF/IFAS budgets and FAWN weather,
-# writes citable extracts plus a checksum lock, rebuilds the data pack, and
-# pushes everything to a new data/fetch-<run id> branch for review as a PR.
+# Manually started. Downloads SSURGO soils, UF/IFAS budgets, FAWN weather and
+# Florida statewide parcel values (aggregates only), writes citable extracts
+# plus a checksum lock, rebuilds the data pack, and pushes everything to a new
+# data/fetch-<run id> branch for review as a PR.
 # Copyrighted raw files (budget workbooks) are never committed.
 
 on:
@@ -15,7 +16,7 @@ on:
         type: choice
         options: [suwannee]
       only:
-        description: "Steps to run. Leave EMPTY to run all. Or type any of: soils budgets weather"
+        description: "Steps to run. Leave EMPTY to run all. Or type any of: soils budgets weather parcels"
         required: false
         default: ""
 
@@ -53,7 +54,7 @@ jobs:
           fi
           picked="$(echo $picked)"  # one line, space-separated
           echo "steps=$picked" >> "$GITHUB_OUTPUT"
-          echo "Fetch steps: ${picked:-all (soils budgets weather)}" | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "Fetch steps: ${picked:-all (soils budgets weather parcels)}" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Fetch and extract
         env:
           REGION: ${{ inputs.region }}

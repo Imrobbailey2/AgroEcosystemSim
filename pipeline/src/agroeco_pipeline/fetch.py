@@ -3,7 +3,8 @@
 Runs in GitHub Actions (network access). Raw copyrighted files are never
 written to the repository: only extracted facts with cell references, public
 domain SSURGO responses, and CC BY derived daily weather, plus a lock file of
-URLs and SHA-256 checksums of every raw download.
+URLs and SHA-256 checksums of every raw download. Parcel data is reduced to
+aggregate statistics before anything is written.
 """
 
 from __future__ import annotations
@@ -19,7 +20,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from agroeco_pipeline import budget, sda, soils, weather
+from agroeco_pipeline import budget, parcels, sda, soils, weather
 from agroeco_pipeline.common import (
     PipelineError,
     read_json,
@@ -32,7 +33,7 @@ from agroeco_pipeline.xlsx import read_workbook
 
 USER_AGENT = "AgroEcosystemSim-pipeline/0.1 (+https://github.com/Imrobbailey2/AgroEcosystemSim)"
 FIGSHARE_API = "https://api.figshare.com/v2/articles/{id}"
-STEPS = ("soils", "budgets", "weather")
+STEPS = ("soils", "budgets", "weather", "parcels")
 
 
 def http(url: str, data: bytes | None = None, headers: dict[str, str] | None = None,
@@ -185,6 +186,23 @@ def fetch_weather(region: dict[str, Any], out: Path, lock: Lock,
     write_csv(out / "weather_daily.csv", rows, weather.DAILY_FIELDS)
 
 
+def fetch_parcels(region: dict[str, Any], out: Path, lock: Lock,
+                  get: Callable[[str], bytes] = http) -> None:
+    """Greenbelt (agricultural classified-use) land value per acre for the region's county.
+
+    Requests only allow-listed value and land-use fields; writes aggregate
+    statistics only (no parcel IDs, owners or addresses).
+    """
+    cfg = region["parcels"]
+    rows, where = parcels.fetch_rows(cfg, get, lambda url, raw, note: lock.add(cfg["source"], url, raw, note))
+    summary = parcels.summarize(rows, cfg)
+    write_json(
+        out / "parcels_summary.json",
+        {**summary, "source": cfg["source"], "layer": cfg["url"], "where": where,
+         "county_no": cfg["county_no"], "use_codes": cfg["use_codes"]},
+    )
+
+
 def run_fetch(region_id: str, only: list[str] | None = None) -> Path:
     base = sources_dir()
     region = read_json(base / "regions" / f"{region_id}.json")
@@ -206,8 +224,10 @@ def run_fetch(region_id: str, only: list[str] | None = None) -> Path:
             fetch_soils(region, out, lock)
         elif step == "budgets":
             fetch_budgets(region, registry, out, lock)
-        else:
+        elif step == "weather":
             fetch_weather(region, out, lock)
+        else:
+            fetch_parcels(region, out, lock)
         fetched_at[step] = now
     kept = [e for e in previous.get("downloads", []) if e.get("step") not in steps]
     write_json(
