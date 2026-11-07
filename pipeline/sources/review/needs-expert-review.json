@@ -58,15 +58,80 @@
     },
     {
       "id": "owned-land-costs",
-      "title": "Owned land: property tax, utilities, other ownership costs, and land appreciation",
-      "status": "deferred",
-      "deferred_on": "2026-11-02",
+      "title": "Owned land: property tax, property insurance, maintenance/upkeep, and land appreciation",
+      "status": "open",
+      "decided_on": "2026-11-06",
       "decision_owner": "Project owner",
-      "current_default": "Not yet modelled: the 2026 owned budget carries $0 land rent (FieldDetails!E19) and $0 mortgage (FieldDetails!E20), so owned land currently has no land cost",
-      "options": [],
-      "notes": "Decided 2026-10-20: owned land must carry property tax, utilities and other related ownership costs, and must gain value over the period of ownership. Sources and method are pending approval. Deferred to a later increment on 2026-11-02 by project-owner decision: no ownership-cost source is approved for Increment 2, so owned land carries no land cost for now; revisit when a cited source and method are approved.",
+      "current_default": "Not yet modelled: the 2026 owned budget carries $0 land rent (FieldDetails!E19) and $0 mortgage (FieldDetails!E20), so owned land has no land cost until Increment 2b adds the cited cost lines described here",
+      "options": [
+        {
+          "id": "basic-average",
+          "summary": "Basic mode: one owned-land cost in $/acre/year, equal to the sum of the three Advanced lines (validated to +/- $0.01/A)"
+        },
+        {
+          "id": "advanced-detail",
+          "summary": "Advanced mode: three lines - property tax (see owned-land-use-value), property insurance (see owned-land-insurance-proxy), maintenance/upkeep (see owned-land-upkeep-proxy)"
+        }
+      ],
+      "notes": "Decided 2026-10-20: owned land must carry property tax and other ownership costs, and must gain value over the period of ownership. Deferred 2026-11-02 (no approved source for Increment 2). Decided 2026-11-06 by the project owner: owned land necessarily includes a cost; Basic shows one average, Advanced shows property tax, property insurance and maintenance/upkeep separately, both read from the same data pack. Land appreciation is in scope for Increment 2b (see land-appreciation-method). Status stays open until the cited sources are registered and the values are built and spot-checked.",
       "affects": ["tenure_options"],
       "sources": ["svaec-corn-2026-ct-owned"]
+    },
+    {
+      "id": "owned-land-use-value",
+      "title": "Owned land property tax: Suwannee County agricultural-use (greenbelt) value per acre and millage",
+      "status": "open",
+      "decided_on": "2026-11-06",
+      "decision_owner": "Project owner",
+      "current_default": "Not yet modelled. Method: median agricultural-use assessed land value per acre for unincorporated Suwannee County cropland parcels x total millage 14.4962 mills ($14.4962 per $1,000 of taxable value)",
+      "options": [],
+      "notes": "Use value: derived from the Suwannee County Property Appraiser parcel download (Download Manager, Parcel Details CSV). Filter unincorporated parcels classified as cropland (Florida DOR land-use codes 51-53 expected; confirm against the DOR code table before use). Value = agricultural assessed land value / acres, land only (buildings and extra features excluded). Record median and 25th/75th percentiles, export date, filter, parcel count and sha256 of the raw export. Owner names and mailing addresses are dropped on read; only parcel ID, use code, acres and value are kept, and only summary statistics enter the pack. Optional: per-field tax by matching each SSURGO unit's capability class to a cropland code. Millage FY2025-26, unincorporated Suwannee County: County 8.8000 (adopted 2025-09-22); School Board 5.415 (required local effort 3.167 + discretionary 0.748 + capital outlay 1.500); Suwannee River Water Management District 0.2812 (Resolution 2025-11); total 14.4962. Conflict: the Property Appraiser Tax Rates page shows 14.4745 (schools 5.4050, SRWMD 0.2695); cite the adoption documents and keep this note. Classification requires an application to the Property Appraiser by March 1 each year (possible Advanced-mode decision).",
+      "affects": ["tenure_options"]
+    },
+    {
+      "id": "owned-land-insurance-proxy",
+      "title": "Owned land property insurance: USDA ERS 'Taxes and insurance' proxy",
+      "status": "open",
+      "decided_on": "2026-11-06",
+      "decision_owner": "IFAS economist",
+      "current_default": "Not yet modelled. Placeholder: USDA ERS Commodity Costs and Returns, corn, Southern Seaboard region, 'Taxes and insurance' ($ per planted acre), latest actual (non-forecast) year in the 2026-10-01 release",
+      "options": [],
+      "notes": "Approved 2026-11-06 as a flagged upper estimate. Under the current ERS method this line covers non-real-estate property tax plus property/casualty/liability insurance, so it does not double-count real-estate property tax. It does include machinery insurance; in Basic mode the player hires custom operations whose rates already include the contractor's insurance, so this proxy overstates Basic costs. Replace with a farm-liability-only source when one is found. ERS corn estimates rest on the 2021 ARMS survey, updated annually.",
+      "affects": ["tenure_options"]
+    },
+    {
+      "id": "owned-land-upkeep-proxy",
+      "title": "Owned land maintenance/upkeep: USDA ERS 'General farm overhead' proxy",
+      "status": "open",
+      "decided_on": "2026-11-06",
+      "decision_owner": "IFAS economist",
+      "current_default": "Not yet modelled. Placeholder: USDA ERS Commodity Costs and Returns, corn, Southern Seaboard region, 'General farm overhead' ($ per planted acre)",
+      "options": [],
+      "notes": "Approved 2026-11-06. ERS general farm overhead covers utilities, supplies, maintenance of general-use structures and general business expense. Condition: before adding it, scan the SVAEC 2026 owned budget workbook (FieldCornBudget2026_Grain-Irrig-CT_Owned_260209.xlsx) for existing overhead, utilities, maintenance, tax or insurance lines, and the FieldOperations fixed costs for machinery depreciation, interest, repairs, taxes and insurance. If any overlap exists, stop and report it to the project owner before adding this cost.",
+      "affects": ["tenure_options"],
+      "sources": ["svaec-corn-2026-ct-owned"]
+    },
+    {
+      "id": "land-appreciation-method",
+      "title": "Owned land appreciation rate",
+      "status": "open",
+      "decided_on": "2026-11-06",
+      "decision_owner": "Project owner",
+      "current_default": "Not yet modelled. Method: USDA NASS Land Values, Florida cropland average value per acre, 2022-2026 series; the game uses the average annual growth rate",
+      "options": [],
+      "notes": "In scope for Increment 2b (data); applying appreciation in the game belongs to Increment 3. NASS reports Florida cropland at $10,550/A (2025) and $11,100/A (2026), +5.2%. NASS publishes state values only, so this is a state-level estimate for a Suwannee County farm.",
+      "affects": ["tenure_options"]
+    },
+    {
+      "id": "advanced-mode-scope",
+      "title": "Basic vs. Advanced game modes: scope of Advanced mode",
+      "status": "open",
+      "decided_on": "2026-11-06",
+      "decision_owner": "Project owner",
+      "current_default": "Basic mode: hired custom operations only; crop insurance rp-75 always bought; owned-land cost shown as one average. Advanced mode: not yet built",
+      "options": [],
+      "notes": "Decided 2026-11-06: Advanced mode lets the player own machinery, hire workers, own farm trucks and own buildings, and see owned-land costs line by line; crop insurance becomes a player choice, which first needs Revenue Protection payouts modelled (USDA RMA projected and harvest prices plus a yield history). Approved order: Increment 2b (owned-land costs and appreciation), Increment 3 (UI-free engine, Basic end to end, with a basic/advanced mode switch from the start), then an Advanced-mode requirements step, then Advanced increments starting with machinery. Insurance researched for Advanced mode: workers' compensation is required for farm employers with 6 or more regular employees and/or 12 or more seasonal workers working more than 30 days in a season or more than 45 days in a calendar year (Florida DFS); registered vehicles with 4 or more wheels need at least $10,000 PIP and $10,000 property damage liability (FLHSMV); flood insurance is required on buildings in a FEMA Special Flood Hazard Area that secure a federally regulated or federally backed loan; lenders may require scheduled coverage on financed equipment. Common optional coverage: farm liability, farm property and machinery, umbrella, environmental, custom-farming liability, ATV/UTV, trailers, commercial auto. Machinery insurance estimate: about 0.5% of average machine value (Mississippi State P3543).",
+      "affects": ["tenure_options", "crop_insurance_options", "custom_operations"]
     }
   ]
 }

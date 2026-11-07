@@ -1,0 +1,95 @@
+# Increment 2b: owned-land costs and land appreciation (design note)
+
+Status: **decisions recorded 2026-11-06; implementation not started.**
+Review register items: `owned-land-costs`, `owned-land-use-value`,
+`owned-land-insurance-proxy`, `owned-land-upkeep-proxy`,
+`land-appreciation-method`, `advanced-mode-scope`
+(`pipeline/sources/review/needs-expert-review.json`).
+
+## Game modes
+
+| | Basic | Advanced |
+|---|---|---|
+| Field work | Hired custom operations only | Custom hire, or owned machinery, hired workers, farm trucks, buildings (later increments) |
+| Owned-land cost | One average, $/acre/year | Three lines: property tax, property insurance, maintenance/upkeep |
+| Crop insurance | Revenue Protection 75% (`rp-75`, $12.20/A, `Marketing!D30`) always bought | Player choice (needs payouts modelled first) |
+
+Both modes read the same data pack. The Basic average is the sum of the
+Advanced lines, so the two can never disagree.
+
+## Owned-land cost lines
+
+| Line | Formula / source | Review item |
+|---|---|---|
+| Property tax | Median agricultural-use (greenbelt) assessed land value per acre, unincorporated Suwannee County cropland, from the Property Appraiser parcel download x 14.4962 mills | `owned-land-use-value` |
+| Property insurance | USDA ERS Commodity Costs and Returns, corn, Southern Seaboard, "Taxes and insurance", latest actual year (flagged upper estimate) | `owned-land-insurance-proxy` |
+| Maintenance/upkeep | USDA ERS, corn, Southern Seaboard, "General farm overhead" (only if the workbook scan finds no overlap) | `owned-land-upkeep-proxy` |
+| Basic average | Sum of the three lines | `owned-land-costs` |
+
+### Millage, FY2025-26, unincorporated Suwannee County
+
+| Taxing authority | Mills | Adoption document |
+|---|---|---|
+| Suwannee County Board of County Commissioners | 8.8000 | Final millage adopted 2025-09-22 |
+| Suwannee County School Board | 5.415 (3.167 + 0.748 + 1.500) | Final millage hearing 2025-09-09 |
+| Suwannee River Water Management District | 0.2812 | Resolution 2025-11 |
+| **Total** | **14.4962** | |
+
+The Property Appraiser's Tax Rates page shows 14.4745 (schools 5.4050,
+SRWMD 0.2695). The pack cites the adoption documents and records the
+difference.
+
+### Parcel download rules
+
+- Suwannee County Property Appraiser, Download Manager, Parcel Details CSV.
+- Unincorporated parcels classified as cropland. Florida DOR land-use codes
+  51-53 are expected; confirm against the DOR code table before use.
+- Value per acre = agricultural assessed **land** value / acres (buildings and
+  extra features excluded). Report median, 25th and 75th percentiles.
+- Record export date, filter, parcel count and sha256 of the raw export.
+- Drop owner names and mailing addresses on read. Keep only parcel ID, use
+  code, acres and value; only summary statistics enter the pack.
+
+## Land appreciation
+
+USDA NASS Land Values, Florida cropland average value per acre, 2022-2026.
+Store the series and the average annual growth rate (2025 $10,550/A, 2026
+$11,100/A, +5.2%). State-level only; NASS publishes no county value. The game
+applies appreciation in Increment 3.
+
+## Double-counting risks
+
+1. **Machinery insurance in Basic mode.** The ERS "Taxes and insurance" line
+   includes machinery insurance, but Basic mode uses custom hire, whose rates
+   already include the contractor's costs. Flagged; replace with a
+   farm-liability-only source when found.
+2. **Overhead already in the budget.** Before adding ERS general farm overhead,
+   scan the SVAEC owned workbook for overhead, utilities, maintenance, tax or
+   insurance lines, and the `FieldOperations` fixed costs. Stop and report any
+   overlap.
+3. **Real-estate tax.** Under the current ERS method, "Taxes and insurance"
+   excludes real-estate tax, so it does not overlap the property-tax line.
+
+## Increment 2b acceptance criteria
+
+1. Every new value cites a registered source in `pipeline/sources/sources.json`
+   with a locator (`provenance_problems` passes).
+2. Owned tenure option carries the three cost lines and the Basic total; the
+   total equals the sum to within $0.01/A (new validation check).
+3. Each owned-land cost is within 0 to revenue per acre (existing plausibility
+   rule for `*_usd_ac`).
+4. Land appreciation series and rate are in the pack with provenance.
+5. Workbook overlap scan result is recorded in the review register.
+6. Tests cover the sum check, the parcel summary (including dropped personal
+   columns) and the appreciation rate.
+7. The pack rebuilds byte-identically in CI; spot-check rows added for the new
+   values and signed by the project owner.
+
+## Approved order of work
+
+1. Increment 2b (this note): owned-land costs and land appreciation.
+2. Increment 3: UI-free engine in `game/src/engine/`, Basic mode end to end,
+   with a basic/advanced mode switch from the start.
+3. Advanced-mode requirements: owned machinery, labor, trucks, buildings,
+   financing, crop insurance with payouts.
+4. Increments 4+: Advanced data and engine work, starting with machinery.
