@@ -162,6 +162,65 @@
       "accessed": "set by fetch (see fetch-lock.json)",
       "license": "Florida public records (Chapter 119, F.S.); see the FGIO item license. Only aggregate statistics are committed; owner names, addresses, parcel IDs and geometry are never requested.",
       "kind": "fetched"
+    },
+    {
+      "id": "suwannee-bocc-millage-fy2027",
+      "title": "Suwannee County Board of County Commissioners, Final Budget Hearing FY2026-2027 (September 21, 2026): final operating millage 8.8000 mills (rolled-back rate 8.3590)",
+      "authors": "Suwannee County Board of County Commissioners",
+      "publisher": "Suwannee County, Florida",
+      "year": "2026",
+      "url": "https://suwanneecofl.portal.civicclerk.com/event/1044/files",
+      "accessed": "2026-11-07",
+      "license": "Florida public record (Chapter 119, F.S.). Rate transcribed as a fact with citation.",
+      "kind": "manual"
+    },
+    {
+      "id": "suwannee-school-board-millage-fy2027",
+      "title": "Suwannee County School Board Public Hearing (September 8, 2026): final millage 2026-2027, required local effort 3.157 + discretionary operating 0.748 + capital outlay 1.500 = 5.405 mills (Resolution SCSB 2027-04R)",
+      "authors": "Suwannee County School Board",
+      "publisher": "Suwannee County School District",
+      "year": "2026",
+      "url": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/4355/Scsd/0a9c1e0b-72b1-4205-8aed-3dfd19f072e6/2026-0908-Agenda-Public-Hearing.pdf",
+      "landing_page": "https://www.suwannee.k12.fl.us/documents/departments/finance/contracts/2026-2027-resolutions/24837677",
+      "accessed": "2026-11-07",
+      "license": "Florida public record (Chapter 119, F.S.). Rates transcribed as facts with citation.",
+      "kind": "manual"
+    },
+    {
+      "id": "srwmd-millage-fy2027",
+      "title": "Suwannee River Water Management District, Final Public Hearing on the FY2026-2027 Millage and Budget (September 21, 2026): Resolution 2026-14, final millage rate 0.2695 mills",
+      "authors": "Suwannee River Water Management District Governing Board",
+      "publisher": "Suwannee River Water Management District",
+      "year": "2026",
+      "url": "https://www.srwmd.org/Archive.aspx?AMID=52",
+      "accessed": "2026-11-07",
+      "license": "Florida public record (Chapter 119, F.S.). Rate transcribed as a fact with citation.",
+      "kind": "manual"
+    },
+    {
+      "id": "usda-ers-ccr-corn",
+      "title": "Commodity Costs and Returns: Corn, recent estimates (dollars per planted acre by ERS Farm Resource Region)",
+      "authors": "USDA Economic Research Service",
+      "publisher": "USDA ERS",
+      "year": "2026",
+      "edition": "Updated 10/1/2026; next update 5/3/2027",
+      "url": "https://www.ers.usda.gov/sites/default/files/_laserfiche/DataFiles/47913/CornCostReturn.csv",
+      "landing_page": "https://www.ers.usda.gov/data-products/commodity-costs-and-returns",
+      "accessed": "set by fetch (see fetch-lock.json)",
+      "license": "US Government work, public domain. Cite USDA ERS.",
+      "kind": "fetched"
+    },
+    {
+      "id": "usda-nass-land-values-2026",
+      "title": "Land Values 2026 Summary (July 2026): Cropland Average Value per Acre - Regions, States, and United States: 2022-2026",
+      "authors": "USDA National Agricultural Statistics Service",
+      "publisher": "USDA NASS",
+      "year": "2026",
+      "url": "https://release.nass.usda.gov/reports/land0726.pdf",
+      "landing_page": "https://esmis.nal.usda.gov/publication/agricultural-land-values",
+      "accessed": "2026-11-07",
+      "license": "US Government work, public domain. Values transcribed with citation.",
+      "kind": "manual"
     }
   ]
 }

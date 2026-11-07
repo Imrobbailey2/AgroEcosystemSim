@@ -119,3 +119,27 @@ def test_fetch_parcels_writes_only_aggregates(tmp_path: Path) -> None:
     text = (tmp_path / "parcels_summary.json").read_text(encoding="utf-8")
     assert "OWN_" not in text and "PARCEL_ID" not in text
     assert [e["note"] for e in lock.entries] == ["layer metadata", "query page 1"]
+
+
+def test_region_ers_config_is_registered() -> None:
+    cfg = REGION["ers"]
+    assert cfg["source"] in REGISTRY
+    assert REGISTRY[cfg["source"]]["url"] == cfg["url"]
+    assert set(cfg["items"]) == {"taxes_and_insurance", "general_farm_overhead"}
+
+
+def test_fetch_ers_writes_selected_items(tmp_path: Path) -> None:
+    cfg = REGION["ers"]
+    header = '"Commodity","Category","Item","Units","Size","Region","Country","Year","Value","Survey base year"\n'
+    rows = "".join(
+        f'"Corn","Allocated overhead","{label}","{cfg["units"]}","No specific size","{cfg["region"]}",'
+        f'"United States",2024,{value},"Base survey of 2021"\n'
+        for label, value in (("Taxes and insurance", 18.5), ("General farm overhead", 22.25))
+    )
+    lock = fetch.Lock()
+    lock.step = "ers"
+    fetch.fetch_ers(REGION, tmp_path, lock, get=lambda url: (header + rows).encode())
+    out = read_json(tmp_path / "ers_costs.json")
+    assert out["latest_year"] == 2024
+    assert out["items"]["general_farm_overhead"]["latest_value"] == 22.25
+    assert [e["note"] for e in lock.entries] == ["commodity costs and returns CSV"]

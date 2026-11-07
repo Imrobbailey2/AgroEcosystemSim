@@ -81,12 +81,13 @@
       "id": "owned-land-use-value",
       "title": "Owned land property tax: Suwannee County agricultural-use (greenbelt) value per acre and millage",
       "status": "open",
-      "decided_on": "2026-11-06",
+      "decided_on": "2026-11-07",
       "decision_owner": "Project owner",
-      "current_default": "Not yet modelled. Method: median agricultural classified-use assessed value per acre for all Suwannee County cropland parcels (DOR use codes 051-053; 050 excluded; no municipal filter) x total millage 14.4962 mills ($14.4962 per $1,000 of taxable value)",
+      "current_default": "Not yet modelled. Method: median agricultural classified-use assessed value per acre for all Suwannee County cropland parcels (DOR use codes 051-053; 050 excluded; no municipal filter), $278.63/A on the 2026 roll, x FY2026-27 total millage 14.4745 mills ($14.4745 per $1,000 of taxable value) = $4.03/A/yr",
       "options": [],
-      "notes": "Use value: fetched automatically (fetch step 'parcels', added 2026-11-07) from the Florida Statewide Parcels layer published by the State of Florida Geographic Information Office: the Florida Department of Revenue parcel GIS joined with the real property assessment roll (NAL) that the Suwannee County Property Appraiser submits to the Department. Filter CO_NO = 71 (Suwannee) and DOR_UC 051-053 (cropland, soil capability Class I-III; codes confirmed against the 2025 DOR NAL/SDF/NAP User's Guide). Value = AV_CLASS_USE (assessed value of the agriculturally classified portion) / parcel acres (LND_SQFOOT / 43,560); parcel acres include any non-classified portion such as a homesite, so values are conservative. Median, 25th/75th percentiles, counts by use code and taxing authority, and assessment year are written to parcels_summary.json; the sha256 of every query page is in fetch-lock.json. Only allow-listed value and land-use fields are requested: owner names, mailing addresses, parcel IDs and geometry are never downloaded. First fetch 2026-11-07 (run 42384231645, 2026 roll): 431 parcels, median $278.63/A (p25 $235.00, p75 $285.00; min $41.81, max $1,253.00); 051: 1 parcel, $277.53; 052: 240 parcels, $285.00; 053: 190 parcels, $234.99; at 14.4962 mills about $4.04/A/yr. Decided 2026-11-07 by the project owner: use all 431 parcels with no municipal filter, because TAX_AUTH_CD is 'CO' for every parcel and cannot separate Live Oak or Branford; exclude improved agricultural (050) parcels because they usually carry buildings. JV_CLASS_USE (median $2,000/A, p25 = p75 = $2,000) is not used. Optional: per-field tax by matching each SSURGO unit's capability class to a cropland code. Millage FY2025-26, unincorporated Suwannee County: County 8.8000 (adopted 2025-09-22); School Board 5.415 (required local effort 3.167 + discretionary 0.748 + capital outlay 1.500); Suwannee River Water Management District 0.2812 (Resolution 2025-11); total 14.4962. Conflict: the Property Appraiser Tax Rates page shows 14.4745 (schools 5.4050, SRWMD 0.2695); cite the adoption documents and keep this note. Classification requires an application to the Property Appraiser by March 1 each year (possible Advanced-mode decision).",
-      "affects": ["tenure_options"]
+      "notes": "Use value: fetched automatically (fetch step 'parcels', added 2026-11-07) from the Florida Statewide Parcels layer published by the State of Florida Geographic Information Office: the Florida Department of Revenue parcel GIS joined with the real property assessment roll (NAL) that the Suwannee County Property Appraiser submits to the Department. Filter CO_NO = 71 (Suwannee) and DOR_UC 051-053 (cropland, soil capability Class I-III; codes confirmed against the 2025 DOR NAL/SDF/NAP User's Guide). Value = AV_CLASS_USE (assessed value of the agriculturally classified portion) / parcel acres (LND_SQFOOT / 43,560); parcel acres include any non-classified portion such as a homesite, so values are conservative. Median, 25th/75th percentiles, counts by use code and taxing authority, and assessment year are written to parcels_summary.json; the sha256 of every query page is in fetch-lock.json. Only allow-listed value and land-use fields are requested: owner names, mailing addresses, parcel IDs and geometry are never downloaded. First fetch 2026-11-07 (run 42384231645, 2026 roll): 431 parcels, median $278.63/A (p25 $235.00, p75 $285.00; min $41.81, max $1,253.00); 051: 1 parcel, $277.53; 052: 240 parcels, $285.00; 053: 190 parcels, $234.99. Decided 2026-11-07 by the project owner: use all 431 parcels with no municipal filter, because TAX_AUTH_CD is 'CO' for every parcel and cannot separate Live Oak or Branford; exclude improved agricultural (050) parcels because they usually carry buildings. JV_CLASS_USE (median $2,000/A, p25 = p75 = $2,000) is not used. Optional: per-field tax by matching each SSURGO unit's capability class to a cropland code. Millage: decided 2026-11-07 by the project owner to use FY2026-27 rates, which are levied on the 2026 roll used here. Unincorporated Suwannee County FY2026-27: County 8.8000 (final budget hearing 2026-09-21); School Board 5.405 (required local effort 3.157 + discretionary 0.748 + capital outlay 1.500; final hearing 2026-09-08, resolution SCSB 2027-04R); Suwannee River Water Management District 0.2695 (Resolution 2026-14, final hearing 2026-09-21; the signed resolution has not been seen, only the staff recommendation and the Alachua County Property Appraiser's 2026 rate table); total 14.4745, which matches the Suwannee County Property Appraiser Tax Rates page. Property tax = $278.63 x 14.4745 / 1,000 = $4.03/A/yr. Superseded FY2025-26 rates: County 8.8000, School Board 5.415, SRWMD 0.2812, total 14.4962. Classification requires an application to the Property Appraiser by March 1 each year (possible Advanced-mode decision).",
+      "affects": ["tenure_options"],
+      "sources": ["fgio-fl-statewide-parcels", "suwannee-bocc-millage-fy2027", "suwannee-school-board-millage-fy2027", "srwmd-millage-fy2027"]
     },
     {
       "id": "owned-land-insurance-proxy",
@@ -94,10 +95,11 @@
       "status": "open",
       "decided_on": "2026-11-06",
       "decision_owner": "IFAS economist",
-      "current_default": "Not yet modelled. Placeholder: USDA ERS Commodity Costs and Returns, corn, Southern Seaboard region, 'Taxes and insurance' ($ per planted acre), latest actual (non-forecast) year in the 2026-10-01 release",
+      "current_default": "Not yet modelled. Placeholder: USDA ERS Commodity Costs and Returns, corn, Southern Seaboard region, 'Taxes and insurance' ($ per planted acre), latest actual (non-forecast) year in the 2026-10-01 release, fetched by step 'ers'",
       "options": [],
-      "notes": "Approved 2026-11-06 as a flagged upper estimate. Under the current ERS method this line covers non-real-estate property tax plus property/casualty/liability insurance, so it does not double-count real-estate property tax. It does include machinery insurance; in Basic mode the player hires custom operations whose rates already include the contractor's insurance, so this proxy overstates Basic costs. Replace with a farm-liability-only source when one is found. ERS corn estimates rest on the 2021 ARMS survey, updated annually.",
-      "affects": ["tenure_options"]
+      "notes": "Approved 2026-11-06 as a flagged upper estimate. Under the current ERS method this line covers non-real-estate property tax plus property/casualty/liability insurance, so it does not double-count real-estate property tax. It does include machinery insurance; in Basic mode the player hires custom operations whose rates already include the contractor's insurance, so this proxy overstates Basic costs. Replace with a farm-liability-only source when one is found. ERS corn estimates rest on the 2021 ARMS survey, updated annually. For scale, the ERS 2026 U.S. forecast (cost-of-production forecasts, 6/18/2026) is $21.46 per planted acre.",
+      "affects": ["tenure_options"],
+      "sources": ["usda-ers-ccr-corn"]
     },
     {
       "id": "owned-land-upkeep-proxy",
@@ -105,11 +107,11 @@
       "status": "open",
       "decided_on": "2026-11-06",
       "decision_owner": "IFAS economist",
-      "current_default": "Not yet modelled. Placeholder: USDA ERS Commodity Costs and Returns, corn, Southern Seaboard region, 'General farm overhead' ($ per planted acre)",
+      "current_default": "Not yet modelled. Placeholder: USDA ERS Commodity Costs and Returns, corn, Southern Seaboard region, 'General farm overhead' ($ per planted acre), latest actual year, fetched by step 'ers'",
       "options": [],
-      "notes": "Approved 2026-11-06. ERS general farm overhead covers utilities, supplies, maintenance of general-use structures and general business expense. Condition: before adding it, scan the SVAEC 2026 owned budget workbook (FieldCornBudget2026_Grain-Irrig-CT_Owned_260209.xlsx) for existing overhead, utilities, maintenance, tax or insurance lines, and the FieldOperations fixed costs for machinery depreciation, interest, repairs, taxes and insurance. If any overlap exists, stop and report it to the project owner before adding this cost.",
+      "notes": "Approved 2026-11-06. ERS general farm overhead covers utilities, supplies, maintenance of general-use structures and general business expense. For scale, the ERS 2026 U.S. forecast is $26.03 per planted acre. Condition: before adding it, scan the SVAEC 2026 owned budget workbook (FieldCornBudget2026_Grain-Irrig-CT_Owned_260209.xlsx) for existing overhead, utilities, maintenance, tax or insurance lines, and the FieldOperations fixed costs for machinery depreciation, interest, repairs, taxes and insurance. If any overlap exists, stop and report it to the project owner before adding this cost.",
       "affects": ["tenure_options"],
-      "sources": ["svaec-corn-2026-ct-owned"]
+      "sources": ["svaec-corn-2026-ct-owned", "usda-ers-ccr-corn"]
     },
     {
       "id": "land-appreciation-method",
@@ -117,10 +119,11 @@
       "status": "open",
       "decided_on": "2026-11-06",
       "decision_owner": "Project owner",
-      "current_default": "Not yet modelled. Method: USDA NASS Land Values, Florida cropland average value per acre, 2022-2026 series; the game uses the average annual growth rate",
+      "current_default": "Not yet modelled. Method: USDA NASS Land Values 2026 Summary, Florida cropland average value per acre, 2022-2026 ($8,340; $9,290; $10,170; $10,550; $11,100); compound average annual growth 2022-2026 = 7.41%/yr",
       "options": [],
-      "notes": "In scope for Increment 2b (data); applying appreciation in the game belongs to Increment 3. NASS reports Florida cropland at $10,550/A (2025) and $11,100/A (2026), +5.2%. NASS publishes state values only, so this is a state-level estimate for a Suwannee County farm.",
-      "affects": ["tenure_options"]
+      "notes": "In scope for Increment 2b (data); applying appreciation in the game belongs to Increment 3. Year-on-year changes: 2023 +11.4%, 2024 +9.5%, 2025 +3.7%, 2026 +5.2%; the compound average over 2022-2026 is (11,100 / 8,340)^(1/4) - 1 = 7.41%/yr. Recent years are slower than the average, so this rate is on the high side. NASS publishes state values only, so this is a state-level estimate for a Suwannee County farm. Figures transcribed from the Land Values 2026 Summary (released July 31, 2026), Cropland Average Value per Acre table.",
+      "affects": ["tenure_options"],
+      "sources": ["usda-nass-land-values-2026"]
     },
     {
       "id": "advanced-mode-scope",
