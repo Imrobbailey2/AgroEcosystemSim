@@ -149,6 +149,19 @@
       "accessed": "2026-10-20",
       "license": "MIT",
       "kind": "project"
+    },
+    {
+      "id": "fgio-fl-statewide-parcels",
+      "title": "Florida Statewide Parcels (CADASTRAL_DOR): Florida Department of Revenue parcel GIS joined with the real property assessment roll (NAL)",
+      "authors": "Florida Department of Revenue, Property Tax Oversight; Florida county property appraisers",
+      "publisher": "State of Florida Geographic Information Office (FGIO)",
+      "year": "current",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0",
+      "landing_page": "https://geodata.floridagio.gov/datasets/FGIO::florida-statewide-parcels/about",
+      "field_guide": "https://floridarevenue.com/property/dataportal/Documents/PTO%20Data%20Portal/User%20Guides/2025%20Users%20guide%20and%20quick%20reference/2025_NAL_SDF_NAP_Users_Guide.pdf",
+      "accessed": "set by fetch (see fetch-lock.json)",
+      "license": "Florida public records (Chapter 119, F.S.); see the FGIO item license. Only aggregate statistics are committed; owner names, addresses, parcel IDs and geometry are never requested.",
+      "kind": "fetched"
     }
   ]
 }

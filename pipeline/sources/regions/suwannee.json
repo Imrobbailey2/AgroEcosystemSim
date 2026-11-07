@@ -104,5 +104,22 @@
     "coverage_level": 0.75,
     "premium_field": "crop_insurance_premium_usd_ac",
     "default_purchased": true
+  },
+  "parcels": {
+    "source": "fgio-fl-statewide-parcels",
+    "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0",
+    "county_no": 71,
+    "use_codes": [51, 52, 53],
+    "fields": {
+      "county": "CO_NO",
+      "use_code": "DOR_UC",
+      "class_use_assessed": "AV_CLASS_U",
+      "class_use_just": "JV_CLASS_U",
+      "land_sqft": "LND_SQFOOT",
+      "tax_authority": "TAX_AUTH_C",
+      "year": "ASMNT_YR"
+    },
+    "exclude_tax_authorities": [],
+    "min_parcels": 10
   }
 }
