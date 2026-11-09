@@ -191,11 +191,20 @@
       "source": "fgio-fl-statewide-parcels",
       "step": "parcels",
       "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=CO_NO+%3D+71+AND+DOR_UC+IN+%28%27051%27%2C+%27052%27%2C+%27053%27%29&outFields=CO_NO%2CDOR_UC%2CAV_CLASS_U%2CJV_CLASS_U%2CLND_SQFOOT%2CTAX_AUTH_C%2CASMNT_YR&returnGeometry=false&orderByFields=OBJECTID+ASC&resultOffset=0&resultRecordCount=2000&f=json"
+    },
+    {
+      "bytes": 895186,
+      "note": "commodity costs and returns CSV",
+      "sha256": "11ffc52d388fc7203635d5c25b0d017ed3e47b0cb79d8b4b671e7c35a62fbffc",
+      "source": "usda-ers-ccr-corn",
+      "step": "ers",
+      "url": "https://www.ers.usda.gov/sites/default/files/_laserfiche/DataFiles/47913/CornCostReturn.csv"
     }
   ],
   "fetched_at": {
     "budgets": "2026-11-07T02:32:03Z",
-    "parcels": "2026-11-07T15:00:31Z",
+    "ers": "2026-11-09T16:17:20Z",
+    "parcels": "2026-11-09T16:17:20Z",
     "soils": "2026-10-20T19:58:05Z",
     "weather": "2026-10-20T19:58:05Z"
   },
