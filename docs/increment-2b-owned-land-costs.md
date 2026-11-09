@@ -1,7 +1,8 @@
 # Increment 2b: owned-land costs and land appreciation (design note)
 
-Status: **decisions recorded 2026-11-06 and 2026-11-07; fetch steps `parcels`
-and `ers` added; sources registered; cost lines not yet built.**
+Status: **decisions recorded 2026-11-06, 2026-11-07 and 2026-11-09; fetch steps
+`parcels` and `ers` added and run; sources registered; owned-workbook overlap
+scan done (2026-11-09, option C chosen); cost lines not yet built.**
 Review register items: `owned-land-costs`, `owned-land-use-value`,
 `owned-land-insurance-proxy`, `owned-land-upkeep-proxy`,
 `land-appreciation-method`, `advanced-mode-scope`
@@ -20,12 +21,19 @@ Advanced lines, so the two can never disagree.
 
 ## Owned-land cost lines
 
-| Line | Formula / source | Review item |
-|---|---|---|
-| Property tax | Median agricultural-use (greenbelt) assessed land value per acre, Suwannee County cropland (DOR use codes 051-053), from the Florida Statewide Parcels layer (fetch step `parcels`) x 14.4745 mills (FY2026-27) = **$4.03/A/yr** | `owned-land-use-value` |
-| Property insurance | USDA ERS Commodity Costs and Returns, corn, Southern Seaboard, "Taxes and insurance", latest actual year (fetch step `ers`; flagged upper estimate) | `owned-land-insurance-proxy` |
-| Maintenance/upkeep | USDA ERS, corn, Southern Seaboard, "General farm overhead" (fetch step `ers`; only if the workbook scan finds no overlap) | `owned-land-upkeep-proxy` |
-| Basic average | Sum of the three lines | `owned-land-costs` |
+Option C (project owner, 2026-11-09): property tax and property insurance
+together equal the owned budget's "Property tax and insurance" ($10.00/A), so
+the game matches the budget the rest of the game uses.
+
+| Line | Formula / source | Value | Review item |
+|---|---|---|---|
+| Property tax | Median agricultural-use (greenbelt) assessed land value per acre, Suwannee County cropland (DOR use codes 051-053), from the Florida Statewide Parcels layer (fetch step `parcels`) x 14.4745 mills (FY2026-27) | **$4.03/A/yr** | `owned-land-use-value` |
+| Property insurance | Owned budget FieldDetails "Property tax and insurance" ($10.00/A) minus property tax; derived value (`svaec-corn-2026-ct-owned`, `agroeco-adjustments`). ERS "Taxes and insurance" ($17.02/A, 2024) is a cross-check only | **$5.97/A/yr** | `owned-land-insurance-proxy` |
+| Maintenance/upkeep | USDA ERS, corn, Southern Seaboard, "General farm overhead", latest actual year 2024 (fetch step `ers`); cleared by the overlap scan | **$23.96/A/yr** | `owned-land-upkeep-proxy` |
+| Basic average | Sum of the three lines | **$33.96/A/yr** | `owned-land-costs` |
+
+Values are to be built and spot-checked; the FieldDetails cell for the $10.00/A
+is confirmed by the next budgets fetch.
 
 ### Millage, FY2026-27, unincorporated Suwannee County
 
@@ -82,8 +90,45 @@ Property Appraiser's 2026 rate table both give 0.2695).
   last 5 actual years are kept (forecast rows such as `2026F` are skipped).
   Output: `ers_costs.json`. If a name does not match, the fetch stops and
   lists the regions or items that do exist.
+- Fetched 2026-11-09 (run 42653191269), $ per planted acre:
+
+| Year | Taxes and insurance | General farm overhead | Survey base |
+|---|---|---|---|
+| 2020 | 19.53 | 29.34 | 2016 |
+| 2021 | 13.92 | 20.93 | 2021 |
+| 2022 | 15.35 | 23.40 | 2021 |
+| 2023 | 16.03 | 24.31 | 2021 |
+| 2024 | 17.02 | 23.96 | 2021 |
+
+- Only the latest actual year (2024) is used. 2020 is on an older survey base,
+  so the series is not used as a trend.
 - For scale only: the ERS 2026 U.S. forecast is $21.46 (taxes and insurance)
   and $26.03 (general farm overhead) per planted acre.
+
+## Owned-workbook overlap scan (2026-11-09)
+
+Scanned all sheets of the public owned workbook
+(`FieldCornBudget2026_Grain-Irrig-CT_Owned_260209.xlsx`) for overhead,
+utilities, maintenance, tax and insurance lines. Per acre, 140 acres:
+
+| Workbook line | $/A | $ total | Overlap | Resolution |
+|---|---|---|---|---|
+| BudgetSummary "Land cost" | 12.00 | 1,680 | | Sum of the rows below |
+| FieldDetails "Land rental cost" (E19), "Mortgage payment" (E20), "Opportunity cost" | 0 | 0 | None | |
+| FieldDetails "Property tax and insurance" | 10.00 | 1,400 | Property tax and property insurance lines | Option C: tax $4.03 + insurance $5.97 = $10.00 |
+| FieldDetails "Fixed electric standby charge" | 2.00 | 280 | Utilities in ERS general farm overhead | Not an owned-land line; not charged separately while ERS overhead is used; revisit with irrigation |
+| Machinery ownership or lease | 179.16 | 25,082 | ERS insurance and overhead, Advanced mode only | Not read by the pack; Basic uses custom hire |
+| Farm vehicle ownership or lease | 6.80 | 952 | Advanced mode only | As above |
+| Irrigation & fertigation equipment (own Tax & Insurance and Fixed Maintenance columns) | 136.99 | 19,179 | Advanced mode only | As above |
+| Maintenance & repairs (variable; machinery and irrigation) | 73.23 | 10,252 | None for land or general-use buildings | |
+
+The budget notes that gross profit does not include overall business
+management or general and administrative costs, so ERS general business
+expense is not already in the budget. The two FieldDetails rows were identified
+by value order in the downloaded workbook; the labels "Land cost", "Property
+tax and insurance", "Fixed electric standby charge" and "Opportunity cost" are
+now extracted (optional budget labels in `suwannee.json`) so the next budgets
+fetch records their cells.
 
 ## Land appreciation
 
@@ -101,16 +146,25 @@ appreciation in Increment 3.
 
 ## Double-counting risks
 
-1. **Machinery insurance in Basic mode.** The ERS "Taxes and insurance" line
-   includes machinery insurance, but Basic mode uses custom hire, whose rates
-   already include the contractor's costs. Flagged; replace with a
-   farm-liability-only source when found.
-2. **Overhead already in the budget.** Before adding ERS general farm overhead,
-   scan the SVAEC owned workbook for overhead, utilities, maintenance, tax or
-   insurance lines, and the `FieldOperations` fixed costs. Stop and report any
-   overlap.
-3. **Real-estate tax.** Under the current ERS method, "Taxes and insurance"
+1. **Property tax and insurance already in the owned budget.** The budget's
+   $12.00/A land cost includes "Property tax and insurance" of $10.00/A.
+   Resolved by option C: the property tax and property insurance lines replace
+   that $10.00/A and must sum to it. The ERS "Taxes and insurance" line
+   (which includes machinery insurance) is no longer charged; it is a
+   cross-check only.
+2. **Fixed electric standby charge.** The budget's $2.00/A standby charge is a
+   utility, which ERS general farm overhead also covers. It is not an
+   owned-land line and must not be charged separately while ERS overhead is
+   used.
+3. **Machinery, vehicle and irrigation fixed costs.** Not read by the pack and
+   not used in Basic mode (custom hire). They overlap ERS overhead and insurance
+   in Advanced mode and must be reconciled then.
+4. **Real-estate tax.** Under the current ERS method, "Taxes and insurance"
    excludes real-estate tax, so it does not overlap the property-tax line.
+
+Open question for the budget author (Kevin Athearn, UF/IFAS NFREC-Suwannee
+Valley): what the $10.00/A "Property tax and insurance" covers and how it was
+estimated.
 
 ## Increment 2b acceptance criteria
 
@@ -118,13 +172,17 @@ appreciation in Increment 3.
    with a locator (`provenance_problems` passes).
 2. Owned tenure option carries the three cost lines and the Basic total; the
    total equals the sum to within $0.01/A (new validation check).
-3. Each owned-land cost is within 0 to revenue per acre (existing plausibility
+3. Property tax + property insurance equals the owned budget's "Property tax
+   and insurance" to within $0.01/A, and property insurance is not negative
+   (new validation check, option C).
+4. Each owned-land cost is within 0 to revenue per acre (existing plausibility
    rule for `*_usd_ac`).
-4. Land appreciation series and rate are in the pack with provenance.
-5. Workbook overlap scan result is recorded in the review register.
-6. Tests cover the sum check, the parcel summary (including dropped personal
+5. Land appreciation series and rate are in the pack with provenance.
+6. Workbook overlap scan result is recorded in the review register (done
+   2026-11-09).
+7. Tests cover the sum checks, the parcel summary (including dropped personal
    columns) and the appreciation rate.
-7. The pack rebuilds byte-identically in CI; spot-check rows added for the new
+8. The pack rebuilds byte-identically in CI; spot-check rows added for the new
    values and signed by the project owner.
 
 ## Approved order of work

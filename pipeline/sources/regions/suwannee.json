@@ -65,7 +65,11 @@
       "Cover crop seed",
       "Total Variable",
       "Total Variable + Fixed",
-      "Total net farm-gate crop revenue"
+      "Total net farm-gate crop revenue",
+      "Land cost",
+      "Property tax and insurance",
+      "Fixed electric standby charge",
+      "Opportunity cost"
     ]
   },
   "budget_fields": {
