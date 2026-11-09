@@ -161,22 +161,6 @@
       "url": "https://ndownloader.figshare.com/files/43213605"
     },
     {
-      "bytes": 151417,
-      "note": "",
-      "sha256": "0b3b6cbac1def357586fd25621ee2d225078c8bde7627334d19f8ec886d3a670",
-      "source": "svaec-corn-2026-ct-owned",
-      "step": "budgets",
-      "url": "https://svaec.ifas.ufl.edu/media/svaecifasufledu/docs/excel/agribusiness/FieldCornBudget2026_Grain-Irrig-CT_Owned_260209.xlsx"
-    },
-    {
-      "bytes": 151298,
-      "note": "",
-      "sha256": "4acf7efecf3edf715b19aad515f39b5fbf7cff46487db41f09c160f2587e51c3",
-      "source": "svaec-corn-2026-ct-rented",
-      "step": "budgets",
-      "url": "https://svaec.ifas.ufl.edu/media/svaecifasufledu/docs/excel/agribusiness/FieldCornBudget2026_Grain-Irrig-CT_Rented_260209.xlsx"
-    },
-    {
       "bytes": 30504,
       "note": "layer metadata",
       "sha256": "afd269587534e88454e92c51aeb6eed1a9fe3184f3a737de4241f90de2628652",
@@ -199,10 +183,26 @@
       "source": "usda-ers-ccr-corn",
       "step": "ers",
       "url": "https://www.ers.usda.gov/sites/default/files/_laserfiche/DataFiles/47913/CornCostReturn.csv"
+    },
+    {
+      "bytes": 151417,
+      "note": "",
+      "sha256": "0b3b6cbac1def357586fd25621ee2d225078c8bde7627334d19f8ec886d3a670",
+      "source": "svaec-corn-2026-ct-owned",
+      "step": "budgets",
+      "url": "https://svaec.ifas.ufl.edu/media/svaecifasufledu/docs/excel/agribusiness/FieldCornBudget2026_Grain-Irrig-CT_Owned_260209.xlsx"
+    },
+    {
+      "bytes": 151298,
+      "note": "",
+      "sha256": "4acf7efecf3edf715b19aad515f39b5fbf7cff46487db41f09c160f2587e51c3",
+      "source": "svaec-corn-2026-ct-rented",
+      "step": "budgets",
+      "url": "https://svaec.ifas.ufl.edu/media/svaecifasufledu/docs/excel/agribusiness/FieldCornBudget2026_Grain-Irrig-CT_Rented_260209.xlsx"
     }
   ],
   "fetched_at": {
-    "budgets": "2026-11-07T02:32:03Z",
+    "budgets": "2026-11-09T19:30:23Z",
     "ers": "2026-11-09T16:17:20Z",
     "parcels": "2026-11-09T16:17:20Z",
     "soils": "2026-10-20T19:58:05Z",
