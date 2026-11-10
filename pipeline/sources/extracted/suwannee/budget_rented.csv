@@ -25,3 +25,6 @@ Total Variable,FieldOperations,H64,0,[]
 Total Variable + Fixed,FieldOperations,J64,0,[]
 Total net farm-gate crop revenue,BudgetSummary,B39,0,"[[""E39"", 967.7], [""F39"", 4.720487804878049], [""G39"", 135478.0]]"
 Total net farm-gate crop revenue,Marketing,B39,1,"[[""C39"", 4.720487804878049], [""D39"", 967.6999999999999]]"
+Land cost,BudgetSummary,B26,0,"[[""E26"", 285.7142857142857], [""F26"", 1.3937282229965158], [""G26"", 40000.0]]"
+Property tax and insurance,FieldDetails,B21,0,"[[""E21"", 0.0]]"
+Fixed electric standby charge,FieldDetails,B22,0,"[[""E22"", 0.0]]"
