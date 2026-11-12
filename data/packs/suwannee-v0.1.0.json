@@ -1436,9 +1436,9 @@
   "format": "agroeco-datapack",
   "format_version": 1,
   "inputs": {
-    "fetch_lock_sha256": "4a495041c054dfda6df68d227969208a553328c9bd64e3848f16398d61bf4419",
+    "fetch_lock_sha256": "2aeb4b2209462101a5bfa378f05266fce1a9013bac585c49eb913aeb2a1366d0",
     "fetched_at": {
-      "budgets": "2026-11-09T19:30:23Z",
+      "budgets": "2026-11-12T14:40:36Z",
       "ers": "2026-11-09T16:17:20Z",
       "parcels": "2026-11-09T16:17:20Z",
       "soils": "2026-10-20T19:58:05Z",
@@ -2306,6 +2306,15 @@
         "value": 205.0
       },
       "budget": "owned",
+      "budget_property_tax_and_insurance_usd_ac": {
+        "prov": {
+          "loc": "FieldDetails!E21",
+          "sources": [
+            "svaec-corn-2026-ct-owned"
+          ]
+        },
+        "value": 10.0
+      },
       "budget_total_net_revenue_usd_ac": {
         "prov": {
           "loc": "Marketing!D39",
@@ -2315,7 +2324,190 @@
         },
         "value": 967.6999999999999
       },
-      "id": "owned"
+      "id": "owned",
+      "land_appreciation": {
+        "label": "Florida cropland average value per acre",
+        "prov": {
+          "loc": "Florida cropland average value per acre, 2022-2026",
+          "sources": [
+            "usda-nass-land-values-2026"
+          ]
+        },
+        "rate_per_yr": {
+          "prov": {
+            "loc": "Florida cropland average value per acre, 2022-2026",
+            "method": "compound average annual growth: (11100 / 8340)^(1/4) - 1",
+            "sources": [
+              "usda-nass-land-values-2026"
+            ]
+          },
+          "value": 0.074086
+        },
+        "review_flag": "land-appreciation-method",
+        "series": [
+          {
+            "prov": {
+              "loc": "Cropland Average Value per Acre - Regions, States, and United States: 2022-2026, Florida, 2022",
+              "sources": [
+                "usda-nass-land-values-2026"
+              ]
+            },
+            "usd_ac": 8340.0,
+            "year": 2022
+          },
+          {
+            "prov": {
+              "loc": "Cropland Average Value per Acre - Regions, States, and United States: 2022-2026, Florida, 2023",
+              "sources": [
+                "usda-nass-land-values-2026"
+              ]
+            },
+            "usd_ac": 9290.0,
+            "year": 2023
+          },
+          {
+            "prov": {
+              "loc": "Cropland Average Value per Acre - Regions, States, and United States: 2022-2026, Florida, 2024",
+              "sources": [
+                "usda-nass-land-values-2026"
+              ]
+            },
+            "usd_ac": 10170.0,
+            "year": 2024
+          },
+          {
+            "prov": {
+              "loc": "Cropland Average Value per Acre - Regions, States, and United States: 2022-2026, Florida, 2025",
+              "sources": [
+                "usda-nass-land-values-2026"
+              ]
+            },
+            "usd_ac": 10550.0,
+            "year": 2025
+          },
+          {
+            "prov": {
+              "loc": "Cropland Average Value per Acre - Regions, States, and United States: 2022-2026, Florida, 2026",
+              "sources": [
+                "usda-nass-land-values-2026"
+              ]
+            },
+            "usd_ac": 11100.0,
+            "year": 2026
+          }
+        ]
+      },
+      "owned_land_cost_usd_ac": {
+        "prov": {
+          "loc": "property_tax_usd_ac + property_insurance_usd_ac + upkeep_usd_ac",
+          "method": "Basic-mode owned-land cost: sum of the three Advanced lines",
+          "sources": [
+            "agroeco-adjustments",
+            "fgio-fl-statewide-parcels",
+            "srwmd-millage-fy2027",
+            "suwannee-bocc-millage-fy2027",
+            "suwannee-school-board-millage-fy2027",
+            "svaec-corn-2026-ct-owned",
+            "usda-ers-ccr-corn"
+          ]
+        },
+        "value": 33.96
+      },
+      "property_insurance_usd_ac": {
+        "prov": {
+          "loc": "FieldDetails!E21 minus property_tax_usd_ac",
+          "method": "option C (2026-11-09): budget 'Property tax and insurance' minus property tax",
+          "sources": [
+            "svaec-corn-2026-ct-owned",
+            "agroeco-adjustments"
+          ]
+        },
+        "value": 5.97
+      },
+      "property_tax_basis": {
+        "millage": [
+          {
+            "authority": "Suwannee County Board of County Commissioners",
+            "id": "county",
+            "mills": 8.8,
+            "prov": {
+              "loc": "Final Budget Hearing FY2026-2027, 2026-09-21: final operating millage",
+              "sources": [
+                "suwannee-bocc-millage-fy2027"
+              ]
+            }
+          },
+          {
+            "authority": "Suwannee County School Board",
+            "id": "school-board",
+            "mills": 5.405,
+            "prov": {
+              "loc": "Public Hearing 2026-09-08, Resolution SCSB 2027-04R: required local effort 3.157 + discretionary operating 0.748 + capital outlay 1.500",
+              "sources": [
+                "suwannee-school-board-millage-fy2027"
+              ]
+            }
+          },
+          {
+            "authority": "Suwannee River Water Management District",
+            "id": "srwmd",
+            "mills": 0.2695,
+            "prov": {
+              "loc": "Resolution 2026-14, final public hearing 2026-09-21: final millage rate",
+              "sources": [
+                "srwmd-millage-fy2027"
+              ]
+            }
+          }
+        ],
+        "millage_label": "FY2026-27",
+        "parcels_used": 431,
+        "prov": {
+          "loc": "parcels_summary.json; manual millage table",
+          "method": "property tax = use value per acre x total mills / 1,000",
+          "sources": [
+            "fgio-fl-statewide-parcels",
+            "srwmd-millage-fy2027",
+            "suwannee-bocc-millage-fy2027",
+            "suwannee-school-board-millage-fy2027"
+          ]
+        },
+        "review_flag": "owned-land-use-value",
+        "total_mills": 14.4745,
+        "use_value_usd_ac": {
+          "prov": {
+            "loc": "parcels_summary.json classified_use_assessed_usd_ac.median (county 71, DOR use codes 051, 052, 053, 431 parcels, 2026 roll)",
+            "method": "median of AV_CLASS_USE / (LND_SQFOOT / 43,560) across parcels",
+            "sources": [
+              "fgio-fl-statewide-parcels"
+            ]
+          },
+          "value": 278.63
+        }
+      },
+      "property_tax_usd_ac": {
+        "prov": {
+          "loc": "property_tax_basis",
+          "method": "278.63 $/A x 14.4745 mills / 1,000, rounded to cents",
+          "sources": [
+            "fgio-fl-statewide-parcels",
+            "srwmd-millage-fy2027",
+            "suwannee-bocc-millage-fy2027",
+            "suwannee-school-board-millage-fy2027"
+          ]
+        },
+        "value": 4.03
+      },
+      "upkeep_usd_ac": {
+        "prov": {
+          "loc": "Corn, Southern Seaboard, General farm overhead, dollars per planted acre, 2024",
+          "method": "latest actual year",
+          "sources": [
+            "usda-ers-ccr-corn"
+          ]
+        },
+        "value": 23.96
+      }
     },
     {
       "benchmark_price_usd_bu": {
