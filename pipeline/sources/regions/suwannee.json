@@ -86,6 +86,10 @@
     "total_net_revenue_usd_ac": {
       "label": "Total net farm-gate crop revenue", "col": "D", "sheet": "Marketing", "required": true
     },
+    "property_tax_and_insurance_usd_ac": {
+      "label": "Property tax and insurance", "col": "E", "sheet": "FieldDetails", "required": true,
+      "tenures": ["owned"]
+    },
     "operating_interest_rate": {"label": "Annual interest rate", "col": "C"}
   },
   "market_channel": {
@@ -108,6 +112,16 @@
     "coverage_level": 0.75,
     "premium_field": "crop_insurance_premium_usd_ac",
     "default_purchased": true
+  },
+  "owned_land": {
+    "budget_field": "property_tax_and_insurance_usd_ac",
+    "parcels_file": "parcels_summary.json",
+    "millage_file": "millage_suwannee_fy2027.csv",
+    "millage_label": "FY2026-27",
+    "ers_file": "ers_costs.json",
+    "upkeep_item": "general_farm_overhead",
+    "appreciation_file": "nass_land_values_fl.csv",
+    "appreciation_label": "Florida cropland average value per acre"
   },
   "parcels": {
     "source": "fgio-fl-statewide-parcels",

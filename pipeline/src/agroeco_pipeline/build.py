@@ -165,8 +165,13 @@ def budgets_block(region: dict[str, Any], extracted: Path) -> tuple[dict[str, An
     return budgets, picked
 
 
-def tenure_block(picked: dict[str, dict], price_field: str) -> list[dict[str, Any]]:
-    """Tenure options; the benchmark price is the same one the market channel pays."""
+def tenure_block(
+    picked: dict[str, dict], price_field: str, owned_land: dict[str, Any] | None = None
+) -> list[dict[str, Any]]:
+    """Tenure options; the benchmark price is the same one the market channel pays.
+
+    ``owned_land`` (from :func:`owned_land_block`) is merged into the owned option.
+    """
     out = []
     for tenure in sorted(picked):
         f = picked[tenure]
@@ -178,12 +183,183 @@ def tenure_block(picked: dict[str, dict], price_field: str) -> list[dict[str, An
         }
         if tenure == "rented":
             entry["land_rent_usd_ac"] = f["land_rent_usd_ac"]
+        if tenure == "owned" and owned_land:
+            entry.update(owned_land)
         # The budget's bottom line (net sales revenue minus the insurance premium),
         # kept so validation can reconcile the pack against the published budget.
         if "total_net_revenue_usd_ac" in f:
             entry["budget_total_net_revenue_usd_ac"] = f["total_net_revenue_usd_ac"]
         out.append(entry)
     return out
+
+
+def _money(value: float) -> float:
+    """Round a $/acre amount to cents."""
+    return round(value, 2)
+
+
+def _read_extract(extracted: Path, name: str, step: str) -> Any:
+    path = extracted / name
+    if not path.exists():
+        raise PipelineError(
+            f"missing {path}: run the 'Fetch sources' workflow with only = {step} for this region first"
+        )
+    return read_json(path)
+
+
+def property_tax_parts(
+    parcels: dict[str, Any], millage_rows: list[dict[str, str]], millage_label: str
+) -> tuple[float, dict[str, Any]]:
+    """Return (property tax $/acre/yr rounded to cents, cited basis).
+
+    Tax = median agricultural classified-use assessed value per acre x total mills / 1,000.
+    """
+    try:
+        use_value = to_float(parcels["classified_use_assessed_usd_ac"]["median"], "parcels median")
+        parcels_used = int(parcels["parcels_used"])
+        parcels_source = parcels["source"]
+    except (KeyError, TypeError) as exc:
+        raise PipelineError(f"parcels_summary.json lacks {exc}; re-run Fetch sources with only = parcels") from exc
+    if not millage_rows:
+        raise PipelineError("millage table is empty")
+    millage = [
+        {"id": r["authority_id"], "authority": r["authority"], "mills": to_float(r["mills"], "mills"),
+         "prov": _prov(r["source"], r["locator"])}
+        for r in millage_rows
+    ]
+    total_mills = round(sum(m["mills"] for m in millage), 4)
+    years = sorted((parcels.get("assessment_years") or {}).keys())
+    roll = f"{'/'.join(years)} roll" if years else "assessment roll"
+    codes = ", ".join(f"{int(c):03d}" for c in parcels.get("use_codes") or [])
+    use_value_node = {
+        "value": use_value,
+        "prov": _prov(
+            parcels_source,
+            f"parcels_summary.json classified_use_assessed_usd_ac.median (county {parcels.get('county_no')}, "
+            f"DOR use codes {codes}, {parcels_used} parcels, {roll})",
+            "median of AV_CLASS_USE / (LND_SQFOOT / 43,560) across parcels",
+        ),
+    }
+    tax = _money(use_value * total_mills / 1000)
+    basis = {
+        "use_value_usd_ac": use_value_node,
+        "parcels_used": parcels_used,
+        "millage": millage,
+        "millage_label": millage_label,
+        "total_mills": total_mills,
+        "review_flag": "owned-land-use-value",
+        "prov": {
+            "sources": [parcels_source, *sorted({r["source"] for r in millage_rows})],
+            "loc": "parcels_summary.json; manual millage table",
+            "method": "property tax = use value per acre x total mills / 1,000",
+        },
+    }
+    return tax, basis
+
+
+def land_appreciation_block(rows: list[dict[str, str]], label: str) -> dict[str, Any]:
+    """Land value series and its compound average annual growth rate."""
+    series = sorted(
+        ({"year": int(r["year"]), "usd_ac": to_float(r["usd_ac"], "usd_ac"),
+          "prov": _prov(r["source"], r["locator"])} for r in rows),
+        key=lambda s: s["year"],
+    )
+    if len(series) < 2:
+        raise PipelineError("land appreciation needs at least 2 years of land values")
+    first, last = series[0], series[-1]
+    span = last["year"] - first["year"]
+    if span <= 0 or first["usd_ac"] <= 0:
+        raise PipelineError("land appreciation series must cover increasing years with positive values")
+    rate = round((last["usd_ac"] / first["usd_ac"]) ** (1 / span) - 1, 6)
+    sources = sorted({r["source"] for r in rows})
+    return {
+        "label": label,
+        "series": series,
+        "rate_per_yr": {
+            "value": rate,
+            "prov": {
+                "sources": sources,
+                "loc": f"{label}, {first['year']}-{last['year']}",
+                "method": f"compound average annual growth: ({last['usd_ac']:g} / {first['usd_ac']:g})"
+                          f"^(1/{span}) - 1",
+            },
+        },
+        "review_flag": "land-appreciation-method",
+        "prov": {"sources": sources, "loc": f"{label}, {first['year']}-{last['year']}"},
+    }
+
+
+def owned_land_block(
+    region: dict[str, Any], owned: dict[str, Any], extracted: Path, manual: Path
+) -> dict[str, Any]:
+    """Owned-land cost lines (option C, 2026-11-09) and land appreciation for the owned tenure.
+
+    - property tax: parcels use value x millage
+    - property insurance: the owned budget's "Property tax and insurance" minus property tax
+    - maintenance/upkeep: USDA ERS "General farm overhead", latest actual year
+    - Basic total: the sum of the three lines
+    """
+    cfg = region["owned_land"]
+    budget_node = owned.get(cfg["budget_field"])
+    if budget_node is None:
+        raise PipelineError(f"owned_land: owned budget field {cfg['budget_field']!r} was not picked")
+    budget_value = budget_node["value"]
+
+    parcels = _read_extract(extracted, cfg["parcels_file"], "parcels")
+    tax, basis = property_tax_parts(parcels, read_csv(manual / cfg["millage_file"]), cfg["millage_label"])
+    tax_node = {
+        "value": tax,
+        "prov": {
+            "sources": basis["prov"]["sources"],
+            "loc": "property_tax_basis",
+            "method": f"{basis['use_value_usd_ac']['value']:g} $/A x {basis['total_mills']:g} mills / 1,000, "
+                      "rounded to cents",
+        },
+    }
+
+    insurance = _money(budget_value - tax)
+    budget_source = budget_node["prov"]["sources"][0]
+    insurance_node = {
+        "value": insurance,
+        "prov": {
+            "sources": [budget_source, "agroeco-adjustments"],
+            "loc": f"{budget_node['prov']['loc']} minus property_tax_usd_ac",
+            "method": "option C (2026-11-09): budget 'Property tax and insurance' minus property tax",
+        },
+    }
+
+    ers = _read_extract(extracted, cfg["ers_file"], "ers")
+    try:
+        item = ers["items"][cfg["upkeep_item"]]
+        upkeep = to_float(item["latest_value"], "ers latest_value")
+        upkeep_loc = (f"{ers['commodity']}, {ers['region']}, {item['item']}, {item['units']}, "
+                      f"{item['latest_year']}")
+        ers_source = ers["source"]
+    except (KeyError, TypeError) as exc:
+        raise PipelineError(f"ers_costs.json lacks {exc}; re-run Fetch sources with only = ers") from exc
+    upkeep_node = {"value": upkeep, "prov": _prov(ers_source, upkeep_loc, "latest actual year")}
+
+    lines = (tax_node, insurance_node, upkeep_node)
+    total_sources = sorted({s for n in lines for s in n["prov"]["sources"]})
+    total_node = {
+        "value": _money(sum(n["value"] for n in lines)),
+        "prov": {
+            "sources": total_sources,
+            "loc": "property_tax_usd_ac + property_insurance_usd_ac + upkeep_usd_ac",
+            "method": "Basic-mode owned-land cost: sum of the three Advanced lines",
+        },
+    }
+    return {
+        "property_tax_usd_ac": tax_node,
+        "property_tax_basis": basis,
+        "property_insurance_usd_ac": insurance_node,
+        "upkeep_usd_ac": upkeep_node,
+        "owned_land_cost_usd_ac": total_node,
+        "budget_property_tax_and_insurance_usd_ac": budget_node,
+        "land_appreciation": land_appreciation_block(
+            read_csv(manual / cfg["appreciation_file"]), cfg["appreciation_label"]
+        ),
+    }
 
 
 def market_block(region: dict[str, Any], picked: dict[str, dict], ops: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -293,6 +469,9 @@ def build_pack(region_id: str) -> dict[str, Any]:
     )
     ops = custom_ops_block(manual)
     budgets, picked = budgets_block(region, extracted)
+    owned_land = None
+    if "owned_land" in region and "owned" in picked:
+        owned_land = owned_land_block(region, picked["owned"], extracted, manual)
     station, years = weather_block(region, extracted)
     return {
         "format": FORMAT,
@@ -308,7 +487,7 @@ def build_pack(region_id: str) -> dict[str, Any]:
         "crops": [crop_block(manual, review)],
         "custom_operations": ops,
         "budgets": budgets,
-        "tenure_options": tenure_block(picked, region["market_channel"]["price_field"]),
+        "tenure_options": tenure_block(picked, region["market_channel"]["price_field"], owned_land),
         "market_channels": market_block(region, picked, ops),
         "crop_insurance_options": crop_insurance_block(region, picked),
         "weather_station": station,
