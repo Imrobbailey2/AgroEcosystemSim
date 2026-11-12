@@ -14,7 +14,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from agroeco_pipeline.build import build_pack, run_build  # noqa: E402
 from agroeco_pipeline.common import PipelineError  # noqa: E402
 from agroeco_pipeline.validate import plausibility_problems, provenance_problems, validate_pack  # noqa: E402
-from fixtures import BUDGET_LINES, make_sources_tree, write_budget_csvs  # noqa: E402
+from fixtures import BUDGET_LINES, OWNED_LAND_LINE, make_sources_tree, write_budget_csvs  # noqa: E402
 
 
 def _build(tmp_path: Path) -> dict:
@@ -23,6 +23,10 @@ def _build(tmp_path: Path) -> dict:
         return build_pack("suwannee")
     finally:
         del os.environ["AGROECO_SOURCES_DIR"]
+
+
+def _owned(pack: dict) -> dict:
+    return next(t for t in pack["tenure_options"] if t["id"] == "owned")
 
 
 def test_pack_passes_schema_and_provenance(tmp_path: Path) -> None:
@@ -128,6 +132,83 @@ def test_implausible_price_and_net_above_gross_are_rejected(tmp_path: Path) -> N
     problems = plausibility_problems(pack)
     assert any("benchmark_price_usd_bu = 861.0" in p for p in problems)
     assert any("net price 5.0 exceeds gross price 4.5" in p for p in problems)
+
+
+def test_owned_land_cost_lines(tmp_path: Path) -> None:
+    """Option C: $4.03 tax + $5.97 insurance = the budget's $10.00/A; + $23.96 upkeep = $33.96/A."""
+    owned = _owned(_build(tmp_path))
+    assert owned["property_tax_usd_ac"]["value"] == 4.03  # $278.63/A x 14.4745 mills / 1,000
+    assert owned["property_insurance_usd_ac"]["value"] == 5.97
+    assert owned["upkeep_usd_ac"]["value"] == 23.96
+    assert owned["owned_land_cost_usd_ac"]["value"] == 33.96
+    budget = owned["budget_property_tax_and_insurance_usd_ac"]
+    assert (budget["value"], budget["prov"]["loc"]) == (10.0, "FieldDetails!E21")  # per-acre E, not D
+    basis = owned["property_tax_basis"]
+    assert basis["use_value_usd_ac"]["value"] == 278.63
+    assert basis["total_mills"] == 14.4745
+    assert [m["mills"] for m in basis["millage"]] == [8.8, 5.405, 0.2695]
+    assert basis["review_flag"] == "owned-land-use-value"
+    assert set(owned["property_tax_usd_ac"]["prov"]["sources"]) == {
+        "fgio-fl-statewide-parcels", "suwannee-bocc-millage-fy2027",
+        "suwannee-school-board-millage-fy2027", "srwmd-millage-fy2027",
+    }
+    assert owned["property_insurance_usd_ac"]["prov"]["sources"] == ["svaec-corn-2026-ct-owned", "agroeco-adjustments"]
+    assert owned["upkeep_usd_ac"]["prov"]["sources"] == ["usda-ers-ccr-corn"]
+    assert "General farm overhead" in owned["upkeep_usd_ac"]["prov"]["loc"]
+    assert "2024" in owned["upkeep_usd_ac"]["prov"]["loc"]
+
+
+def test_rented_land_has_no_owned_land_costs(tmp_path: Path) -> None:
+    rented = next(t for t in _build(tmp_path)["tenure_options"] if t["id"] == "rented")
+    for key in ("property_tax_usd_ac", "owned_land_cost_usd_ac", "land_appreciation"):
+        assert key not in rented
+
+
+def test_land_appreciation(tmp_path: Path) -> None:
+    """USDA NASS Florida cropland 2022-2026: ($11,100 / $8,340)^(1/4) - 1 = 7.41%/yr."""
+    appreciation = _owned(_build(tmp_path))["land_appreciation"]
+    assert [(s["year"], s["usd_ac"]) for s in appreciation["series"]] == [
+        (2022, 8340.0), (2023, 9290.0), (2024, 10170.0), (2025, 10550.0), (2026, 11100.0),
+    ]
+    assert appreciation["rate_per_yr"]["value"] == pytest.approx(0.074086, abs=1e-6)
+    assert round(appreciation["rate_per_yr"]["value"] * 100, 2) == 7.41
+    assert appreciation["rate_per_yr"]["prov"]["sources"] == ["usda-nass-land-values-2026"]
+    assert appreciation["review_flag"] == "land-appreciation-method"
+
+
+def test_owned_budget_without_property_tax_line_fails_the_build(tmp_path: Path) -> None:
+    base = make_sources_tree(tmp_path)
+    write_budget_csvs(base / "extracted" / "suwannee", owned_lines=[])
+    os.environ["AGROECO_SOURCES_DIR"] = str(base)
+    try:
+        with pytest.raises(PipelineError, match="property_tax_and_insurance_usd_ac"):
+            build_pack("suwannee")
+    finally:
+        del os.environ["AGROECO_SOURCES_DIR"]
+
+
+def test_missing_parcels_extract_explains(tmp_path: Path) -> None:
+    base = make_sources_tree(tmp_path)
+    (base / "extracted" / "suwannee" / "parcels_summary.json").unlink()
+    os.environ["AGROECO_SOURCES_DIR"] = str(base)
+    try:
+        with pytest.raises(PipelineError, match="only = parcels"):
+            build_pack("suwannee")
+    finally:
+        del os.environ["AGROECO_SOURCES_DIR"]
+
+
+def test_property_tax_above_the_budget_line_fails_the_build(tmp_path: Path) -> None:
+    """If tax ($4.03/A) exceeds the budget's 'Property tax and insurance', insurance must not go negative."""
+    base = make_sources_tree(tmp_path)
+    label, sheet, cell, occ, _ = OWNED_LAND_LINE
+    write_budget_csvs(base / "extracted" / "suwannee", owned_lines=[(label, sheet, cell, occ, [["E21", 3.0]])])
+    os.environ["AGROECO_SOURCES_DIR"] = str(base)
+    try:
+        with pytest.raises(PipelineError, match="property_insurance_usd_ac = -1.03 is negative"):
+            run_build("suwannee", tmp_path / "p.json")
+    finally:
+        del os.environ["AGROECO_SOURCES_DIR"]
 
 
 def test_build_is_byte_deterministic(tmp_path: Path) -> None:
