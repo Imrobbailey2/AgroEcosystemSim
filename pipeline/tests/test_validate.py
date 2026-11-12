@@ -5,6 +5,10 @@ must be rejected when it is read as a per-acre value, the correct per-acre rent
 (~$285.71) must pass, a net farm-gate price above the gross price must be
 rejected, and the pack's revenue must reconcile with the budget's own total
 (205 bu/A x $4.78/bu - $12.20/A crop insurance premium = $967.70/A).
+
+Owned-land costs (option C, 2026-11-09): property tax $4.03 + property insurance
+$5.97 = the owned budget's "Property tax and insurance" $10.00/A; plus upkeep
+$23.96 = the Basic total $33.96/A; land appreciation 7.41%/yr from the NASS series.
 """
 
 from __future__ import annotations
@@ -14,7 +18,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from agroeco_pipeline.validate import plausibility_problems  # noqa: E402
+from agroeco_pipeline.validate import owned_land_problems, plausibility_problems  # noqa: E402
 
 
 def _num(value: float) -> dict:
@@ -46,6 +50,36 @@ def _reconcile_pack(total: float, premium: float = 12.2, purchased: bool = True)
         "crop_insurance_options": [
             {"id": "rp-75", "premium_usd_ac": _num(premium), "default_purchased": purchased},
         ],
+    }
+
+
+NASS_FL_CROPLAND = [(2022, 8340.0), (2023, 9290.0), (2024, 10170.0), (2025, 10550.0), (2026, 11100.0)]
+
+
+def _owned(
+    tax: float = 4.03,
+    insurance: float = 5.97,
+    upkeep: float = 23.96,
+    total: float = 33.96,
+    budget: float = 10.0,
+    rate: float = 0.074086,
+    series: list[tuple[int, float]] | None = None,
+) -> dict:
+    """An owned tenure option with the real 2026 owned-land values (option C)."""
+    points = NASS_FL_CROPLAND if series is None else series
+    return {
+        "id": "owned",
+        "benchmark_yield_bu_ac": _num(205.0),
+        "benchmark_price_usd_bu": _num(4.78),
+        "property_tax_usd_ac": _num(tax),
+        "property_insurance_usd_ac": _num(insurance),
+        "upkeep_usd_ac": _num(upkeep),
+        "owned_land_cost_usd_ac": _num(total),
+        "budget_property_tax_and_insurance_usd_ac": _num(budget),
+        "land_appreciation": {
+            "series": [{"year": y, "usd_ac": v, "prov": {"loc": "x", "sources": ["s"]}} for y, v in points],
+            "rate_per_yr": _num(rate),
+        },
     }
 
 
@@ -123,3 +157,52 @@ def test_missing_premium_deduction_is_flagged() -> None:
 def test_reconcile_skipped_without_a_default_insurance_option() -> None:
     """With no option marked as purchased there is no premium to reconcile."""
     assert plausibility_problems(_reconcile_pack(967.7, premium=0.0, purchased=False)) == []
+
+
+def test_real_owned_land_costs_pass() -> None:
+    """$4.03 + $5.97 + $23.96 = $33.96/A; $4.03 + $5.97 = $10.00/A; 7.41%/yr."""
+    assert plausibility_problems({"tenure_options": [_owned()]}) == []
+
+
+def test_basic_total_must_equal_the_sum_of_the_lines() -> None:
+    problems = owned_land_problems(_owned(total=34.00))
+    assert any("owned_land_cost_usd_ac = 34.00 does not equal the sum" in p and "33.96" in p for p in problems)
+
+
+def test_basic_total_within_one_cent_passes() -> None:
+    assert owned_land_problems(_owned(total=33.965)) == []
+
+
+def test_basic_total_without_its_lines_is_flagged() -> None:
+    owned = _owned()
+    del owned["upkeep_usd_ac"]
+    problems = owned_land_problems(owned)
+    assert any("'upkeep_usd_ac'" in p and "missing" in p for p in problems)
+
+
+def test_tax_and_insurance_must_reconcile_with_the_budget() -> None:
+    """Option B ($4.03 tax + ERS $17.02) would be $11.05/A above the budget's $10.00/A."""
+    problems = owned_land_problems(_owned(insurance=17.02, total=45.01))
+    assert any("21.05 does not reconcile" in p and "10.00" in p for p in problems)
+
+
+def test_negative_property_insurance_is_flagged() -> None:
+    """Property tax above the budget's line must fail rather than give negative insurance."""
+    problems = owned_land_problems(_owned(tax=12.0, insurance=-2.0, total=33.96, budget=10.0))
+    assert any("property_insurance_usd_ac = -2.00 is negative" in p for p in problems)
+
+
+def test_appreciation_rate_must_match_the_series() -> None:
+    """Using a year-on-year change (2026: +5.2%) instead of the 2022-2026 compound rate is caught."""
+    problems = owned_land_problems(_owned(rate=0.052))
+    assert any("rate_per_yr = 0.052 does not match" in p and "0.074086" in p for p in problems)
+
+
+def test_appreciation_series_must_be_increasing_years() -> None:
+    problems = owned_land_problems(_owned(series=[(2026, 11100.0), (2022, 8340.0)]))
+    assert any("increasing order" in p for p in problems)
+
+
+def test_appreciation_series_rejects_non_positive_values() -> None:
+    problems = owned_land_problems(_owned(series=[(2022, 0.0), (2026, 11100.0)]))
+    assert any("non-positive" in p for p in problems)

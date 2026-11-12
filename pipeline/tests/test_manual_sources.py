@@ -68,3 +68,18 @@ def test_review_register_default_is_sl129() -> None:
     item = next(i for i in review["items"] if i["id"] == "corn-n-rule")
     assert item["current_default"] == "sl129-plant-population"
     assert {o["id"] for o in item["options"]} == {"sl129-plant-population", "interim-yield-goal"}
+
+
+def test_suwannee_millage_fy2027_totals_14_4745() -> None:
+    """County 8.8000 + School Board 5.405 + SRWMD 0.2695 = 14.4745 mills (PA Tax Rates page)."""
+    rows = {r["authority_id"]: r for r in read_csv(MANUAL / "millage_suwannee_fy2027.csv")}
+    assert {k: r["mills"] for k, r in rows.items()} == {"county": "8.8000", "school-board": "5.405", "srwmd": "0.2695"}
+    assert round(sum(float(r["mills"]) for r in rows.values()), 4) == 14.4745
+
+
+def test_nass_florida_cropland_values() -> None:
+    """NASS Land Values 2026 Summary, Florida cropland $/acre, 2022-2026."""
+    rows = read_csv(MANUAL / "nass_land_values_fl.csv")
+    assert [(r["year"], r["usd_ac"]) for r in rows] == [
+        ("2022", "8340"), ("2023", "9290"), ("2024", "10170"), ("2025", "10550"), ("2026", "11100"),
+    ]

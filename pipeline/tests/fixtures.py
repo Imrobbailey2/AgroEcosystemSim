@@ -89,13 +89,49 @@ BUDGET_LINES: list[tuple[str, str, str, int, list[list[object]]]] = [
     ("Annual interest rate", "OperatingRates", "B22", 0, [["C22", 0.08]]),
 ]
 RENT_LINE = ("Land rental cost", "FieldDetails", "B20", 0, [["D20", 19600.0], ["E20", 140.0]])
+# Owned budget only. Same layout as the real workbook: whole-farm total in D
+# ($1,400 on 140 acres), per-acre value in E ($10.00/A).
+OWNED_LAND_LINE = ("Property tax and insurance", "FieldDetails", "B21", 0, [["D21", 1400.0], ["E21", 10.0]])
+
+# Synthetic extracts with the values of the real 2026 fetches:
+# $278.63/A x 14.4745 mills / 1,000 = $4.03/A property tax; ERS overhead $23.96/A.
+PARCELS_SUMMARY = {
+    "assessment_years": {"2026": 431},
+    "classified_use_assessed_usd_ac": {"max": 1253.0, "median": 278.63, "min": 41.81, "p25": 235.0, "p75": 285.0},
+    "county_no": 71,
+    "parcels_used": 431,
+    "source": "fgio-fl-statewide-parcels",
+    "use_codes": [51, 52, 53],
+}
+ERS_COSTS = {
+    "commodity": "Corn",
+    "items": {
+        "general_farm_overhead": {"item": "General farm overhead", "latest_value": 23.96, "latest_year": 2024,
+                                  "units": "dollars per planted acre"},
+        "taxes_and_insurance": {"item": "Taxes and insurance", "latest_value": 17.02, "latest_year": 2024,
+                                "units": "dollars per planted acre"},
+    },
+    "latest_year": 2024,
+    "region": "Southern Seaboard",
+    "source": "usda-ers-ccr-corn",
+    "units": "dollars per planted acre",
+}
 
 
-def write_budget_csvs(ex: Path, lines: list[tuple[str, str, str, int, list[list[object]]]] | None = None) -> None:
-    """Write budget_owned.csv and budget_rented.csv (rented adds the land-rent row)."""
+def write_budget_csvs(
+    ex: Path,
+    lines: list[tuple[str, str, str, int, list[list[object]]]] | None = None,
+    owned_lines: list[tuple[str, str, str, int, list[list[object]]]] | None = None,
+) -> None:
+    """Write budget_owned.csv and budget_rented.csv.
+
+    Rented adds the land-rent row; owned adds ``owned_lines`` (default: the
+    "Property tax and insurance" row).
+    """
     lines = BUDGET_LINES if lines is None else lines
+    owned_lines = [OWNED_LAND_LINE] if owned_lines is None else owned_lines
     for tenure in ("owned", "rented"):
-        chosen = [*lines, RENT_LINE] if tenure == "rented" else list(lines)
+        chosen = [*lines, RENT_LINE] if tenure == "rented" else [*lines, *owned_lines]
         rows = [{"label": lab, "sheet": sheet, "label_cell": cell, "occurrence": occ, "values": json.dumps(v)}
                 for lab, sheet, cell, occ, v in chosen]
         write_csv(ex / f"budget_{tenure}.csv", rows, ["label", "sheet", "label_cell", "occurrence", "values"])
@@ -132,6 +168,8 @@ def make_sources_tree(root: Path) -> Path:
                        "awc_r": 0.06, "ksat_r": 40, "ph1to1h2o_r": 5.5, "cec7_r": 3})
     write_json(ex / "sda_horizons.json", hz)
     write_budget_csvs(ex)
+    write_json(ex / "parcels_summary.json", PARCELS_SUMMARY)
+    write_json(ex / "ers_costs.json", ERS_COSTS)
     write_json(ex / "station.json", {"latitude": 30.3, "longitude": -82.9, "elevation_m": 50.0,
                                      "station_id": 170, "name": "Live Oak",
                                      "source": "fawn-gapfree-liveoak-170",

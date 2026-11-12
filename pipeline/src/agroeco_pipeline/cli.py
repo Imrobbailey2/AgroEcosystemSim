@@ -1,6 +1,6 @@
 """Command-line entry point.
 
-    agroeco-pipeline fetch --region suwannee [--only soils budgets weather]
+    agroeco-pipeline fetch --region suwannee [--only soils budgets weather parcels ers]
     agroeco-pipeline build --region suwannee [--out PATH] [--check]
     agroeco-pipeline validate PATH
 """
@@ -31,7 +31,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     fetch = sub.add_parser("fetch", help="Download sources and write committed extracts (needs network).")
     fetch.add_argument("--region", required=True, choices=KNOWN_REGIONS)
-    fetch.add_argument("--only", nargs="+", choices=["soils", "budgets", "weather"])
+    fetch.add_argument("--only", nargs="+", choices=["soils", "budgets", "weather", "parcels", "ers"])
 
     build = sub.add_parser("build", help="Build and validate a region data pack (offline).")
     build.add_argument("--region", required=True, choices=KNOWN_REGIONS)

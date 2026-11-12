@@ -1,0 +1,78 @@
+{
+  "commodity": "Corn",
+  "items": {
+    "general_farm_overhead": {
+      "category": "Allocated overhead",
+      "item": "General farm overhead",
+      "latest_value": 23.96,
+      "latest_year": 2024,
+      "series": [
+        {
+          "survey_base_year": "Base survey of 2016",
+          "value": 29.34,
+          "year": 2020
+        },
+        {
+          "survey_base_year": "Base survey of 2021",
+          "value": 20.93,
+          "year": 2021
+        },
+        {
+          "survey_base_year": "Base survey of 2021",
+          "value": 23.4,
+          "year": 2022
+        },
+        {
+          "survey_base_year": "Base survey of 2021",
+          "value": 24.31,
+          "year": 2023
+        },
+        {
+          "survey_base_year": "Base survey of 2021",
+          "value": 23.96,
+          "year": 2024
+        }
+      ],
+      "units": "dollars per planted acre"
+    },
+    "taxes_and_insurance": {
+      "category": "Allocated overhead",
+      "item": "Taxes and insurance",
+      "latest_value": 17.02,
+      "latest_year": 2024,
+      "series": [
+        {
+          "survey_base_year": "Base survey of 2016",
+          "value": 19.53,
+          "year": 2020
+        },
+        {
+          "survey_base_year": "Base survey of 2021",
+          "value": 13.92,
+          "year": 2021
+        },
+        {
+          "survey_base_year": "Base survey of 2021",
+          "value": 15.35,
+          "year": 2022
+        },
+        {
+          "survey_base_year": "Base survey of 2021",
+          "value": 16.03,
+          "year": 2023
+        },
+        {
+          "survey_base_year": "Base survey of 2021",
+          "value": 17.02,
+          "year": 2024
+        }
+      ],
+      "units": "dollars per planted acre"
+    }
+  },
+  "latest_year": 2024,
+  "region": "Southern Seaboard",
+  "source": "usda-ers-ccr-corn",
+  "units": "dollars per planted acre",
+  "url": "https://www.ers.usda.gov/sites/default/files/_laserfiche/DataFiles/47913/CornCostReturn.csv"
+}

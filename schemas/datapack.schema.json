@@ -54,10 +54,30 @@
           "benchmark_yield_bu_ac": {"$ref": "#/$defs/citedNumber"},
           "benchmark_price_usd_bu": {"$ref": "#/$defs/citedNumber"},
           "land_rent_usd_ac": {"$ref": "#/$defs/citedNumber"},
-          "budget_total_net_revenue_usd_ac": {"$ref": "#/$defs/citedNumber"}
+          "budget_total_net_revenue_usd_ac": {"$ref": "#/$defs/citedNumber"},
+          "property_tax_usd_ac": {"$ref": "#/$defs/citedNumber"},
+          "property_tax_basis": {"$ref": "#/$defs/propertyTaxBasis"},
+          "property_insurance_usd_ac": {"$ref": "#/$defs/citedNumber"},
+          "upkeep_usd_ac": {"$ref": "#/$defs/citedNumber"},
+          "owned_land_cost_usd_ac": {"$ref": "#/$defs/citedNumber"},
+          "budget_property_tax_and_insurance_usd_ac": {"$ref": "#/$defs/citedNumber"},
+          "land_appreciation": {"$ref": "#/$defs/landAppreciation"}
         },
-        "if": {"properties": {"id": {"const": "rented"}}},
-        "then": {"required": ["land_rent_usd_ac"]}
+        "allOf": [
+          {
+            "if": {"properties": {"id": {"const": "rented"}}},
+            "then": {"required": ["land_rent_usd_ac"]}
+          },
+          {
+            "if": {"properties": {"id": {"const": "owned"}}},
+            "then": {
+              "required": [
+                "property_tax_usd_ac", "property_tax_basis", "property_insurance_usd_ac", "upkeep_usd_ac",
+                "owned_land_cost_usd_ac", "budget_property_tax_and_insurance_usd_ac", "land_appreciation"
+              ]
+            }
+          }
+        ]
       }
     },
     "market_channels": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/marketChannel"}},
@@ -197,6 +217,55 @@
         "premium_usd_ac": {"$ref": "#/$defs/citedNumber"},
         "default_purchased": {"type": "boolean"},
         "proceeds_modelled": {"type": "boolean"},
+        "prov": {"$ref": "#/$defs/prov"}
+      }
+    },
+    "propertyTaxBasis": {
+      "type": "object",
+      "required": ["use_value_usd_ac", "parcels_used", "millage", "total_mills", "review_flag", "prov"],
+      "properties": {
+        "use_value_usd_ac": {"$ref": "#/$defs/citedNumber"},
+        "parcels_used": {"type": "integer", "minimum": 1},
+        "millage": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "authority", "mills", "prov"],
+            "properties": {
+              "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+              "authority": {"type": "string", "minLength": 1},
+              "mills": {"type": "number", "minimum": 0},
+              "prov": {"$ref": "#/$defs/prov"}
+            }
+          }
+        },
+        "millage_label": {"type": "string"},
+        "total_mills": {"type": "number", "exclusiveMinimum": 0},
+        "review_flag": {"type": "string"},
+        "prov": {"$ref": "#/$defs/prov"}
+      }
+    },
+    "landAppreciation": {
+      "type": "object",
+      "required": ["series", "rate_per_yr", "review_flag", "prov"],
+      "properties": {
+        "label": {"type": "string"},
+        "series": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["year", "usd_ac", "prov"],
+            "properties": {
+              "year": {"type": "integer"},
+              "usd_ac": {"type": "number", "exclusiveMinimum": 0},
+              "prov": {"$ref": "#/$defs/prov"}
+            }
+          }
+        },
+        "rate_per_yr": {"$ref": "#/$defs/citedNumber"},
+        "review_flag": {"type": "string"},
         "prov": {"$ref": "#/$defs/prov"}
       }
     },

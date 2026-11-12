@@ -1,0 +1,49 @@
+{
+  "assessment_years": {
+    "2026": 431
+  },
+  "by_use_code": {
+    "051": {
+      "median_usd_ac": 277.53,
+      "parcels": 1
+    },
+    "052": {
+      "median_usd_ac": 285.0,
+      "parcels": 240
+    },
+    "053": {
+      "median_usd_ac": 234.99,
+      "parcels": 190
+    }
+  },
+  "classified_use_assessed_usd_ac": {
+    "max": 1253.0,
+    "median": 278.63,
+    "min": 41.81,
+    "p25": 235.0,
+    "p75": 285.0
+  },
+  "classified_use_just_usd_ac": {
+    "max": 18139.15,
+    "median": 2000.0,
+    "min": 293.39,
+    "p25": 2000.0,
+    "p75": 2000.0
+  },
+  "county_no": 71,
+  "excluded": {},
+  "layer": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0",
+  "method": "Agricultural classified-use assessed value (AV_CLASS_USE) / parcel acres (LND_SQFOOT / 43,560) for parcels with the configured DOR cropland use codes; median and quartiles across parcels. Parcel acres include any non-classified portion (for example a homesite), so per-acre values are conservative (low).",
+  "parcels_returned": 431,
+  "parcels_used": 431,
+  "source": "fgio-fl-statewide-parcels",
+  "tax_authority_counts": {
+    "CO": 431
+  },
+  "use_codes": [
+    51,
+    52,
+    53
+  ],
+  "where": "CO_NO = 71 AND DOR_UC IN ('051', '052', '053')"
+}
