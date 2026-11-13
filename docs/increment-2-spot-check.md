@@ -83,3 +83,32 @@ Decision recorded on 2026-11-05 (C27 vs. C39, option C):
 - Checked by:ImRobbailey2
 - Date:11-6-2026
 - Overall: PASS 
+
+## Increment 2b: owned-land costs and land appreciation (rows 11–18)
+
+Pack built by PR #12 and rebuilt by Fetch sources run 43239622406 (pack commit
+`67558b8`, CI green). All values below are in `tenure_options` (`owned`). The
+"Pack value" column was read from the committed pack; confirm each against the
+original source and mark pass or fail. Option C (2026-11-09): property tax +
+property insurance must equal the owned budget's "Property tax and insurance".
+
+| # | Value in the pack | Where to find it in the pack | Source and location | Pack value | Pass/fail |
+|---|---|---|---|---|---|
+| 11 | Median agricultural-use assessed value, Suwannee cropland | `property_tax_basis.use_value_usd_ac` | Florida Statewide Parcels (FGIO), CO_NO 71, DOR_UC 051–053, 2026 roll; `pipeline/sources/extracted/suwannee/parcels_summary.json` (`classified_use_assessed_usd_ac.median`, 431 parcels) | $278.63/A | PASS |
+| 12 | FY2026-27 total millage | `property_tax_basis.millage`, `total_mills` | County 8.8000 (BOCC final budget hearing 2026-09-21); School Board 5.405 (Resolution SCSB 2027-04R); SRWMD 0.2695 (Resolution 2026-14); total vs. Suwannee County Property Appraiser Tax Rates page | 14.4745 mills | PASS |
+| 13 | Property tax | `property_tax_usd_ac` | Arithmetic: $278.63 × 14.4745 / 1,000 = $4.0330, rounded to cents | $4.03/A/yr | PASS |
+| 14 | Owned budget "Property tax and insurance" (per acre, not whole-farm) | `budget_property_tax_and_insurance_usd_ac` | 2026 SV CT Owned budget, `FieldDetails!E21` (whole-farm total `D21` = $1,400 on 140 acres) | $10.00/A | PASS |
+| 15 | Property insurance (option C remainder) | `property_insurance_usd_ac` | $10.00 (row 14) − $4.03 (row 13); not negative | $5.97/A/yr | PASS |
+| 16 | Maintenance/upkeep | `upkeep_usd_ac` | USDA ERS Commodity Costs and Returns, `CornCostReturn.csv`: Corn, Southern Seaboard, "General farm overhead", dollars per planted acre, 2024 | $23.96/A/yr | PASS |
+| 17 | Basic owned-land cost | `owned_land_cost_usd_ac` | Sum of rows 13, 15, 16: $4.03 + $5.97 + $23.96 | $33.96/A/yr | PASS |
+| 18 | Land value series and appreciation rate | `land_appreciation.series`, `land_appreciation.rate_per_yr` | USDA NASS Land Values 2026 Summary (July 2026), Cropland Average Value per Acre, Florida: 2022 $8,340; 2023 $9,290; 2024 $10,170; 2025 $10,550; 2026 $11,100. Rate = (11,100 / 8,340)^(1/4) − 1 | 0.074086 (7.41%/yr) | PASS |
+
+Also check: the `rented` tenure option carries none of these fields, and each
+`*_usd_ac` value has a `prov` naming registered sources (validation enforces
+both; CI is green on `67558b8`).
+
+### Results: Increment 2b
+
+- Checked by: ImRobbailey2
+- Date: 11-13-2026
+- Overall: PASS
