@@ -1,11 +1,14 @@
 # Increment 2b: owned-land costs and land appreciation (design note)
 
-Status: **decisions recorded 2026-11-06, 2026-11-07 and 2026-11-09; fetch steps
-`parcels` and `ers` added and run; sources registered; owned-workbook overlap
-scan done (2026-11-09, option C chosen); cost lines not yet built.**
-Review register items: `owned-land-costs`, `owned-land-use-value`,
-`owned-land-insurance-proxy`, `owned-land-upkeep-proxy`,
-`land-appreciation-method`, `advanced-mode-scope`
+Status: **complete and signed off 2026-11-13.** Decisions recorded 2026-11-06,
+2026-11-07 and 2026-11-09; fetch steps `parcels` and `ers` added and run;
+sources registered; owned-workbook overlap scan done (2026-11-09, option C
+chosen); cost lines and land appreciation built (PR #12), pack rebuilt by Fetch
+sources run 43239622406 (pack commit `67558b8`); spot-check rows 11-18 PASS,
+signed by the project owner (PR #18). Review register items `owned-land-costs`,
+`owned-land-use-value`, `owned-land-insurance-proxy`, `owned-land-upkeep-proxy`
+and `land-appreciation-method` resolved 2026-11-13; `advanced-mode-scope` stays
+open until the Advanced-mode requirements step
 (`pipeline/sources/review/needs-expert-review.json`).
 
 ## Game modes
@@ -32,13 +35,15 @@ the game matches the budget the rest of the game uses.
 | Maintenance/upkeep | USDA ERS, corn, Southern Seaboard, "General farm overhead", latest actual year 2024 (fetch step `ers`); cleared by the overlap scan | **$23.96/A/yr** | `owned-land-upkeep-proxy` |
 | Basic average | Sum of the three lines | **$33.96/A/yr** | `owned-land-costs` |
 
-Values are to be built and spot-checked; the FieldDetails cell for the $10.00/A
-is confirmed by the next budgets fetch.
+Values are built in the pack (`tenure_options`, `owned`) and spot-checked
+(rows 11-18, PASS 2026-11-13). The $10.00/A is `FieldDetails!E21`, confirmed by
+budgets fetch run 42683938758.
 
-### Millage, FY2026-27, unincorporated Suwannee County
+### Millage, FY2026-27, Suwannee County (no municipal filter)
 
 The 2026 tax roll (the parcel values used here) is taxed at the FY2026-27
-rates (project-owner decision 2026-11-07).
+rates (project-owner decision 2026-11-07). These rates are applied to all 431
+parcels; Live Oak and Branford parcels cannot be separated (see below).
 
 | Taxing authority | Mills | Adoption document | Source id |
 |---|---|---|---|
@@ -125,10 +130,9 @@ utilities, maintenance, tax and insurance lines. Per acre, 140 acres:
 The budget notes that gross profit does not include overall business
 management or general and administrative costs, so ERS general business
 expense is not already in the budget. The two FieldDetails rows were identified
-by value order in the downloaded workbook; the labels "Land cost", "Property
-tax and insurance", "Fixed electric standby charge" and "Opportunity cost" are
-now extracted (optional budget labels in `suwannee.json`) so the next budgets
-fetch records their cells.
+by value order in the downloaded workbook and confirmed by budgets fetch run
+42683938758: "Property tax and insurance" is `FieldDetails!E21` ($10.00/A) and
+"Fixed electric standby charge" is `FieldDetails!E22` ($2.00/A).
 
 ## Land appreciation
 
@@ -164,7 +168,7 @@ appreciation in Increment 3.
 
 Open question for the budget author (Kevin Athearn, UF/IFAS NFREC-Suwannee
 Valley): what the $10.00/A "Property tax and insurance" covers and how it was
-estimated.
+estimated. This is a follow-up and does not block sign-off.
 
 ## Increment 2b acceptance criteria
 
@@ -183,11 +187,12 @@ estimated.
 7. Tests cover the sum checks, the parcel summary (including dropped personal
    columns) and the appreciation rate.
 8. The pack rebuilds byte-identically in CI; spot-check rows added for the new
-   values and signed by the project owner.
+   values and signed by the project owner (rows 11-18 PASS, 2026-11-13, PR #18).
 
 ## Approved order of work
 
-1. Increment 2b (this note): owned-land costs and land appreciation.
+1. Increment 2b (this note): owned-land costs and land appreciation. **Done
+   2026-11-13.**
 2. Increment 3: UI-free engine in `game/src/engine/`, Basic mode end to end,
    with a basic/advanced mode switch from the start.
 3. Advanced-mode requirements: owned machinery, labor, trucks, buildings,
