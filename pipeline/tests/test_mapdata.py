@@ -47,22 +47,21 @@ def parcel(code: str, x: float, y: float, size_m: float, oid: int) -> dict[str, 
     }
 
 
-def transport(meta: dict[str, Any], pages: list[list[dict[str, Any]]], sr: int = SR,
-              exceeded: bool = False) -> tuple[Any, list[str]]:
-    """Fake server: metadata, then pages selected by resultOffset."""
+def transport(meta: dict[str, Any], features: list[dict[str, Any]], sr: int = SR) -> tuple[Any, list[str]]:
+    """Fake server: layer metadata, an object-ID query, then features by objectIds."""
     seen: list[str] = []
-    starts = [sum(len(p) for p in pages[:i]) for i in range(len(pages))]
+    by_id = {f["attributes"]["OBJECTID"]: f for f in features}
 
     def get(url: str) -> bytes:
         seen.append(url)
         if url.endswith("?f=json"):
             return json.dumps(meta).encode()
-        offset = int(urllib.parse.parse_qs(urllib.parse.urlparse(url).query)["resultOffset"][0])
-        idx = starts.index(offset) if offset in starts else len(pages)
-        batch = pages[idx] if idx < len(pages) else []
-        more = exceeded and idx < len(pages) - 1
-        return json.dumps({"features": batch, "spatialReference": {"wkid": sr},
-                           "exceededTransferLimit": more}).encode()
+        q = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)
+        if q.get("returnIdsOnly") == ["true"]:
+            return json.dumps({"objectIdFieldName": "OBJECTID", "objectIds": list(by_id)}).encode()
+        wanted = [int(i) for i in q["objectIds"][0].split(",")]
+        batch = [by_id[i] for i in wanted if i in by_id]
+        return json.dumps({"features": batch, "spatialReference": {"wkid": sr}}).encode()
 
     return get, seen
 
@@ -93,12 +92,13 @@ def test_region_map_config_is_registered() -> None:
 
 
 def test_parcel_shapes_request_only_allow_listed_fields_and_write_no_identifiers(tmp_path: Path) -> None:
-    get, seen = transport(PARCEL_META, [[parcel("052", 1000, 1000, 300, 7), parcel("001", 0, 0, 50, 8)]])
+    get, seen = transport(PARCEL_META, [parcel("052", 1000, 1000, 300, 7), parcel("001", 0, 0, 50, 8)])
     mapdata.fetch_parcel_shapes(region_with(), tmp_path, no_record, get)
-    q = query(seen[1])
+    assert query(seen[1])["where"] == ["CO_NO = 71"] and query(seen[1])["returnIdsOnly"] == ["true"]
+    q = query(seen[2])
     assert sorted(q["outFields"][0].split(",")) == ["CO_NO", "DOR_UC", "LND_SQFOOT"]
     assert q["returnGeometry"] == ["true"] and q["outSR"] == [str(SR)] and q["geometryPrecision"] == ["0"]
-    assert q["where"] == ["CO_NO = 71"]
+    assert q["objectIds"] == ["7,8"]
     text = (tmp_path / mapdata.PARCEL_SHAPES_FILE).read_text(encoding="utf-8")
     assert not any(bad in text for bad in FORBIDDEN_TEXT)
     assert "PRIVATE PERSON" not in text and "12-34-56" not in text
@@ -113,39 +113,60 @@ def test_parcel_shapes_request_only_allow_listed_fields_and_write_no_identifiers
 def test_personal_fields_cannot_be_configured_and_nothing_is_downloaded(tmp_path: Path, key: str, name: str) -> None:
     region = region_with()
     region["map"]["parcel_shapes"]["fields"][key] = name
-    get, seen = transport(PARCEL_META, [[]])
+    get, seen = transport(PARCEL_META, [])
     with pytest.raises(PipelineError, match="personal or identifying"):
         mapdata.fetch_parcel_shapes(region, tmp_path, no_record, get)
     assert seen == []
 
 
-def test_paging_advances_by_features_returned(tmp_path: Path) -> None:
-    pages = [[parcel("052", i * 400, 0, 300, i) for i in range(3)],
-             [parcel("053", i * 400, 1000, 300, 10 + i) for i in range(2)]]
-    get, seen = transport(PARCEL_META, pages, exceeded=True)
-    recorded: list[str] = []
-    mapdata.fetch_parcel_shapes(region_with(), tmp_path, lambda u, r, n: recorded.append(n), get)
-    assert [query(u)["resultOffset"][0] for u in seen[1:]] == ["0", "3"]
-    assert recorded == ["layer metadata", "query page 1", "query page 2"]
+def test_features_download_in_object_id_batches_and_ids_are_not_logged(tmp_path: Path) -> None:
+    feats = [parcel("052", i * 400, 0, 300, 101 + i) for i in range(5)]
+    get, seen = transport(PARCEL_META, feats)
+    logged: list[tuple[str, str]] = []
+    saved = arcgis.ID_CHUNK
+    arcgis.ID_CHUNK = 2
+    try:
+        mapdata.fetch_parcel_shapes(region_with(), tmp_path, lambda u, r, n: logged.append((u, n)), get)
+    finally:
+        arcgis.ID_CHUNK = saved
+    assert [query(u)["objectIds"][0] for u in seen[2:]] == ["101,102", "103,104", "105"]
+    assert [n for _, n in logged] == ["layer metadata", "object IDs", "features batch 1", "features batch 2",
+                                      "features batch 3"]
+    batch_urls = [u for u, n in logged if n.startswith("features batch")]
+    assert [query(u)["objectIds"][0] for u in batch_urls] == ["<2 ids>", "<2 ids>", "<1 ids>"]
+    assert not any(str(101 + i) in u for u, _ in logged for i in range(5))
     assert read_json(tmp_path / mapdata.PARCEL_SHAPES_FILE)["count"] == 5
 
 
+def test_truncated_batch_stops_the_fetch(tmp_path: Path) -> None:
+    def get(url: str) -> bytes:
+        if url.endswith("?f=json"):
+            return json.dumps(PARCEL_META).encode()
+        if "returnIdsOnly" in url:
+            return json.dumps({"objectIds": [1, 2]}).encode()
+        return json.dumps({"features": [parcel("052", 0, 0, 300, 1)], "spatialReference": {"wkid": SR},
+                           "exceededTransferLimit": True}).encode()
+
+    with pytest.raises(PipelineError, match="truncated"):
+        mapdata.fetch_parcel_shapes(region_with(), tmp_path, no_record, get)
+
+
 def test_wrong_spatial_reference_stops_the_fetch(tmp_path: Path) -> None:
-    get, _ = transport(PARCEL_META, [[parcel("052", 0, 0, 300, 1)]], sr=4326)
+    get, _ = transport(PARCEL_META, [parcel("052", 0, 0, 300, 1)], sr=4326)
     with pytest.raises(PipelineError, match="spatial reference"):
         mapdata.fetch_parcel_shapes(region_with(), tmp_path, no_record, get)
 
 
 def test_parcel_without_geometry_is_counted_not_written(tmp_path: Path) -> None:
-    empty = {"attributes": {"DOR_UC": "052", "LND_SQFOOT": 1.0}, "geometry": None}
-    get, _ = transport(PARCEL_META, [[parcel("052", 0, 0, 300, 1), empty]])
+    empty = {"attributes": {"OBJECTID": 2, "DOR_UC": "052", "LND_SQFOOT": 1.0}, "geometry": None}
+    get, _ = transport(PARCEL_META, [parcel("052", 0, 0, 300, 1), empty])
     mapdata.fetch_parcel_shapes(region_with(), tmp_path, no_record, get)
     out = read_json(tmp_path / mapdata.PARCEL_SHAPES_FILE)
     assert out["count"] == 1 and out["excluded"] == {"no_geometry": 1} and out["returned"] == 2
 
 
 def test_too_few_parcels_fails(tmp_path: Path) -> None:
-    get, _ = transport(PARCEL_META, [[parcel("052", 0, 0, 300, 1)]])
+    get, _ = transport(PARCEL_META, [parcel("052", 0, 0, 300, 1)])
     with pytest.raises(PipelineError, match="parcels with geometry"):
         mapdata.fetch_parcel_shapes(region_with(min_parcels=5), tmp_path, no_record, get)
 
@@ -153,29 +174,29 @@ def test_too_few_parcels_fails(tmp_path: Path) -> None:
 def test_output_does_not_depend_on_server_order(tmp_path: Path) -> None:
     feats = [parcel("052", i * 500, (i % 3) * 500, 300, i) for i in range(6)]
     a, b = tmp_path / "a", tmp_path / "b"
-    mapdata.fetch_parcel_shapes(region_with(), a, no_record, transport(PARCEL_META, [feats])[0])
-    mapdata.fetch_parcel_shapes(region_with(), b, no_record, transport(PARCEL_META, [feats[::-1]])[0])
+    mapdata.fetch_parcel_shapes(region_with(), a, no_record, transport(PARCEL_META, feats)[0])
+    mapdata.fetch_parcel_shapes(region_with(), b, no_record, transport(PARCEL_META, feats[::-1])[0])
     assert (a / mapdata.PARCEL_SHAPES_FILE).read_bytes() == (b / mapdata.PARCEL_SHAPES_FILE).read_bytes()
     assert (a / mapdata.MEASUREMENTS_FILE).read_bytes() == (b / mapdata.MEASUREMENTS_FILE).read_bytes()
 
 
-def city(name: str, x: float, y: float, size: float) -> dict[str, Any]:
-    return {"attributes": {"OBJECTID": 1, "BASENAME": name, "STATE": "12"},
+def city(name: str, x: float, y: float, size: float, oid: int = 1) -> dict[str, Any]:
+    return {"attributes": {"OBJECTID": oid, "BASENAME": name, "STATE": "12"},
             "geometry": {"rings": [square(x, y, size)]}}
 
 
 def test_city_limits_writes_configured_cities_in_the_region_state(tmp_path: Path) -> None:
-    get, seen = transport(CITY_META, [[city("Live Oak", 0, 0, 2000), city("Branford", 9000, 0, 1000)]])
+    get, seen = transport(CITY_META, [city("Live Oak", 0, 0, 2000, 1), city("Branford", 9000, 0, 1000, 2)])
     mapdata.fetch_city_limits(REGION, tmp_path, no_record, get)
     assert query(seen[1])["where"] == ["STATE = '12' AND BASENAME IN ('Branford', 'Live Oak')"]
-    assert query(seen[1])["outFields"] == ["BASENAME"]
+    assert query(seen[2])["outFields"] == ["BASENAME"]
     out = read_json(tmp_path / mapdata.CITY_LIMITS_FILE)
     assert [c["name"] for c in out["cities"]] == ["BRANFORD", "LIVE OAK"]
     assert "OBJECTID" not in json.dumps(out)
 
 
 def test_city_limits_missing_city_fails(tmp_path: Path) -> None:
-    get, _ = transport(CITY_META, [[city("Live Oak", 0, 0, 2000)]])
+    get, _ = transport(CITY_META, [city("Live Oak", 0, 0, 2000)])
     with pytest.raises(PipelineError, match="Branford"):
         mapdata.fetch_city_limits(REGION, tmp_path, no_record, get)
 
@@ -183,7 +204,7 @@ def test_city_limits_missing_city_fails(tmp_path: Path) -> None:
 def test_city_limits_state_must_be_a_fips_code(tmp_path: Path) -> None:
     region = copy.deepcopy(REGION)
     region["map"]["city_limits"]["state"] = "FL' OR '1'='1"
-    get, seen = transport(CITY_META, [[]])
+    get, seen = transport(CITY_META, [])
     with pytest.raises(PipelineError, match="2-digit state FIPS"):
         mapdata.fetch_city_limits(region, tmp_path, no_record, get)
     assert seen == []
@@ -192,20 +213,20 @@ def test_city_limits_state_must_be_a_fips_code(tmp_path: Path) -> None:
 def test_city_names_cannot_inject_sql(tmp_path: Path) -> None:
     region = copy.deepcopy(REGION)
     region["map"]["city_limits"]["names"] = ["X' OR '1'='1"]
-    get, _ = transport(CITY_META, [[]])
+    get, _ = transport(CITY_META, [])
     with pytest.raises(PipelineError, match="not an allowed name"):
         mapdata.fetch_city_limits(region, tmp_path, no_record, get)
 
 
 def test_missing_layer_field_lists_available_names(tmp_path: Path) -> None:
-    get, _ = transport({"fields": [{"name": "NAME", "type": "esriFieldTypeString"}]}, [[]])
+    get, _ = transport({"fields": [{"name": "NAME", "type": "esriFieldTypeString"}]}, [])
     with pytest.raises(PipelineError, match="available"):
         mapdata.fetch_city_limits(REGION, tmp_path, no_record, get)
 
 
 def test_county_outline_writes_rings(tmp_path: Path) -> None:
-    feat = {"attributes": {"GEOID": "12121"}, "geometry": {"rings": [square(0, 0, 50000)]}}
-    get, seen = transport(COUNTY_META, [[feat]])
+    feat = {"attributes": {"OBJECTID": 9, "GEOID": "12121"}, "geometry": {"rings": [square(0, 0, 50000)]}}
+    get, seen = transport(COUNTY_META, [feat])
     mapdata.fetch_county_outline(REGION, tmp_path, no_record, get)
     assert query(seen[1])["where"] == ["GEOID = '12121'"]
     out = read_json(tmp_path / mapdata.COUNTY_OUTLINE_FILE)
@@ -213,7 +234,7 @@ def test_county_outline_writes_rings(tmp_path: Path) -> None:
 
 
 def test_county_outline_not_found_fails(tmp_path: Path) -> None:
-    get, _ = transport(COUNTY_META, [[]])
+    get, _ = transport(COUNTY_META, [])
     with pytest.raises(PipelineError, match="not found"):
         mapdata.fetch_county_outline(REGION, tmp_path, no_record, get)
 

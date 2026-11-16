@@ -20,8 +20,11 @@ from agroeco_pipeline.parcels import FORBIDDEN_FIELD_PREFIXES
 Get = Callable[[str], bytes]
 Record = Callable[[str, bytes, str], None]
 
-PAGE_SIZE = 1000
-MAX_PAGES = 200
+# Features are downloaded in batches of object IDs (Esri's recommended pattern for
+# large results: returnIdsOnly, then subsets of objectIds) rather than by
+# resultOffset, which hosted layers can reject deep into a result set.
+ID_CHUNK = 250
+MAX_IDS = 500_000
 STRING_TYPES = {"esriFieldTypeString"}
 # Text values allowed in a where clause (place names): letters, spaces and . ' -
 SAFE_TEXT = re.compile(r"^[A-Za-z][A-Za-z .'-]{0,59}$")
@@ -89,42 +92,57 @@ def query_features(
 ) -> list[dict[str, Any]]:
     """Download every matching feature with geometry projected to ``out_sr`` (whole units).
 
-    Paging advances by the number of features actually returned, so a server
-    that returns short pages (``exceededTransferLimit``) is still read in full.
+    First asks for the matching object IDs (``returnIdsOnly``), then downloads the
+    features in batches of ``ID_CHUNK`` IDs, in ascending ID order. Object IDs are
+    internal row numbers that could be joined back to the source layer, so the
+    URLs passed to ``record`` (and so the lock file) show only how many IDs a
+    batch asked for, never the IDs themselves. ``order_by`` is accepted for
+    compatibility and not needed: batches are already in ID order.
     """
     refuse_forbidden(out_fields)
     base = url.rstrip("/")
+    ids_params = {"where": where, "returnIdsOnly": "true", "f": "json"}
+    ids_url = f"{base}/query?" + urllib.parse.urlencode(ids_params)
+    raw = get(ids_url)
+    record(ids_url, raw, "object IDs")
+    data = _json(raw, "object ID query")
+    ids = data.get("objectIds") or []
+    if not isinstance(ids, list) or any(isinstance(i, bool) or not isinstance(i, int) for i in ids):
+        raise PipelineError("object ID query did not return a list of integer IDs")
+    if len(ids) > MAX_IDS:
+        raise PipelineError(f"query matches {len(ids)} features (limit {MAX_IDS}); narrow the where clause")
+    ids = sorted(set(ids))
     features: list[dict[str, Any]] = []
-    offset = 0
-    for page in range(MAX_PAGES):
+    for n, start in enumerate(range(0, len(ids), ID_CHUNK), start=1):
+        chunk = ids[start:start + ID_CHUNK]
         params = {
-            "where": where,
+            "objectIds": ",".join(str(i) for i in chunk),
             "outFields": ",".join(out_fields),
             "returnGeometry": "true",
             "outSR": str(out_sr),
             "geometryPrecision": "0",
-            "resultOffset": str(offset),
-            "resultRecordCount": str(PAGE_SIZE),
             "f": "json",
         }
         if max_allowable_offset_m:
             params["maxAllowableOffset"] = f"{max_allowable_offset_m:g}"
-        if order_by:
-            params["orderByFields"] = f"{order_by} ASC"
         query_url = f"{base}/query?" + urllib.parse.urlencode(params)
+        logged_url = f"{base}/query?" + urllib.parse.urlencode({**params, "objectIds": f"<{len(chunk)} ids>"})
         raw = get(query_url)
-        record(query_url, raw, f"query page {page + 1}")
-        data = _json(raw, f"query page {page + 1}")
-        batch = data.get("features") or []
+        record(logged_url, raw, f"features batch {n}")
+        page = _json(raw, f"features batch {n}")
+        batch = page.get("features") or []
         if batch:
-            sr = data.get("spatialReference") or {}
+            sr = page.get("spatialReference") or {}
             if out_sr not in (sr.get("wkid"), sr.get("latestWkid")):
                 raise PipelineError(f"layer returned spatial reference {sr}; expected EPSG:{out_sr}")
+        if len(batch) > len(chunk):
+            raise PipelineError(f"features batch {n} returned {len(batch)} features for {len(chunk)} IDs")
+        if page.get("exceededTransferLimit"):
+            raise PipelineError(
+                f"features batch {n} was truncated by the server (exceededTransferLimit); lower arcgis.ID_CHUNK"
+            )
         features.extend(batch)
-        offset += len(batch)
-        if not batch or (len(batch) < PAGE_SIZE and not data.get("exceededTransferLimit")):
-            return features
-    raise PipelineError(f"query did not finish within {MAX_PAGES} pages: {base}")
+    return features
 
 
 def keep_attributes(feature: dict[str, Any], allowed: Iterable[str]) -> dict[str, Any]:
