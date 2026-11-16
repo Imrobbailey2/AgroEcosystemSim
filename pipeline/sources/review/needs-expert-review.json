@@ -160,7 +160,7 @@
       "status": "open",
       "decided_on": "2026-11-16",
       "decision_owner": "Project owner",
-      "current_default": "Interim rule: a parcel is selectable when its DOR land-use code (DOR_UC, Florida Statewide Parcels) is agricultural, 050-069; its land area (LND_SQFOOT / 43,560) is at least 10 acres; and it is not inside the Live Oak or Branford city limits (FGDL City Limits 2021). Every parcel's zoning district is 'unknown'. Settings live in the region config (map.agricultural_use_code_range, map.min_selectable_acres, map.city_limits)",
+      "current_default": "Interim rule: a parcel is selectable when its DOR land-use code (DOR_UC, Florida Statewide Parcels) is agricultural, 050-069; its land area (LND_SQFOOT / 43,560) is at least 10 acres; and it is not inside the Live Oak or Branford city limits (Census TIGERweb Incorporated Places, January 1, 2026). Every parcel's zoning district is 'unknown'. Settings live in the region config (map.agricultural_use_code_range, map.min_selectable_acres, map.city_limits)",
       "options": [
         {
           "id": "interim-land-use",
@@ -171,9 +171,9 @@
           "summary": "Suwannee County Land Development Regulations: A-1 and A-2 selectable; ESA-1 and ESA-2 selectable for non-intensive agriculture only; CSV, residential, commercial, industrial and municipal blocked. Needs the county's current zoning layer"
         }
       ],
-      "notes": "Decided 2026-11-16 by the project owner. Land-use codes describe current use, not zoning: a parcel zoned residential but farmed today shows as selectable, and code 068 (dairies, feed lots) is included although intensive operations need a special exception in A-1 and are prohibited in ESA districts. The game labels this eligibility as provisional. No current machine-readable zoning layer was found (searched 2026-11-16): the county's Official Zoning Atlas is a PDF adopted September 3, 1992, amended October 17, 1997, and the county's public ArcGIS base map has no zoning layer. To resolve: obtain the current zoning layer from Suwannee County Planning & Zoning (Ronald Meeks, Director, ronaldm@suwcountyfl.gov, 386-364-3401) and check the rules against the current Land Development Regulations text. City limits are from 2021 tax-code boundaries, so later annexations are missing. The 10-acre minimum is a gameplay setting: the LDR sets minimum lot sizes for dwellings, not for farm use. Map design: docs/increment-3-county-map.md.",
+      "notes": "Decided 2026-11-16 by the project owner. Land-use codes describe current use, not zoning: a parcel zoned residential but farmed today shows as selectable, and code 068 (dairies, feed lots) is included although intensive operations need a special exception in A-1 and are prohibited in ESA districts. The game labels this eligibility as provisional. No current machine-readable zoning layer was found (searched 2026-11-16): the county's Official Zoning Atlas is a PDF adopted September 3, 1992, amended October 17, 1997, and the county's public ArcGIS base map has no zoning layer. To resolve: obtain the current zoning layer from Suwannee County Planning & Zoning (Ronald Meeks, Director, ronaldm@suwcountyfl.gov, 386-364-3401) and check the rules against the current Land Development Regulations text. City limits are the Census Bureau's January 1, 2026 incorporated-place boundaries, so annexations after that date are missing (the FGDL/FDOT city-limits layer first chosen refused downloads from GitHub Actions, HTTP 403, 2026-11-16). The 10-acre minimum is a gameplay setting: the LDR sets minimum lot sizes for dwellings, not for farm use. Map design: docs/increment-3-county-map.md.",
       "affects": ["map pack: eligibility_rules", "map pack: parcels"],
-      "sources": ["fgio-fl-statewide-parcels", "fgdl-city-limits-2021"]
+      "sources": ["fgio-fl-statewide-parcels", "census-tigerweb-places-2026"]
     }
   ]
 }

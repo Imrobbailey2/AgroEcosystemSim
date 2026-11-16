@@ -1,7 +1,7 @@
 # Increment 3: county map and parcel selection (design note)
 
 Status: **requirements, architecture and plan approved 2026-11-16; step 0
-(docs) in progress.** Branch `inc3-county-map`.
+(docs) done; step 1 (map fetch steps) in progress.** Branch `inc3-county-map`.
 
 ## Decisions (project owner)
 
@@ -100,9 +100,10 @@ flowchart LR
 
 | Component | Responsibility |
 |---|---|
-| `parcel_shapes.py` (new fetch step) | Server-side projection to EPSG:3086; requests geometry, `DOR_UC`, `LND_SQFOOT` only; reuses `FORBIDDEN_FIELD_PREFIXES`; strips object IDs |
-| `city_limits`, `county_outline` fetch | City limits from FGDL `PAR_CITYLM_2021` (derived from 2021 FDOR parcel tax codes); Live Oak and Branford only |
-| `mappack.py` (new) | Douglas-Peucker simplification, whole-metre quantization, P0001... IDs, municipal tagging, eligibility rules, validation and privacy scan |
+| `mapdata.py` / `arcgis.py` (fetch step `parcel_shapes`) | Server-side projection to EPSG:3086; requests geometry, `DOR_UC`, `LND_SQFOOT` only; reuses `FORBIDDEN_FIELD_PREFIXES`; strips object IDs |
+| `city_limits`, `county_outline` fetch | City limits from Census TIGERweb Incorporated Places (January 1, 2026; Live Oak and Branford, state 12); county outline from TIGERweb Counties (GEOID 12121). The FGDL/FDOT city-limits layer first planned returned HTTP 403 to GitHub Actions (2026-11-16) |
+| `mapmeasure.py` | Size and interim-eligibility report (`map_measurements.json`) for the step 2 decisions |
+| `mappack.py` (new, step 2) | Douglas-Peucker simplification, whole-metre quantization, P0001... IDs, municipal tagging, eligibility rules, validation and privacy scan |
 | `schemas/mappack.schema.json` (new) | Map pack format |
 | `engine/mappack.ts` | Typed loader with runtime checks |
 | `engine/eligibility.ts` | `evaluate(parcel, rules)` -> selectable / restricted / blocked with reasons; rules are data |
@@ -122,16 +123,17 @@ Map pack: header (`schema_version`, `region`, `crs`, `units`, `sources`,
 |---|---|
 | Full county over 2 MB | Measure in step 1; stronger simplification; merge small blocked parcels into background shapes |
 | Slivers between simplified neighbours | Tolerance 5 m or less; shared-edge simplification later if needed |
-| City limits from 2021 | Review flag; replace with county or city data |
+| City limits as of January 1, 2026 (Census) | Review flag; replace with county or city data if annexations matter |
 | Land-use codes are not zoning | Approved interim rule; review flag; shown to the player as provisional eligibility |
 | shapely version drift breaks `--check` | Pin the version; quantize after simplification |
+| A source server blocks GitHub Actions | Prefer federal or state open-data hosts; the fetch fails loudly with the URL |
 
 ## Implementation plan
 
 | # | Step | Status |
 |---|---|---|
-| 0 | Docs: this note, `project-principles.md`, `deferred-items.md` | In progress |
-| 1 | Fetch steps `parcel_shapes`, `city_limits`, `county_outline`; size measurement report; review item `parcel-eligibility-interim` (with the new sources registered). Project owner runs Fetch sources once, which also rebuilds the main pack with the new review item | |
+| 0 | Docs: this note, `project-principles.md`, `deferred-items.md` | Done |
+| 1 | Fetch steps `parcel_shapes`, `city_limits`, `county_outline`; size measurement report; review item `parcel-eligibility-interim` (with the new sources registered). Project owner runs Fetch sources once, which also rebuilds the main pack with the new review item | In progress (PR #22) |
 | 2 | Map pack build, schema, validation, privacy scan, CI size limit | |
 | 3 | Engine: loader, eligibility, geometry, state and replay | |
 | 4 | Map screen: SVG map, list, details, disclaimer; axe; offline test | |
