@@ -46,7 +46,7 @@ def test_run_fetch_runs_map_steps_in_order_and_records_them(tmp_path: Path, monk
     lock = read_json(out / "fetch-lock.json")
     assert {"city_limits", "parcel_shapes"} <= set(lock["fetched_at"])
     sources = {e["step"]: e["source"] for e in lock["downloads"] if e["step"] in MAP}
-    assert sources == {"city_limits": "fgdl-city-limits-2021", "parcel_shapes": "fgio-fl-statewide-parcels"}
+    assert sources == {"city_limits": "census-tigerweb-places-2026", "parcel_shapes": "fgio-fl-statewide-parcels"}
 
 
 def test_unknown_step_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

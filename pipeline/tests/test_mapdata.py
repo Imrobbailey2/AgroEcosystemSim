@@ -26,8 +26,9 @@ PARCEL_META = {
         ("OWN_NAME", "esriFieldTypeString"), ("PARCEL_ID", "esriFieldTypeString"),
     ]],
 }
-CITY_META = {"objectIdField": "fid", "fields": [{"name": "fid", "type": "esriFieldTypeOID"},
-                                                {"name": "name", "type": "esriFieldTypeString"}]}
+CITY_META = {"objectIdField": "OBJECTID", "fields": [{"name": "OBJECTID", "type": "esriFieldTypeOID"},
+                                                     {"name": "BASENAME", "type": "esriFieldTypeString"},
+                                                     {"name": "STATE", "type": "esriFieldTypeString"}]}
 COUNTY_META = {"objectIdField": "OBJECTID", "fields": [{"name": "GEOID", "type": "esriFieldTypeString"},
                                                        {"name": "NAME", "type": "esriFieldTypeString"}]}
 
@@ -159,23 +160,33 @@ def test_output_does_not_depend_on_server_order(tmp_path: Path) -> None:
 
 
 def city(name: str, x: float, y: float, size: float) -> dict[str, Any]:
-    return {"attributes": {"fid": 1, "name": name}, "geometry": {"rings": [square(x, y, size)]}}
+    return {"attributes": {"OBJECTID": 1, "BASENAME": name, "STATE": "12"},
+            "geometry": {"rings": [square(x, y, size)]}}
 
 
-def test_city_limits_writes_configured_cities(tmp_path: Path) -> None:
-    get, seen = transport(CITY_META, [[city("LIVE OAK", 0, 0, 2000), city("BRANFORD", 9000, 0, 1000)]])
+def test_city_limits_writes_configured_cities_in_the_region_state(tmp_path: Path) -> None:
+    get, seen = transport(CITY_META, [[city("Live Oak", 0, 0, 2000), city("Branford", 9000, 0, 1000)]])
     mapdata.fetch_city_limits(REGION, tmp_path, no_record, get)
-    assert query(seen[1])["where"] == ["name IN ('BRANFORD', 'LIVE OAK')"]
-    assert query(seen[1])["outFields"] == ["name"]
+    assert query(seen[1])["where"] == ["STATE = '12' AND BASENAME IN ('Branford', 'Live Oak')"]
+    assert query(seen[1])["outFields"] == ["BASENAME"]
     out = read_json(tmp_path / mapdata.CITY_LIMITS_FILE)
     assert [c["name"] for c in out["cities"]] == ["BRANFORD", "LIVE OAK"]
-    assert "fid" not in json.dumps(out)
+    assert "OBJECTID" not in json.dumps(out)
 
 
 def test_city_limits_missing_city_fails(tmp_path: Path) -> None:
-    get, _ = transport(CITY_META, [[city("LIVE OAK", 0, 0, 2000)]])
-    with pytest.raises(PipelineError, match="BRANFORD"):
+    get, _ = transport(CITY_META, [[city("Live Oak", 0, 0, 2000)]])
+    with pytest.raises(PipelineError, match="Branford"):
         mapdata.fetch_city_limits(REGION, tmp_path, no_record, get)
+
+
+def test_city_limits_state_must_be_a_fips_code(tmp_path: Path) -> None:
+    region = copy.deepcopy(REGION)
+    region["map"]["city_limits"]["state"] = "FL' OR '1'='1"
+    get, seen = transport(CITY_META, [[]])
+    with pytest.raises(PipelineError, match="2-digit state FIPS"):
+        mapdata.fetch_city_limits(region, tmp_path, no_record, get)
+    assert seen == []
 
 
 def test_city_names_cannot_inject_sql(tmp_path: Path) -> None:

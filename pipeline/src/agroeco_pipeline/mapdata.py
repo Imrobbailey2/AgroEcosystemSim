@@ -60,18 +60,29 @@ def _num(v: Any) -> float | None:
 
 
 def fetch_city_limits(region: dict[str, Any], out: Path, record: arcgis.Record, get: arcgis.Get) -> None:
-    """City-limit polygons for the configured municipalities (excluded from selection)."""
+    """City-limit polygons for the configured municipalities (excluded from selection).
+
+    Place names repeat across states (there is a Live Oak in California and in
+    Texas), so an optional ``state_field`` / ``state`` (2-digit FIPS) filter
+    restricts the query to the region's state.
+    """
     cfg = map_cfg(region, "city_limits")
     sr = _out_sr(region)
     name_field = cfg["name_field"]
     names = cfg.get("names") or []
     if not names:
         raise PipelineError("map.city_limits.names must list at least one city")
-    arcgis.refuse_forbidden([name_field])
+    state_field, state = cfg.get("state_field"), cfg.get("state")
+    if state_field and (not isinstance(state, str) or not state.isdigit() or len(state) != 2):
+        raise PipelineError(f"map.city_limits.state must be a 2-digit state FIPS code, got {state!r}")
+    fields = [name_field, state_field] if state_field else [name_field]
+    arcgis.refuse_forbidden(fields)
     meta = arcgis.layer_meta(cfg["url"], get, record)
-    arcgis.field_types(meta, [name_field])
+    arcgis.field_types(meta, fields)
     literals = ", ".join(arcgis.text_literal(n, "map.city_limits.names") for n in names)
     where = f"{name_field} IN ({literals})"
+    if state_field:
+        where = f"{state_field} = '{state}' AND {where}"
     feats = arcgis.query_features(cfg["url"], where, [name_field], get, record, sr,
                                   cfg.get("max_allowable_offset_m"), meta.get("objectIdField"))
     by_name: dict[str, list[list[list[int]]]] = {}
