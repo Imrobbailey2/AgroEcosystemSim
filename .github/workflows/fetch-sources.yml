@@ -1,10 +1,12 @@
 name: Fetch sources
 
 # Manually started. Downloads SSURGO soils, UF/IFAS budgets, FAWN weather,
-# Florida statewide parcel values (aggregates only) and USDA ERS corn cost
-# lines, writes citable extracts plus a checksum lock, rebuilds the data pack,
-# and pushes everything to a new data/fetch-<run id> branch for review as a PR.
-# Copyrighted raw files (budget workbooks) are never committed.
+# Florida statewide parcel values (aggregates only), USDA ERS corn cost lines
+# and the county map extracts (parcel shapes with land-use code and area only,
+# city limits, county outline), writes citable extracts plus a checksum lock,
+# rebuilds the data pack, and pushes everything to a new data/fetch-<run id>
+# branch for review as a PR. Copyrighted raw files (budget workbooks) are never
+# committed; owner names, addresses and parcel IDs are never requested.
 
 on:
   workflow_dispatch:
@@ -16,7 +18,7 @@ on:
         type: choice
         options: [suwannee]
       only:
-        description: "Steps to run. Leave EMPTY to run all. Or type any of: soils budgets weather parcels ers"
+        description: "Steps to run. Leave EMPTY to run all. Or type any of: soils budgets weather parcels ers city_limits county_outline parcel_shapes (map = the last three)"
         required: false
         default: ""
 
@@ -54,7 +56,7 @@ jobs:
           fi
           picked="$(echo $picked)"  # one line, space-separated
           echo "steps=$picked" >> "$GITHUB_OUTPUT"
-          echo "Fetch steps: ${picked:-all (soils budgets weather parcels ers)}" | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "Fetch steps: ${picked:-all (soils budgets weather parcels ers city_limits county_outline parcel_shapes)}" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Fetch and extract
         env:
           REGION: ${{ inputs.region }}
@@ -68,6 +70,21 @@ jobs:
             args+=(--only "${only_steps[@]}")
           fi
           bash scripts/annotate-errors.sh agroeco-pipeline "${args[@]}"
+      - name: County map measurements
+        env:
+          REGION: ${{ inputs.region }}
+        shell: bash
+        run: |
+          f="pipeline/sources/extracted/$REGION/map_measurements.json"
+          if [ -f "$f" ]; then
+            {
+              echo "### County map measurements"
+              echo ""
+              echo '```json'
+              cat "$f"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Build and validate data pack
         env:
           REGION: ${{ inputs.region }}
@@ -79,6 +96,7 @@ jobs:
         env:
           REGION: ${{ inputs.region }}
           BRANCH: data/fetch-${{ github.run_id }}
+          BASE: ${{ github.ref_name }}
         shell: bash
         run: |
           set -euo pipefail
@@ -95,6 +113,6 @@ jobs:
           {
             echo "### Data branch pushed"
             echo ""
-            echo "Open a pull request from \`$BRANCH\` into \`main\`, then complete"
-            echo "\`docs/increment-2-spot-check.md\`."
+            echo "Open a pull request from \`$BRANCH\` into \`$BASE\` (the branch this run started from),"
+            echo "then complete the spot-check for the increment."
           } >> "$GITHUB_STEP_SUMMARY"

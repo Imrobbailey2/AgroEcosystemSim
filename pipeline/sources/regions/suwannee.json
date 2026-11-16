@@ -151,5 +151,34 @@
       "general_farm_overhead": "General farm overhead"
     },
     "years_kept": 5
+  },
+  "map": {
+    "crs_epsg": 3086,
+    "agricultural_use_code_range": [50, 69],
+    "min_selectable_acres": 10,
+    "measure_tolerances_m": [2, 5, 10, 20],
+    "size_budget_bytes": 2000000,
+    "parcel_shapes": {
+      "source": "fgio-fl-statewide-parcels",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0",
+      "county_no": 71,
+      "fields": {"county": "CO_NO", "use_code": "DOR_UC", "land_sqft": "LND_SQFOOT"},
+      "max_allowable_offset_m": 1,
+      "min_parcels": 1000
+    },
+    "city_limits": {
+      "source": "fgdl-city-limits-2021",
+      "url": "https://gis.fdot.gov/arcgis/rest/services/Hosted/CityLimits_1/FeatureServer/0",
+      "name_field": "name",
+      "names": ["BRANFORD", "LIVE OAK"],
+      "max_allowable_offset_m": 1
+    },
+    "county_outline": {
+      "source": "census-tigerweb-counties-2026",
+      "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1",
+      "geoid_field": "GEOID",
+      "geoid": "12121",
+      "max_allowable_offset_m": 1
+    }
   }
 }
