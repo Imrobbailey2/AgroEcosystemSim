@@ -20,11 +20,13 @@ from agroeco_pipeline.parcels import FORBIDDEN_FIELD_PREFIXES
 Get = Callable[[str], bytes]
 Record = Callable[[str, bytes, str], None]
 
-# Features are downloaded in batches of object IDs (Esri's recommended pattern for
-# large results: returnIdsOnly, then subsets of objectIds) rather than by
-# resultOffset, which hosted layers can reject deep into a result set.
+# Features are downloaded in batches: first the matching object IDs (returnIdsOnly),
+# then one query per run of ID_CHUNK consecutive IDs, selected with an ID range in the
+# where clause. resultOffset paging failed deep into the parcel layer (HTTP 400) and
+# listing IDs in objectIds made URLs too long for ArcGIS Online (HTTP 404).
 ID_CHUNK = 250
 MAX_IDS = 500_000
+SAFE_FIELD = re.compile(r"^[A-Za-z_][A-Za-z0-9_]{0,63}$")
 STRING_TYPES = {"esriFieldTypeString"}
 # Text values allowed in a where clause (place names): letters, spaces and . ' -
 SAFE_TEXT = re.compile(r"^[A-Za-z][A-Za-z .'-]{0,59}$")
@@ -88,16 +90,16 @@ def query_features(
     record: Record,
     out_sr: int,
     max_allowable_offset_m: float | None = None,
-    order_by: str | None = None,
+    id_field: str | None = None,
 ) -> list[dict[str, Any]]:
     """Download every matching feature with geometry projected to ``out_sr`` (whole units).
 
     First asks for the matching object IDs (``returnIdsOnly``), then downloads the
-    features in batches of ``ID_CHUNK`` IDs, in ascending ID order. Object IDs are
-    internal row numbers that could be joined back to the source layer, so the
-    URLs passed to ``record`` (and so the lock file) show only how many IDs a
-    batch asked for, never the IDs themselves. ``order_by`` is accepted for
-    compatibility and not needed: batches are already in ID order.
+    features in ascending ID order, ``ID_CHUNK`` IDs per request, each selected by
+    ``(where) AND id >= first AND id <= last``. Object IDs are internal row numbers
+    that could be joined back to the source layer, so the URLs passed to ``record``
+    (and so the lock file) and any download error show ``<ID range>`` instead of
+    the numbers. ``id_field`` defaults to the field the ID query reports.
     """
     refuse_forbidden(out_fields)
     base = url.rstrip("/")
@@ -106,6 +108,9 @@ def query_features(
     raw = get(ids_url)
     record(ids_url, raw, "object IDs")
     data = _json(raw, "object ID query")
+    oid = id_field or data.get("objectIdFieldName")
+    if not isinstance(oid, str) or not SAFE_FIELD.match(oid):
+        raise PipelineError(f"layer did not name a usable object-ID field (got {oid!r})")
     ids = data.get("objectIds") or []
     if not isinstance(ids, list) or any(isinstance(i, bool) or not isinstance(i, int) for i in ids):
         raise PipelineError("object ID query did not return a list of integer IDs")
@@ -116,7 +121,7 @@ def query_features(
     for n, start in enumerate(range(0, len(ids), ID_CHUNK), start=1):
         chunk = ids[start:start + ID_CHUNK]
         params = {
-            "objectIds": ",".join(str(i) for i in chunk),
+            "where": f"({where}) AND {oid} >= {chunk[0]} AND {oid} <= {chunk[-1]}",
             "outFields": ",".join(out_fields),
             "returnGeometry": "true",
             "outSR": str(out_sr),
@@ -126,8 +131,13 @@ def query_features(
         if max_allowable_offset_m:
             params["maxAllowableOffset"] = f"{max_allowable_offset_m:g}"
         query_url = f"{base}/query?" + urllib.parse.urlencode(params)
-        logged_url = f"{base}/query?" + urllib.parse.urlencode({**params, "objectIds": f"<{len(chunk)} ids>"})
-        raw = get(query_url)
+        shown = {**params, "where": f"({where}) AND <ID range, {len(chunk)} ids>"}
+        logged_url = f"{base}/query?" + urllib.parse.urlencode(shown)
+        try:
+            raw = get(query_url)
+        except PipelineError as exc:
+            reason = str(exc).split(f"{query_url}: ", 1)[-1] if query_url in str(exc) else "download error"
+            raise PipelineError(f"features batch {n} failed ({reason}): {logged_url}") from None
         record(logged_url, raw, f"features batch {n}")
         page = _json(raw, f"features batch {n}")
         batch = page.get("features") or []

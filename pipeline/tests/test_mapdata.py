@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 import urllib.parse
 from pathlib import Path
 from typing import Any
@@ -48,7 +49,7 @@ def parcel(code: str, x: float, y: float, size_m: float, oid: int) -> dict[str, 
 
 
 def transport(meta: dict[str, Any], features: list[dict[str, Any]], sr: int = SR) -> tuple[Any, list[str]]:
-    """Fake server: layer metadata, an object-ID query, then features by objectIds."""
+    """Fake server: layer metadata, an object-ID query, then features by an ID range in the where clause."""
     seen: list[str] = []
     by_id = {f["attributes"]["OBJECTID"]: f for f in features}
 
@@ -59,11 +60,20 @@ def transport(meta: dict[str, Any], features: list[dict[str, Any]], sr: int = SR
         q = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)
         if q.get("returnIdsOnly") == ["true"]:
             return json.dumps({"objectIdFieldName": "OBJECTID", "objectIds": list(by_id)}).encode()
-        wanted = [int(i) for i in q["objectIds"][0].split(",")]
-        batch = [by_id[i] for i in wanted if i in by_id]
+        assert "objectIds" not in q
+        lo, hi = id_range(url)
+        batch = [f for i, f in by_id.items() if lo <= i <= hi]
         return json.dumps({"features": batch, "spatialReference": {"wkid": sr}}).encode()
 
     return get, seen
+
+
+def id_range(url: str) -> tuple[int, int]:
+    """(first, last) object ID from a batch query's where clause."""
+    where = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)["where"][0]
+    m = re.search(r"AND OBJECTID >= (\d+) AND OBJECTID <= (\d+)$", where)
+    assert m, where
+    return int(m.group(1)), int(m.group(2))
 
 
 def no_record(url: str, raw: bytes, note: str) -> None:
@@ -98,7 +108,7 @@ def test_parcel_shapes_request_only_allow_listed_fields_and_write_no_identifiers
     q = query(seen[2])
     assert sorted(q["outFields"][0].split(",")) == ["CO_NO", "DOR_UC", "LND_SQFOOT"]
     assert q["returnGeometry"] == ["true"] and q["outSR"] == [str(SR)] and q["geometryPrecision"] == ["0"]
-    assert q["objectIds"] == ["7,8"]
+    assert q["where"] == ["(CO_NO = 71) AND OBJECTID >= 7 AND OBJECTID <= 8"]
     text = (tmp_path / mapdata.PARCEL_SHAPES_FILE).read_text(encoding="utf-8")
     assert not any(bad in text for bad in FORBIDDEN_TEXT)
     assert "PRIVATE PERSON" not in text and "12-34-56" not in text
@@ -119,8 +129,9 @@ def test_personal_fields_cannot_be_configured_and_nothing_is_downloaded(tmp_path
     assert seen == []
 
 
-def test_features_download_in_object_id_batches_and_ids_are_not_logged(tmp_path: Path) -> None:
-    feats = [parcel("052", i * 400, 0, 300, 101 + i) for i in range(5)]
+def test_features_download_in_id_range_batches_and_ids_are_not_logged(tmp_path: Path) -> None:
+    oids = [101, 102, 104, 107, 108]  # gaps, as in a real layer
+    feats = [parcel("052", i * 400, 0, 300, oid) for i, oid in enumerate(oids)]
     get, seen = transport(PARCEL_META, feats)
     logged: list[tuple[str, str]] = []
     saved = arcgis.ID_CHUNK
@@ -129,13 +140,31 @@ def test_features_download_in_object_id_batches_and_ids_are_not_logged(tmp_path:
         mapdata.fetch_parcel_shapes(region_with(), tmp_path, lambda u, r, n: logged.append((u, n)), get)
     finally:
         arcgis.ID_CHUNK = saved
-    assert [query(u)["objectIds"][0] for u in seen[2:]] == ["101,102", "103,104", "105"]
+    assert [id_range(u) for u in seen[2:]] == [(101, 102), (104, 107), (108, 108)]
+    assert all(len(u) < 400 for u in seen)
     assert [n for _, n in logged] == ["layer metadata", "object IDs", "features batch 1", "features batch 2",
                                       "features batch 3"]
     batch_urls = [u for u, n in logged if n.startswith("features batch")]
-    assert [query(u)["objectIds"][0] for u in batch_urls] == ["<2 ids>", "<2 ids>", "<1 ids>"]
-    assert not any(str(101 + i) in u for u, _ in logged for i in range(5))
+    assert [query(u)["where"][0] for u in batch_urls] == [
+        "(CO_NO = 71) AND <ID range, 2 ids>", "(CO_NO = 71) AND <ID range, 2 ids>",
+        "(CO_NO = 71) AND <ID range, 1 ids>"]
+    assert not any(str(oid) in u for u, _ in logged for oid in oids)
     assert read_json(tmp_path / mapdata.PARCEL_SHAPES_FILE)["count"] == 5
+
+
+def test_failed_batch_error_does_not_show_ids(tmp_path: Path) -> None:
+    def get(url: str) -> bytes:
+        if url.endswith("?f=json"):
+            return json.dumps(PARCEL_META).encode()
+        if "returnIdsOnly" in url:
+            return json.dumps({"objectIds": [10413841, 10413842]}).encode()
+        raise PipelineError(f"download failed after 4 attempts: {url}: HTTP Error 404: Not Found")
+
+    with pytest.raises(PipelineError) as info:
+        mapdata.fetch_parcel_shapes(region_with(), tmp_path, no_record, get)
+    message = str(info.value)
+    assert "features batch 1 failed (HTTP Error 404: Not Found)" in message
+    assert "10413841" not in message and "10413842" not in message
 
 
 def test_truncated_batch_stops_the_fetch(tmp_path: Path) -> None:
