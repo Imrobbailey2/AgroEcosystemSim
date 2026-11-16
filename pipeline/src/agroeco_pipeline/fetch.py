@@ -5,7 +5,9 @@ written to the repository: only extracted facts with cell references, public
 domain SSURGO responses, and CC BY derived daily weather, plus a lock file of
 URLs and SHA-256 checksums of every raw download. Parcel data is reduced to
 aggregate statistics before anything is written; USDA ERS cost tables are
-reduced to the configured region and cost lines.
+reduced to the configured region and cost lines. County map extracts
+(Increment 3) keep parcel shapes with only the land-use code and land area:
+no owner, address, parcel ID or other identifier is requested or written.
 """
 
 from __future__ import annotations
@@ -21,7 +23,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from agroeco_pipeline import budget, ers, parcels, sda, soils, weather
+from agroeco_pipeline import budget, ers, mapdata, parcels, sda, soils, weather
 from agroeco_pipeline.common import (
     PipelineError,
     read_json,
@@ -34,7 +36,14 @@ from agroeco_pipeline.xlsx import read_workbook
 
 USER_AGENT = "AgroEcosystemSim-pipeline/0.1 (+https://github.com/Imrobbailey2/AgroEcosystemSim)"
 FIGSHARE_API = "https://api.figshare.com/v2/articles/{id}"
-STEPS = ("soils", "budgets", "weather", "parcels", "ers")
+# City limits and the county outline run before parcel shapes so the map size
+# report can count parcels inside city limits.
+STEPS = ("soils", "budgets", "weather", "parcels", "ers", "city_limits", "county_outline", "parcel_shapes")
+MAP_STEPS = {
+    "city_limits": mapdata.fetch_city_limits,
+    "county_outline": mapdata.fetch_county_outline,
+    "parcel_shapes": mapdata.fetch_parcel_shapes,
+}
 
 
 def http(url: str, data: bytes | None = None, headers: dict[str, str] | None = None,
@@ -214,6 +223,13 @@ def fetch_ers(region: dict[str, Any], out: Path, lock: Lock,
     write_json(out / "ers_costs.json", {**summary, "source": cfg["source"], "url": cfg["url"]})
 
 
+def fetch_map_step(step: str, region: dict[str, Any], out: Path, lock: Lock,
+                   get: Callable[[str], bytes] = http) -> None:
+    """County map extracts: city_limits, county_outline or parcel_shapes (see mapdata.py)."""
+    source = mapdata.map_cfg(region, step)["source"]
+    MAP_STEPS[step](region, out, lambda url, raw, note: lock.add(source, url, raw, note), get)
+
+
 def run_fetch(region_id: str, only: list[str] | None = None) -> Path:
     base = sources_dir()
     region = read_json(base / "regions" / f"{region_id}.json")
@@ -221,10 +237,11 @@ def run_fetch(region_id: str, only: list[str] | None = None) -> Path:
     out = base / "extracted" / region_id
     out.mkdir(parents=True, exist_ok=True)
     lock = Lock()
-    steps = only or list(STEPS)
-    unknown = [s for s in steps if s not in STEPS]
+    unknown = [s for s in only or [] if s not in STEPS]
     if unknown:
         raise PipelineError(f"unknown fetch steps {unknown}; choose from {list(STEPS)}")
+    # Always run in STEPS order (city limits before parcel shapes).
+    steps = [s for s in STEPS if s in only] if only else list(STEPS)
     now = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     lock_path = out / "fetch-lock.json"
     previous = read_json(lock_path) if lock_path.exists() else {"downloads": [], "fetched_at": {}}
@@ -239,8 +256,10 @@ def run_fetch(region_id: str, only: list[str] | None = None) -> Path:
             fetch_weather(region, out, lock)
         elif step == "parcels":
             fetch_parcels(region, out, lock)
-        else:
+        elif step == "ers":
             fetch_ers(region, out, lock)
+        else:
+            fetch_map_step(step, region, out, lock)
         fetched_at[step] = now
     kept = [e for e in previous.get("downloads", []) if e.get("step") not in steps]
     write_json(

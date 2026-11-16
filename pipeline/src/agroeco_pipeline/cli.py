@@ -1,6 +1,7 @@
 """Command-line entry point.
 
-    agroeco-pipeline fetch --region suwannee [--only soils budgets weather parcels ers]
+    agroeco-pipeline fetch --region suwannee [--only soils budgets weather parcels ers
+                                                     city_limits county_outline parcel_shapes]
     agroeco-pipeline build --region suwannee [--out PATH] [--check]
     agroeco-pipeline validate PATH
 """
@@ -18,6 +19,7 @@ from agroeco_pipeline import __version__
 from agroeco_pipeline.common import PipelineError, packs_dir
 
 KNOWN_REGIONS = ("suwannee",)
+FETCH_STEPS = ("soils", "budgets", "weather", "parcels", "ers", "city_limits", "county_outline", "parcel_shapes")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -31,7 +33,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     fetch = sub.add_parser("fetch", help="Download sources and write committed extracts (needs network).")
     fetch.add_argument("--region", required=True, choices=KNOWN_REGIONS)
-    fetch.add_argument("--only", nargs="+", choices=["soils", "budgets", "weather", "parcels", "ers"])
+    fetch.add_argument("--only", nargs="+", choices=FETCH_STEPS)
 
     build = sub.add_parser("build", help="Build and validate a region data pack (offline).")
     build.add_argument("--region", required=True, choices=KNOWN_REGIONS)
