@@ -1436,10 +1436,13 @@
   "format": "agroeco-datapack",
   "format_version": 1,
   "inputs": {
-    "fetch_lock_sha256": "05f1b7a0b474785505b13da00710a59f48b7c8a0523ef707cb7527c4824eef85",
+    "fetch_lock_sha256": "0a5ac62e62b40196f3664a2dbfb5f89d1901274f06a762cb79593aee5eed0185",
     "fetched_at": {
       "budgets": "2026-11-13T20:46:42Z",
+      "city_limits": "2026-11-16T17:35:10Z",
+      "county_outline": "2026-11-16T17:35:10Z",
       "ers": "2026-11-09T16:17:20Z",
+      "parcel_shapes": "2026-11-16T17:35:10Z",
       "parcels": "2026-11-09T16:17:20Z",
       "soils": "2026-10-20T19:58:05Z",
       "weather": "2026-10-20T19:58:05Z"
@@ -1720,6 +1723,33 @@
       "options": [],
       "status": "open",
       "title": "Basic vs. Advanced game modes: scope of Advanced mode"
+    },
+    {
+      "affects": [
+        "map pack: eligibility_rules",
+        "map pack: parcels"
+      ],
+      "current_default": "Interim rule: a parcel is selectable when its DOR land-use code (DOR_UC, Florida Statewide Parcels) is agricultural, 050-069; its land area (LND_SQFOOT / 43,560) is at least 10 acres; and it is not inside the Live Oak or Branford city limits (Census TIGERweb Incorporated Places, January 1, 2026). Every parcel's zoning district is 'unknown'. Settings live in the region config (map.agricultural_use_code_range, map.min_selectable_acres, map.city_limits)",
+      "decided_on": "2026-11-16",
+      "decision_owner": "Project owner",
+      "id": "parcel-eligibility-interim",
+      "notes": "Decided 2026-11-16 by the project owner. Land-use codes describe current use, not zoning: a parcel zoned residential but farmed today shows as selectable, and code 068 (dairies, feed lots) is included although intensive operations need a special exception in A-1 and are prohibited in ESA districts. The game labels this eligibility as provisional. No current machine-readable zoning layer was found (searched 2026-11-16): the county's Official Zoning Atlas is a PDF adopted September 3, 1992, amended October 17, 1997, and the county's public ArcGIS base map has no zoning layer. To resolve: obtain the current zoning layer from Suwannee County Planning & Zoning (Ronald Meeks, Director, ronaldm@suwcountyfl.gov, 386-364-3401) and check the rules against the current Land Development Regulations text. City limits are the Census Bureau's January 1, 2026 incorporated-place boundaries, so annexations after that date are missing (the FGDL/FDOT city-limits layer first chosen refused downloads from GitHub Actions, HTTP 403, 2026-11-16). The 10-acre minimum is a gameplay setting: the LDR sets minimum lot sizes for dwellings, not for farm use. Map design: docs/increment-3-county-map.md.",
+      "options": [
+        {
+          "id": "interim-land-use",
+          "summary": "Land-use codes 050-069 selectable (current use, not zoning), at least 10 acres, outside city limits. Chosen 2026-11-16 so Increment 3 is not blocked on the county"
+        },
+        {
+          "id": "county-zoning",
+          "summary": "Suwannee County Land Development Regulations: A-1 and A-2 selectable; ESA-1 and ESA-2 selectable for non-intensive agriculture only; CSV, residential, commercial, industrial and municipal blocked. Needs the county's current zoning layer"
+        }
+      ],
+      "sources": [
+        "fgio-fl-statewide-parcels",
+        "census-tigerweb-places-2026"
+      ],
+      "status": "open",
+      "title": "County map: which parcels the player may select, using DOR land-use codes until the county zoning layer is obtained"
     }
   ],
   "soil_test": {
@@ -2080,6 +2110,30 @@
       "year": "2026"
     },
     {
+      "accessed": "set by fetch (see fetch-lock.json)",
+      "authors": "U.S. Census Bureau",
+      "id": "census-tigerweb-counties-2026",
+      "kind": "fetched",
+      "landing_page": "https://tigerweb.geo.census.gov/tigerwebmain/TIGERweb_restmapservice.html",
+      "license": "US Government work, public domain. Cite the U.S. Census Bureau.",
+      "publisher": "U.S. Census Bureau",
+      "title": "TIGERweb State_County map service, Counties layer (January 1, 2026 vintage)",
+      "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1",
+      "year": "2026"
+    },
+    {
+      "accessed": "set by fetch (see fetch-lock.json)",
+      "authors": "U.S. Census Bureau",
+      "id": "census-tigerweb-places-2026",
+      "kind": "fetched",
+      "landing_page": "https://tigerweb.geo.census.gov/tigerwebmain/TIGERweb_restmapservice.html",
+      "license": "US Government work, public domain. Cite the U.S. Census Bureau. Incorporated-place boundaries as reported to the Census Bureau's Boundary and Annexation Survey; only the configured city polygons and names are committed.",
+      "publisher": "U.S. Census Bureau",
+      "title": "TIGERweb Places_CouSub_ConCity_SubMCD map service, Incorporated Places layer (January 1, 2026 vintage)",
+      "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4",
+      "year": "2026"
+    },
+    {
       "accessed": "2026-10-20",
       "authors": "Allen, R. G., Pereira, L. S., Raes, D., and Smith, M.",
       "id": "fao56",
@@ -2132,7 +2186,7 @@
       "id": "fgio-fl-statewide-parcels",
       "kind": "fetched",
       "landing_page": "https://geodata.floridagio.gov/datasets/FGIO::florida-statewide-parcels/about",
-      "license": "Florida public records (Chapter 119, F.S.); see the FGIO item license. Only aggregate statistics are committed; owner names, addresses, parcel IDs and geometry are never requested.",
+      "license": "Florida public records (Chapter 119, F.S.); see the FGIO item license. Owner names, addresses, legal descriptions, parcel IDs and alternate keys are never requested. Fetch step 'parcels' commits aggregate statistics only; fetch step 'parcel_shapes' (county map, project-owner decision 2026-11-16) commits parcel boundaries with only the land-use code and land area, and the game shows them under anonymous IDs with a not-a-real-listing disclaimer.",
       "publisher": "State of Florida Geographic Information Office (FGIO)",
       "title": "Florida Statewide Parcels (CADASTRAL_DOR): Florida Department of Revenue parcel GIS joined with the real property assessment roll (NAL)",
       "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0",

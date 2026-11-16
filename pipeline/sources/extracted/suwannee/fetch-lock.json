@@ -199,11 +199,1110 @@
       "source": "svaec-corn-2026-ct-rented",
       "step": "budgets",
       "url": "https://svaec.ifas.ufl.edu/media/svaecifasufledu/docs/excel/agribusiness/FieldCornBudget2026_Grain-Irrig-CT_Rented_260209.xlsx"
+    },
+    {
+      "bytes": 9806,
+      "note": "layer metadata",
+      "sha256": "fdd4f51653928c7ec464f4bbf5116f2d86f77b455536083a28eea4446df0076d",
+      "source": "census-tigerweb-places-2026",
+      "step": "city_limits",
+      "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4?f=json"
+    },
+    {
+      "bytes": 58,
+      "note": "object IDs",
+      "sha256": "6dc39e0c3891d84b2adf263677f9da863159462093cd3304b14a2bf32b6b77d7",
+      "source": "census-tigerweb-places-2026",
+      "step": "city_limits",
+      "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4/query?where=STATE+%3D+%2712%27+AND+BASENAME+IN+%28%27Branford%27%2C+%27Live+Oak%27%29&returnIdsOnly=true&f=json"
+    },
+    {
+      "bytes": 3607,
+      "note": "features batch 1",
+      "sha256": "f5d52ddee1a5e6f5996276a1e552f23d4fea75ab210405eb548c264afb5efcff",
+      "source": "census-tigerweb-places-2026",
+      "step": "city_limits",
+      "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4/query?where=%28STATE+%3D+%2712%27+AND+BASENAME+IN+%28%27Branford%27%2C+%27Live+Oak%27%29%29+AND+%3CID+range%2C+2+ids%3E&outFields=BASENAME&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 6008,
+      "note": "layer metadata",
+      "sha256": "cc05d07d52e3989061e248e7179f07c674e0a59a86a4f3ca55f81a722fa6af55",
+      "source": "census-tigerweb-counties-2026",
+      "step": "county_outline",
+      "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1?f=json"
+    },
+    {
+      "bytes": 50,
+      "note": "object IDs",
+      "sha256": "0a0e7b64a372c551d510bd2c6a4821c70a3f7e51d7ec631b2867511385daeb46",
+      "source": "census-tigerweb-counties-2026",
+      "step": "county_outline",
+      "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1/query?where=GEOID+%3D+%2712121%27&returnIdsOnly=true&f=json"
+    },
+    {
+      "bytes": 42943,
+      "note": "features batch 1",
+      "sha256": "1d07d87947403d140c8b6132fb46c217f47cc9f4a06d037b760dc60763a53cd2",
+      "source": "census-tigerweb-counties-2026",
+      "step": "county_outline",
+      "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1/query?where=%28GEOID+%3D+%2712121%27%29+AND+%3CID+range%2C+1+ids%3E&outFields=GEOID&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 30554,
+      "note": "layer metadata",
+      "sha256": "eec7a8ac85be9466ba9ea364c9f7533181fb8b278cdcad2f354d7a350bb7ec08",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0?f=json"
+    },
+    {
+      "bytes": 289234,
+      "note": "object IDs",
+      "sha256": "94b50aa97eeb7acb5eda84818e54e289bffa9b1636f4fa564009334a27a12e09",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=CO_NO+%3D+71&returnIdsOnly=true&f=json"
+    },
+    {
+      "bytes": 47793,
+      "note": "features batch 1",
+      "sha256": "bb025246bc5581daf0f1e477edc8c1554bf15cef03214194309123026d8752c5",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48041,
+      "note": "features batch 2",
+      "sha256": "553554353f0d78aa6280b517a6ae7d581a04268c3100aae72703a3a9dd39f5da",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 55011,
+      "note": "features batch 3",
+      "sha256": "8ceeee2a4b3890ea5f7b7d229b5a87867849d05c52545ad6d32dbfcbca96d957",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 46420,
+      "note": "features batch 4",
+      "sha256": "0794b74151855c3c6d765869c8349cd01bd9fbce6e90d386ecabd905fee14f92",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48693,
+      "note": "features batch 5",
+      "sha256": "355e259b1769ad4b7f2df6b1c7f7b2e918fc0710ed4cae5c851b711bd7a4d5b5",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48475,
+      "note": "features batch 6",
+      "sha256": "d954ddf7df6ae7ea9c09a1ce8597b77c7ad8b872eeb5e1581e864177be67dc09",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 46668,
+      "note": "features batch 7",
+      "sha256": "4c932ab1b4d35098f9d5f277afc7625185f58d201292a66b106cfb60bbc6960f",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48715,
+      "note": "features batch 8",
+      "sha256": "7d1c9ef369892e9996b8b96c50ca204cb81307c5b4e88245c762731b9e1c966f",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 52366,
+      "note": "features batch 9",
+      "sha256": "4fa764f15d55d4d727c11ec6828d5012ed4c0ae29d8b5e8ee14dde466e6579fb",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 50278,
+      "note": "features batch 10",
+      "sha256": "ea99356567f846af5e03913f298ea0deaa196b2cbc7f2dcbce8d646e9ff44b20",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48314,
+      "note": "features batch 11",
+      "sha256": "3b8c6fdcdb44cf1398ce5969127556c6b4ed5387f8ed4ba75e8e65f010ca1481",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51073,
+      "note": "features batch 12",
+      "sha256": "7ffec852c62612cee0b57b4a37f9460f7e7cc3876376f82a1904a0e3882c5817",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 46826,
+      "note": "features batch 13",
+      "sha256": "6c90f17cc47fcdf042f9f734c3f1cddd517d1a152f16a4e99687192e5948b4c8",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51239,
+      "note": "features batch 14",
+      "sha256": "106c41bc6e472ef290659b3c6cfd1602e7fbf4067ecb8e798c2edaeacdbc5b26",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 47929,
+      "note": "features batch 15",
+      "sha256": "18c8bc55074011bcc61e6133fc9141889b323b775d664461c7fa68bc0a25999b",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 55116,
+      "note": "features batch 16",
+      "sha256": "e32f5b500a2952ef47bf16cbdd7a361b0cf2a487463f986847c74d898234710c",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 46753,
+      "note": "features batch 17",
+      "sha256": "a05817a922a69f85845f9a73255502eb84800a54888afaf64a1eef9bdaf05ac2",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 46796,
+      "note": "features batch 18",
+      "sha256": "c963e945307585a0e202559503a8c0b24c8032d8f5242641cc368ed225767ce7",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 46117,
+      "note": "features batch 19",
+      "sha256": "d0fdad6fbb17ea6f9d94d451f448b4b26e9daea78668858bff5a2a8fe714cb20",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51490,
+      "note": "features batch 20",
+      "sha256": "e2c2e1a893d300fc1b874350e33b135f70c5303dde72e21710534ca65bfdf3df",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51485,
+      "note": "features batch 21",
+      "sha256": "66f5b52d6cda3f2aae1c867715a7d937d52783cf16587271f4e71a1471f4307a",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51022,
+      "note": "features batch 22",
+      "sha256": "4bea7b5cafb140f3d57344190ddf9fdf377001ab7fcc70dfb5f8075404d3a482",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 47929,
+      "note": "features batch 23",
+      "sha256": "624b642a3b6dd454b519876679a707999791fd26e49724f1b114a50436c28279",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51332,
+      "note": "features batch 24",
+      "sha256": "38a53b47f7cc8961a31aecc0866d5422d375fd8de2abded31efd1f526bcfcb8e",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49406,
+      "note": "features batch 25",
+      "sha256": "3849c896e3f2215ff5bf245d734d710db27160722206f5fba581f6526e069540",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 54176,
+      "note": "features batch 26",
+      "sha256": "9259842ca78aaee950acb753a3aaa29c72256fe98929feae121d7951a158b09c",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 46970,
+      "note": "features batch 27",
+      "sha256": "a6fe8f55690c7362b17df2ed751f262959ebb2f63b38b665456714f1cc517c9c",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 47692,
+      "note": "features batch 28",
+      "sha256": "9a9bc8c364d18b2728e9089a671b63a8d46ba37d8fa697483cc32343cae328be",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 45523,
+      "note": "features batch 29",
+      "sha256": "683771298de4624c6f265024a993d20f673eccc3a644fb4c4fb497af94250268",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 46835,
+      "note": "features batch 30",
+      "sha256": "8ad1c537e550221fffd9ca58cfdee19d113eea71131a392057e263f61f9622c1",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49249,
+      "note": "features batch 31",
+      "sha256": "8935a17a7957973e94e51635ef41b439bb203541f8fd75ecfb8fab21b1345c08",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 50281,
+      "note": "features batch 32",
+      "sha256": "d4b6337e76463ddcde76f438aef33371111d788345a5e5c0e8e76d98a854ca93",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 47350,
+      "note": "features batch 33",
+      "sha256": "fdf4f7980b8e16a91b4fee6abf2d1b227c24981ef0d573fce51d536a05919d47",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 47069,
+      "note": "features batch 34",
+      "sha256": "43e5d1f8650342c42bca6af7fe681c3b82e4a05eb561de46a5c187d047ff9851",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 45608,
+      "note": "features batch 35",
+      "sha256": "c9d0a16cb3c58a0dd58fc919c8467d92c31d19b5b3ba4dce0bc66019906af431",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48979,
+      "note": "features batch 36",
+      "sha256": "97469911201c0a691f48bce4bce595611f0ff2dfa4314cac48d3aeedc551de35",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48400,
+      "note": "features batch 37",
+      "sha256": "a1b56f193a97ef22186785deb76537dd6f0e34c786907df3ffa5c3490539c8bd",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 46852,
+      "note": "features batch 38",
+      "sha256": "db309edc336227d6d6a8f1a8b4f0af0fec36d1a98da4eacd97156e992fd18846",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48234,
+      "note": "features batch 39",
+      "sha256": "2cc71f127adce77c2b6391ed2647b21d7cacead97e691740a02625ba4afe79d9",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49607,
+      "note": "features batch 40",
+      "sha256": "1d487edc90efebfc28a01c70d9b4c6c8c0b0d37f58f07c9c632256143ddfc61a",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49161,
+      "note": "features batch 41",
+      "sha256": "79c1423517dc6e85fa433cf665e49f2d83871fbce5a659b93c29354bf1322ba4",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48205,
+      "note": "features batch 42",
+      "sha256": "a59f4ac6ca4ca153efd444fbb6747f0ca8415a52b1ab2160287c3553b90d095f",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 50673,
+      "note": "features batch 43",
+      "sha256": "1f7f6d4493bf11a6284f613329fb347ce93237f712ce8b0d52f71164a7308043",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 50586,
+      "note": "features batch 44",
+      "sha256": "5ade5e14e5e3ee6c4e948cb5671ffe542fc08c3c94d0bb463b64c6c4c0f26260",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48167,
+      "note": "features batch 45",
+      "sha256": "47701e56e1133597cee18a9706c0132420f11b9c963c8db2779bd59acb88f7d5",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51543,
+      "note": "features batch 46",
+      "sha256": "5660b87124efa25817118455d421c9cb8e8f705a48911a776f65da5f9ab01404",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51381,
+      "note": "features batch 47",
+      "sha256": "77a1593fd04eb1a1e11e9918b96766673fad2c151598f5f5497de11f88ded0b6",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 52738,
+      "note": "features batch 48",
+      "sha256": "974a5b909c9fd5deb8838dc9f13b1f4eb1ad377681ed05105072c4a322e7f387",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 46442,
+      "note": "features batch 49",
+      "sha256": "363bf8581588e86fb97acb62faae619356a22aba205e16637de8dd398b4e9fa5",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 50492,
+      "note": "features batch 50",
+      "sha256": "f1ccfc8372d43a6a5906600676c9d17280c56034af2f95850b6fa5c8917a1f2e",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48491,
+      "note": "features batch 51",
+      "sha256": "72f773695029df947a58442c1c25e2c93a11a9b2dd604bec915f09369007133b",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 45330,
+      "note": "features batch 52",
+      "sha256": "d7fb3af2fa1b805be0387eca74cf681b16da18e0943c60be3f59b5f0fa9c0279",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 57753,
+      "note": "features batch 53",
+      "sha256": "a73f37492dbd5bebed502fc21976d24583748e5b020d730af86c1cb29aed3263",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51974,
+      "note": "features batch 54",
+      "sha256": "af73ffc3a418b344b5b8e99b903e0c760a2a8eb2759817815b4697beeda54570",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49488,
+      "note": "features batch 55",
+      "sha256": "f3c637c757e5ce114212907af4c84f6011ef5b673360046bf2587dde8df3b380",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 50990,
+      "note": "features batch 56",
+      "sha256": "8d28919d667e22cc8b8c83aa602bfa2c9779ba64cce0f9ed8033cf59995cbb2f",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 52759,
+      "note": "features batch 57",
+      "sha256": "16e15200fb8fab69797e4df7658dc521a8bc351386d5b5d0d2606224563430e0",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 47333,
+      "note": "features batch 58",
+      "sha256": "5f9f7385b963bcad1d83073e2d67345e18ba69f0687ed0e1405e292b56c8ba7e",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49443,
+      "note": "features batch 59",
+      "sha256": "3ca430aeb74cd499bb9822be6d37926e2dfcfb6234681a31456f65dd518d5230",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48359,
+      "note": "features batch 60",
+      "sha256": "8adab511cfae40fc2b22f0b7f5e1c85039226f0dbd545a230ace82d847d36171",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49650,
+      "note": "features batch 61",
+      "sha256": "03c65e67d9249bf98e7ba1906442914a65193c8520e5f135ca2ffb81c40c9909",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48935,
+      "note": "features batch 62",
+      "sha256": "ded14f27e85714f548cfc9388428d31a17920a54e596c8aa7b757b15cff17fbf",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51974,
+      "note": "features batch 63",
+      "sha256": "83a31261c7cee6b7133b134266b1d5ca24f2c45e81532ae1dd722159c8df7890",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49738,
+      "note": "features batch 64",
+      "sha256": "f1970f90add0d6610579dcdcc8d8ab1bb46b410d9cfb74e2cb8770cf34d150bc",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 52248,
+      "note": "features batch 65",
+      "sha256": "c9d1db7ce4fd70520940bd6084e7e22cc9ca50ddba56694107c6c1dd4d467bb4",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51452,
+      "note": "features batch 66",
+      "sha256": "26dce781bf284f41c0bf90800315e3b51e716ad7c93223ecb7f94a97298027aa",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49491,
+      "note": "features batch 67",
+      "sha256": "fc849c8ad70c5310c9407412954764d34670fa723e7e79e02f37eaf0b34fd441",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49913,
+      "note": "features batch 68",
+      "sha256": "20c6041d59ef04253bd322184134532d228fe1e97cf00ed081053c8d0c0e2873",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49586,
+      "note": "features batch 69",
+      "sha256": "9b74f6878189b20067b0fbd1064da816dedad630ace18cc01dfda2521cdfb4af",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48726,
+      "note": "features batch 70",
+      "sha256": "2f4ac7b73b446970f706969e3d68c30e1d68bc102bc8a97b06eda08768958fd4",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 50843,
+      "note": "features batch 71",
+      "sha256": "4a1c7c6f6f5dcf88f7e6b7c7e6bd4eebf6a7c6d8125fd1ca1773b88d1675bea9",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 50270,
+      "note": "features batch 72",
+      "sha256": "3d4cf8020f6799a15c1e9f6305a4b991ad23457b9986778fb925472b12c75c97",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51057,
+      "note": "features batch 73",
+      "sha256": "29650be3926ab5cfc714f8c5a4154fe7f396eb4f5e58a9cb0ca1c3c020cf644e",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48455,
+      "note": "features batch 74",
+      "sha256": "d8bc2bc99cbf41f702790b78dbd9fce42c45b29ddf7586f0badc3431c85650ae",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48914,
+      "note": "features batch 75",
+      "sha256": "a65cdb4d2242ee979e9dbac3b94fb84837d337dd75fffe379cb9aee463ebd8c2",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 52439,
+      "note": "features batch 76",
+      "sha256": "2aec30109e7383f08e1b427eb4f62806b729e4bde23c277f3bca5b9abc36baee",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49879,
+      "note": "features batch 77",
+      "sha256": "e060373cf1c5827464a65e5c3975ab3de92766dfdc535655812bf893cc0bead0",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 47703,
+      "note": "features batch 78",
+      "sha256": "7a9b356fc0916bd859cfa00f1c6c91dee17ed5b443d0fcbf770fa269a792af75",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48827,
+      "note": "features batch 79",
+      "sha256": "157715bd80fdd93d1181c1f8653b18e1a0c37ab56625b5eb86202c3b244e934e",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 56827,
+      "note": "features batch 80",
+      "sha256": "cd8eaebdb748e09c88203019c2c2f08cf7c7a7f5a3eab13c09b409013f3eb0aa",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 55850,
+      "note": "features batch 81",
+      "sha256": "2dab4b8c846181485d18d463e235820cb490fe33b11caa68c5517f97daf3affa",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 57272,
+      "note": "features batch 82",
+      "sha256": "82dcaa342ab20f77a8b3119fbd8e8250f9570d49d8ecf05a0a9f9ff7dd5e0dda",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49443,
+      "note": "features batch 83",
+      "sha256": "6a5b09d60e082ea4472fbcda5ba194e36321eb114acdcad948d0eb25c31034f4",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49643,
+      "note": "features batch 84",
+      "sha256": "d24cfe95e7ba123a23579ef7630e3519bb36650152d95186fc0b863b88dba5be",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 47446,
+      "note": "features batch 85",
+      "sha256": "1aa2015b3060c257ed4adac4d2f3236568acae71d041b07827e9af6992e63a56",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 52475,
+      "note": "features batch 86",
+      "sha256": "fbc172eced0429ad54f45a5ce13dfbaa88f4aa1e31cda0082e349863d4e28bcc",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 53104,
+      "note": "features batch 87",
+      "sha256": "03714e924c477f8ba17864a92ba2149312f7cd4b43b0a2815be6604bc3d918e4",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49557,
+      "note": "features batch 88",
+      "sha256": "75bd83a783cb7182c897fef3091a93ffe839fef0f55925f907ffb5a1dc9650c9",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48270,
+      "note": "features batch 89",
+      "sha256": "1211296cf0acd55e9da214d486c94ac5f6ed703c46dc3237893e18b2de6ce35c",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 50380,
+      "note": "features batch 90",
+      "sha256": "b8482aa38ecc1c0a5c441811dd2d721e439884e34be6ef1ba04eed5d43829ac4",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48353,
+      "note": "features batch 91",
+      "sha256": "0041f95be1c4044f1d4bef28ba898870696f538cccc65989b4615869d1027657",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49801,
+      "note": "features batch 92",
+      "sha256": "63ecadd6aeb652acf87201eb74a57069872da426d2e05020f5e58c1442bbe38f",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48512,
+      "note": "features batch 93",
+      "sha256": "df0ed22f202a960f30cc23b7f01a16ba042166b82021d71bbabe4a693dbe27a3",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 54510,
+      "note": "features batch 94",
+      "sha256": "f4b32d0268091aea8ac8e9eda3507a8f02f93f89a1a13cdf793b7cde1af5923f",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51980,
+      "note": "features batch 95",
+      "sha256": "39e1792fb8617b04423ea9f7f1102fb6fe5922479e4016be6fc19ac8b6276ad3",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 47457,
+      "note": "features batch 96",
+      "sha256": "754927de77e5e34a3599f127ff93e34b0436ec3f96ef01b623860bf16b7da42c",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48103,
+      "note": "features batch 97",
+      "sha256": "45363af0698235a59f9c69f2d62ccdff29747713acc7c8dccf28f42df6756fe6",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 47179,
+      "note": "features batch 98",
+      "sha256": "2146151a723aa47e74397273126925ab7bfa418aabff2ab02eadfe48d0f2221b",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 47483,
+      "note": "features batch 99",
+      "sha256": "a27486152ce84d88008d21b765dc01a702266bb804bc391251a082f572b5ff8b",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 47955,
+      "note": "features batch 100",
+      "sha256": "7d2d969b54afe1b627d274bcbc703f0b4ee608bdacd2b2580b19f1c7f730e575",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 44370,
+      "note": "features batch 101",
+      "sha256": "7f0e1f53a2b992f519fb9d3ab7c5dc9fd360673b4826b6b65f8289d152e2beff",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 44532,
+      "note": "features batch 102",
+      "sha256": "7d63988e2efebab1b575cd24c24b7a9c66e5152b3fb30323e014a8a95ecddec8",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 44726,
+      "note": "features batch 103",
+      "sha256": "e9a2d1cf7503dd97a335d25746ad8f46e81c7e4b3e653d21a59f25ef2a9b006a",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 45338,
+      "note": "features batch 104",
+      "sha256": "1d0598256f91c5e2b99e28337293c42e9e2314f003690569e735c8f62d35a131",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 45104,
+      "note": "features batch 105",
+      "sha256": "7a633a0bd7be7e359e93f9591ec58954a8d132bf8d9d4ab9de7f6618e6cb0410",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 47307,
+      "note": "features batch 106",
+      "sha256": "df8b1e0fcbf561d93d1fae7087db5b2785e752a454e1fb62346edcfcb011e3a2",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 45629,
+      "note": "features batch 107",
+      "sha256": "470584c583210bfe7d2db5afc0111628b88332873f2edd82dc50c328dd63454a",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 45883,
+      "note": "features batch 108",
+      "sha256": "4ac8d2c6b873c333684e2a9001ff2847641119ff8cb0f6d692a05a1405784c25",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 45316,
+      "note": "features batch 109",
+      "sha256": "d459cf471cee35e82c4d6dfbf819c9c48f7bc496314b9e10bf04dca2cea1bb77",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 46262,
+      "note": "features batch 110",
+      "sha256": "13dbfbe469564a61b8ea691158513ae072e8b4ac171016cbf9290d3ca689e2d3",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 47494,
+      "note": "features batch 111",
+      "sha256": "f83783e92eace63909957e93f9068a2e8f58d8edb68dbf8c0a5d8b296783101f",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 46475,
+      "note": "features batch 112",
+      "sha256": "397757d6579df01be239e8a7c3716f046c47140ed72e667a0ac723d0bfcc0ef6",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 46816,
+      "note": "features batch 113",
+      "sha256": "4584d28ffbb5da123339d5e425e37e9bb64d24663d31fbda08a8897fa2a2f6c1",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 50659,
+      "note": "features batch 114",
+      "sha256": "21a9bb515a69b99a180de93a155f9aa7794621d475e3f6e43e8eb496cd1fa99d",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 50213,
+      "note": "features batch 115",
+      "sha256": "d82856ba56c8fea72b37ff060a943b3bec97e60a818d298a21aca72f6504cfeb",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51196,
+      "note": "features batch 116",
+      "sha256": "fc897b707280a8991776a660a5285c129e9e88d7e24557b5b8cdc5a496368902",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49191,
+      "note": "features batch 117",
+      "sha256": "1c29eb3dc62e7ce87ef20c0ed050c28bb31b14c678ad0794a44943fc0f4432e3",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51007,
+      "note": "features batch 118",
+      "sha256": "fa3fc77ea8019e861863f44a540b58fb71ed42b64407364cfadd38a393ae45c4",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 47304,
+      "note": "features batch 119",
+      "sha256": "f406d25786bff27cd399c44d74fd67924dbd347f680b0c5a6c71a4ba7f15bb92",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 53996,
+      "note": "features batch 120",
+      "sha256": "933a86290cf35e771292382e4dc6ee4b246c8886d347033cf322adffffa09c13",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 49095,
+      "note": "features batch 121",
+      "sha256": "716f7ea49761a7dc3de54baa9c7fa3493e8c303bfaa2e6a5ff67ffec76fb92eb",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51731,
+      "note": "features batch 122",
+      "sha256": "35d7c446dbe566161b3fe59a2a671bb4910eecd8eb782bca57787fc867e04b57",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51235,
+      "note": "features batch 123",
+      "sha256": "ae2355c57e05a805d26991edb0eb37c5a20ecdc602f336ee1c3ac6f19575d5d6",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 50355,
+      "note": "features batch 124",
+      "sha256": "a68bb15c1905ae2cb15c55618200d3c9275550e7c980bdf82e24f4cf1e19d1ef",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 51301,
+      "note": "features batch 125",
+      "sha256": "6303fccfdcdd24b3d6dbaa1a0818532d8c815975e293808fb153dedc789b94ca",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48147,
+      "note": "features batch 126",
+      "sha256": "6da5c53a4773efc2227ba7bc609dc9aae616315779d9f327d1f6b08b520a8c5a",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 48865,
+      "note": "features batch 127",
+      "sha256": "f75379368a8b5442a517211acdef64e2f305a0512b0105739b3d3993be99cde6",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 46522,
+      "note": "features batch 128",
+      "sha256": "12c82e06adce6354b2895e4028bf34890cb13e2e96ec09a0f67c67f2086675f3",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+250+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
+    },
+    {
+      "bytes": 24939,
+      "note": "features batch 129",
+      "sha256": "785262563c8d0fc8d53e1c0db43cfc9dcdb451c7cd996b08b8050ceb4c8b98a6",
+      "source": "fgio-fl-statewide-parcels",
+      "step": "parcel_shapes",
+      "url": "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query?where=%28CO_NO+%3D+71%29+AND+%3CID+range%2C+132+ids%3E&outFields=CO_NO%2CDOR_UC%2CLND_SQFOOT&returnGeometry=true&outSR=3086&geometryPrecision=0&f=json&maxAllowableOffset=1"
     }
   ],
   "fetched_at": {
     "budgets": "2026-11-13T20:46:42Z",
+    "city_limits": "2026-11-16T17:35:10Z",
+    "county_outline": "2026-11-16T17:35:10Z",
     "ers": "2026-11-09T16:17:20Z",
+    "parcel_shapes": "2026-11-16T17:35:10Z",
     "parcels": "2026-11-09T16:17:20Z",
     "soils": "2026-10-20T19:58:05Z",
     "weather": "2026-10-20T19:58:05Z"
