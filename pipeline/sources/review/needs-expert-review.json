@@ -153,6 +153,27 @@
       "options": [],
       "notes": "Decided 2026-11-06: Advanced mode lets the player own machinery, hire workers, own farm trucks and own buildings, and see owned-land costs line by line; crop insurance becomes a player choice, which first needs Revenue Protection payouts modelled (USDA RMA projected and harvest prices plus a yield history). Approved order: Increment 2b (owned-land costs and appreciation), Increment 3 (UI-free engine, Basic end to end, with a basic/advanced mode switch from the start), then an Advanced-mode requirements step, then Advanced increments starting with machinery. Insurance researched for Advanced mode: workers' compensation is required for farm employers with 6 or more regular employees and/or 12 or more seasonal workers working more than 30 days in a season or more than 45 days in a calendar year (Florida DFS); registered vehicles with 4 or more wheels need at least $10,000 PIP and $10,000 property damage liability (FLHSMV); flood insurance is required on buildings in a FEMA Special Flood Hazard Area that secure a federally regulated or federally backed loan; lenders may require scheduled coverage on financed equipment. Common optional coverage: farm liability, farm property and machinery, umbrella, environmental, custom-farming liability, ATV/UTV, trailers, commercial auto. Machinery insurance estimate: about 0.5% of average machine value (Mississippi State P3543). Increment 2b signed off 2026-11-13; this item stays open until the Advanced-mode requirements step.",
       "affects": ["tenure_options", "crop_insurance_options", "custom_operations"]
+    },
+    {
+      "id": "parcel-eligibility-interim",
+      "title": "County map: which parcels the player may select, using DOR land-use codes until the county zoning layer is obtained",
+      "status": "open",
+      "decided_on": "2026-11-16",
+      "decision_owner": "Project owner",
+      "current_default": "Interim rule: a parcel is selectable when its DOR land-use code (DOR_UC, Florida Statewide Parcels) is agricultural, 050-069; its land area (LND_SQFOOT / 43,560) is at least 10 acres; and it is not inside the Live Oak or Branford city limits (FGDL City Limits 2021). Every parcel's zoning district is 'unknown'. Settings live in the region config (map.agricultural_use_code_range, map.min_selectable_acres, map.city_limits)",
+      "options": [
+        {
+          "id": "interim-land-use",
+          "summary": "Land-use codes 050-069 selectable (current use, not zoning), at least 10 acres, outside city limits. Chosen 2026-11-16 so Increment 3 is not blocked on the county"
+        },
+        {
+          "id": "county-zoning",
+          "summary": "Suwannee County Land Development Regulations: A-1 and A-2 selectable; ESA-1 and ESA-2 selectable for non-intensive agriculture only; CSV, residential, commercial, industrial and municipal blocked. Needs the county's current zoning layer"
+        }
+      ],
+      "notes": "Decided 2026-11-16 by the project owner. Land-use codes describe current use, not zoning: a parcel zoned residential but farmed today shows as selectable, and code 068 (dairies, feed lots) is included although intensive operations need a special exception in A-1 and are prohibited in ESA districts. The game labels this eligibility as provisional. No current machine-readable zoning layer was found (searched 2026-11-16): the county's Official Zoning Atlas is a PDF adopted September 3, 1992, amended October 17, 1997, and the county's public ArcGIS base map has no zoning layer. To resolve: obtain the current zoning layer from Suwannee County Planning & Zoning (Ronald Meeks, Director, ronaldm@suwcountyfl.gov, 386-364-3401) and check the rules against the current Land Development Regulations text. City limits are from 2021 tax-code boundaries, so later annexations are missing. The 10-acre minimum is a gameplay setting: the LDR sets minimum lot sizes for dwellings, not for farm use. Map design: docs/increment-3-county-map.md.",
+      "affects": ["map pack: eligibility_rules", "map pack: parcels"],
+      "sources": ["fgio-fl-statewide-parcels", "fgdl-city-limits-2021"]
     }
   ]
 }
