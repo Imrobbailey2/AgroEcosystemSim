@@ -223,17 +223,15 @@
       "kind": "manual"
     },
     {
-      "id": "fgdl-city-limits-2021",
-      "title": "City Limits - Derived from Florida Parcel Data - 2021 (PAR_CITYLM_2021), Florida Geographic Data Library; hosted feature layer City_Limits__2021_",
-      "authors": "University of Florida GeoPlan Center, compiled from tax code boundaries in 2021 Florida Department of Revenue county parcel data",
-      "publisher": "Florida Department of Transportation (hosted feature service); Florida Geographic Data Library",
-      "year": "2023",
-      "edition": "Data current as of 3/13/2023",
-      "url": "https://gis.fdot.gov/arcgis/rest/services/Hosted/CityLimits_1/FeatureServer/0",
-      "landing_page": "https://gis.fdot.gov/arcgisportal/home/item.html?id=64f5148ff9cc405c8775511e8b73078d",
-      "metadata": "https://fgdl.org/meta/PAR_CITYLM.xml",
+      "id": "census-tigerweb-places-2026",
+      "title": "TIGERweb Places_CouSub_ConCity_SubMCD map service, Incorporated Places layer (January 1, 2026 vintage)",
+      "authors": "U.S. Census Bureau",
+      "publisher": "U.S. Census Bureau",
+      "year": "2026",
+      "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4",
+      "landing_page": "https://tigerweb.geo.census.gov/tigerwebmain/TIGERweb_restmapservice.html",
       "accessed": "set by fetch (see fetch-lock.json)",
-      "license": "Public information per the FGDL metadata use constraints, provided as is; copyright text: Florida Department of Revenue and the 67 County Property Appraisers. Only the configured city polygons and names are committed.",
+      "license": "US Government work, public domain. Cite the U.S. Census Bureau. Incorporated-place boundaries as reported to the Census Bureau's Boundary and Annexation Survey; only the configured city polygons and names are committed.",
       "kind": "fetched"
     },
     {

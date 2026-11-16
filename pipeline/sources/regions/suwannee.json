@@ -167,10 +167,12 @@
       "min_parcels": 1000
     },
     "city_limits": {
-      "source": "fgdl-city-limits-2021",
-      "url": "https://gis.fdot.gov/arcgis/rest/services/Hosted/CityLimits_1/FeatureServer/0",
-      "name_field": "name",
-      "names": ["BRANFORD", "LIVE OAK"],
+      "source": "census-tigerweb-places-2026",
+      "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4",
+      "name_field": "BASENAME",
+      "names": ["Branford", "Live Oak"],
+      "state_field": "STATE",
+      "state": "12",
       "max_allowable_offset_m": 1
     },
     "county_outline": {
