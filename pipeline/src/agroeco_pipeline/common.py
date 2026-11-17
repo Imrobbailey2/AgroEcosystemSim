@@ -46,6 +46,16 @@ def write_json(path: Path, data: Any) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def write_json_compact(path: Path, data: Any) -> None:
+    """Write JSON with sorted keys, no whitespace and a trailing newline (byte-stable).
+
+    Used for large coordinate extracts, where indented JSON would be many times larger.
+    """
+    path.parent.mkdir(parents=True, exist_ok=True)
+    text = json.dumps(data, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n"
+    path.write_text(text, encoding="utf-8")
+
+
 def read_csv(path: Path) -> list[dict[str, str]]:
     try:
         with path.open(newline="", encoding="utf-8") as fh:

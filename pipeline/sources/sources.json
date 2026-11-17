@@ -160,7 +160,7 @@
       "landing_page": "https://geodata.floridagio.gov/datasets/FGIO::florida-statewide-parcels/about",
       "field_guide": "https://floridarevenue.com/property/dataportal/Documents/PTO%20Data%20Portal/User%20Guides/2025%20Users%20guide%20and%20quick%20reference/2025_NAL_SDF_NAP_Users_Guide.pdf",
       "accessed": "set by fetch (see fetch-lock.json)",
-      "license": "Florida public records (Chapter 119, F.S.); see the FGIO item license. Only aggregate statistics are committed; owner names, addresses, parcel IDs and geometry are never requested.",
+      "license": "Florida public records (Chapter 119, F.S.); see the FGIO item license. Owner names, addresses, legal descriptions, parcel IDs and alternate keys are never requested. Fetch step 'parcels' commits aggregate statistics only; fetch step 'parcel_shapes' (county map, project-owner decision 2026-11-16) commits parcel boundaries with only the land-use code and land area, and the game shows them under anonymous IDs with a not-a-real-listing disclaimer.",
       "kind": "fetched"
     },
     {
@@ -221,6 +221,30 @@
       "accessed": "2026-11-07",
       "license": "US Government work, public domain. Values transcribed with citation.",
       "kind": "manual"
+    },
+    {
+      "id": "census-tigerweb-places-2026",
+      "title": "TIGERweb Places_CouSub_ConCity_SubMCD map service, Incorporated Places layer (January 1, 2026 vintage)",
+      "authors": "U.S. Census Bureau",
+      "publisher": "U.S. Census Bureau",
+      "year": "2026",
+      "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4",
+      "landing_page": "https://tigerweb.geo.census.gov/tigerwebmain/TIGERweb_restmapservice.html",
+      "accessed": "set by fetch (see fetch-lock.json)",
+      "license": "US Government work, public domain. Cite the U.S. Census Bureau. Incorporated-place boundaries as reported to the Census Bureau's Boundary and Annexation Survey; only the configured city polygons and names are committed.",
+      "kind": "fetched"
+    },
+    {
+      "id": "census-tigerweb-counties-2026",
+      "title": "TIGERweb State_County map service, Counties layer (January 1, 2026 vintage)",
+      "authors": "U.S. Census Bureau",
+      "publisher": "U.S. Census Bureau",
+      "year": "2026",
+      "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1",
+      "landing_page": "https://tigerweb.geo.census.gov/tigerwebmain/TIGERweb_restmapservice.html",
+      "accessed": "set by fetch (see fetch-lock.json)",
+      "license": "US Government work, public domain. Cite the U.S. Census Bureau.",
+      "kind": "fetched"
     }
   ]
 }
